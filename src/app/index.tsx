@@ -9,9 +9,18 @@ import {
 } from "react-native";
 
 const heroStats = [
-  { value: "Pickup slots", label: "Reserve a collection time before stock runs out." },
-  { value: "Saturday markets", label: "Farmers can publish weekly stall plans and opening hours." },
-  { value: "Fresh weekly", label: "Availability shifts with harvests, pickups, and market days." },
+  {
+    value: "Pickup slots",
+    label: "Reserve a collection time before stock runs out.",
+  },
+  {
+    value: "Saturday markets",
+    label: "Farmers can publish weekly stall plans and opening hours.",
+  },
+  {
+    value: "Fresh weekly",
+    label: "Availability shifts with harvests, pickups, and market days.",
+  },
 ];
 
 const featureCards = [
@@ -40,7 +49,11 @@ const featureCards = [
 const pickupSlots = [
   { title: "Thursday pickup", meta: "16:30 to 17:00", tone: "Oakridge Farm" },
   { title: "Friday pickup", meta: "17:00 to 18:30", tone: "Moss Lane Produce" },
-  { title: "Saturday market", meta: "09:00 to 13:00", tone: "Green Square Market" },
+  {
+    title: "Saturday market",
+    meta: "09:00 to 13:00",
+    tone: "Green Square Market",
+  },
 ];
 
 const marketHighlights = [
@@ -96,12 +109,14 @@ export default function Index() {
                   Farm pickup · Market days · Weekly harvest
                 </Text>
                 <Text style={styles.heroTitle}>
-                  Order from the farm, pick up in a slot, or meet at Saturday market.
+                  Order from the farm, pick up in a slot, or meet at Saturday
+                  market.
                 </Text>
                 <Text style={styles.heroBody}>
-                  FarmConnect helps small farms sell produce without messy coordination.
-                  Customers reserve items, choose a collection time, and keep track of
-                  where the handoff happens, whether that is at the farm gate or a weekend market.
+                  FarmConnect helps small farms sell produce without messy
+                  coordination. Customers reserve items, choose a collection
+                  time, and keep track of where the handoff happens, whether
+                  that is at the farm gate or a weekend market.
                 </Text>
                 <View style={styles.heroActionRow}>
                   <View style={[styles.ctaPill, styles.ctaPillPrimary]}>
@@ -113,7 +128,9 @@ export default function Index() {
                     <Text style={styles.ctaText}>See market days</Text>
                   </View>
                 </View>
-                <View style={[styles.statsRow, isMedium && styles.statsRowWide]}>
+                <View
+                  style={[styles.statsRow, isMedium && styles.statsRowWide]}
+                >
                   {heroStats.map((stat) => (
                     <View key={stat.value} style={styles.statCard}>
                       <Text style={styles.statValue}>{stat.value}</Text>
@@ -141,9 +158,12 @@ export default function Index() {
                   <View style={styles.phoneScreen}>
                     <View style={styles.phoneHeaderSoft}>
                       <Text style={styles.phoneChip}>Customer</Text>
-                      <Text style={styles.phoneHeading}>Choose a collection plan</Text>
+                      <Text style={styles.phoneHeading}>
+                        Choose a collection plan
+                      </Text>
                       <Text style={styles.phoneSubheading}>
-                        Reserve produce, pick a time, and decide whether you collect at the farm or at market.
+                        Reserve produce, pick a time, and decide whether you
+                        collect at the farm or at market.
                       </Text>
                     </View>
                     <View style={styles.phoneBody}>
@@ -157,15 +177,20 @@ export default function Index() {
                             </View>
                           </View>
                           <View style={styles.inlineBadge}>
-                            <Text style={styles.inlineBadgeText}>{slot.tone}</Text>
+                            <Text style={styles.inlineBadgeText}>
+                              {slot.tone}
+                            </Text>
                           </View>
                         </View>
                       ))}
                       <View style={[styles.mockCard, styles.marketCard]}>
                         <Text style={styles.marketEyebrow}>This Saturday</Text>
-                        <Text style={styles.marketTitle}>Green Square farm market</Text>
+                        <Text style={styles.marketTitle}>
+                          Green Square farm market
+                        </Text>
                         <Text style={styles.mockMeta}>
-                          6 farms, morning pickup queue, and pre-ordered baskets ready at stall opening.
+                          6 farms, morning pickup queue, and pre-ordered baskets
+                          ready at stall opening.
                         </Text>
                       </View>
                     </View>
@@ -185,18 +210,25 @@ export default function Index() {
                       <Text style={[styles.phoneChip, styles.phoneChipStrong]}>
                         Farmer
                       </Text>
-                      <Text style={styles.phoneHeading}>Saturday market setup</Text>
+                      <Text style={styles.phoneHeading}>
+                        Saturday market setup
+                      </Text>
                       <Text style={styles.phoneSubheading}>
-                        Open a market day, cap pickup windows, and keep pre-orders aligned with what the van can carry.
+                        Open a market day, cap pickup windows, and keep
+                        pre-orders aligned with what the van can carry.
                       </Text>
                     </View>
                     <View style={styles.phoneBody}>
                       <View style={styles.mockCard}>
                         <Text style={styles.queueLabel}>Upcoming event</Text>
-                        <Text style={styles.queueTitle}>Green Square market opens at 09:00</Text>
+                        <Text style={styles.queueTitle}>
+                          Green Square market opens at 09:00
+                        </Text>
                         <View style={styles.queueMetaRow}>
                           <Text style={styles.queueMeta}>Reserved baskets</Text>
-                          <Text style={styles.queueMetaValue}>18 confirmed</Text>
+                          <Text style={styles.queueMetaValue}>
+                            18 confirmed
+                          </Text>
                         </View>
                       </View>
                       <View style={styles.statusRow}>
@@ -209,7 +241,8 @@ export default function Index() {
                       <View style={[styles.mockCard, styles.mockCardMuted]}>
                         <Text style={styles.mockTitle}>Bring to market</Text>
                         <Text style={styles.mockMeta}>
-                          Carrots, lettuce, eggs, herb bundles, and 8 extra mixed vegetable boxes.
+                          Carrots, lettuce, eggs, herb bundles, and 8 extra
+                          mixed vegetable boxes.
                         </Text>
                       </View>
                     </View>
@@ -220,10 +253,14 @@ export default function Index() {
 
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionEyebrow}>This Week</Text>
-              <Text style={styles.sectionTitle}>Designed around real pickup habits, not abstract marketplace features.</Text>
+              <Text style={styles.sectionTitle}>
+                Designed around real pickup habits, not abstract marketplace
+                features.
+              </Text>
               <Text style={styles.sectionBody}>
-                The home screen now talks like the product should: reserve produce, choose a time slot,
-                and watch for weekend markets where local farms gather in one place.
+                The home screen now talks like the product should: reserve
+                produce, choose a time slot, and watch for weekend markets where
+                local farms gather in one place.
               </Text>
             </View>
 
@@ -241,23 +278,33 @@ export default function Index() {
               <View style={[styles.bandGrid, isMedium && styles.bandGridWide]}>
                 <View style={styles.bandCopy}>
                   <Text style={styles.bandEyebrow}>Featured market</Text>
-                  <Text style={styles.bandTitle}>Saturday should feel like an event, not a logistics problem.</Text>
+                  <Text style={styles.bandTitle}>
+                    Saturday should feel like an event, not a logistics problem.
+                  </Text>
                   <Text style={styles.bandBody}>
-                    Farmers can publish one clear market listing with time, location, and what is coming to the stall.
-                    Customers can reserve before leaving home and collect in a predictable window.
+                    Farmers can publish one clear market listing with time,
+                    location, and what is coming to the stall. Customers can
+                    reserve before leaving home and collect in a predictable
+                    window.
                   </Text>
                 </View>
                 <View style={styles.bandPanels}>
                   <View style={styles.bandPanel}>
-                    <Text style={styles.bandPanelTitle}>What customers see</Text>
+                    <Text style={styles.bandPanelTitle}>
+                      What customers see
+                    </Text>
                     <Text style={styles.bandPanelBody}>
-                      A market card, opening hours, available produce, and pickup-ready reservations.
+                      A market card, opening hours, available produce, and
+                      pickup-ready reservations.
                     </Text>
                   </View>
                   <View style={styles.bandPanel}>
-                    <Text style={styles.bandPanelTitle}>What farmers manage</Text>
+                    <Text style={styles.bandPanelTitle}>
+                      What farmers manage
+                    </Text>
                     <Text style={styles.bandPanelBody}>
-                      Stall schedule, stock allocation, collection queue, and who has already arrived.
+                      Stall schedule, stock allocation, collection queue, and
+                      who has already arrived.
                     </Text>
                   </View>
                 </View>
@@ -266,9 +313,13 @@ export default function Index() {
 
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionEyebrow}>Paths</Text>
-              <Text style={styles.sectionTitle}>The app supports both farm-gate pickup and weekend market traffic.</Text>
+              <Text style={styles.sectionTitle}>
+                The app supports both farm-gate pickup and weekend market
+                traffic.
+              </Text>
               <Text style={styles.sectionBody}>
-                That gives the product two useful rhythms: weekday collection windows and recurring Saturday market planning.
+                That gives the product two useful rhythms: weekday collection
+                windows and recurring Saturday market planning.
               </Text>
             </View>
 
@@ -286,7 +337,8 @@ export default function Index() {
               <View style={styles.flowCardAccent}>
                 <Text style={styles.flowTitleAccent}>Market board</Text>
                 <Text style={styles.flowBodyAccent}>
-                  Farmers can keep a rolling list of upcoming markets so customers know where produce will be available next.
+                  Farmers can keep a rolling list of upcoming markets so
+                  customers know where produce will be available next.
                 </Text>
                 <View style={styles.marketBoard}>
                   {saturdayMarkets.map((market) => (
@@ -311,10 +363,13 @@ export default function Index() {
 
             <View style={styles.footerCard}>
               <Text style={styles.footerEyebrow}>Coming into the app</Text>
-              <Text style={styles.footerTitle}>Weekly harvests, pickup notes, and market-ready reservations.</Text>
+              <Text style={styles.footerTitle}>
+                Weekly harvests, pickup notes, and market-ready reservations.
+              </Text>
               <Text style={styles.footerBody}>
-                The next backend pass can wire these sections into Supabase so farmers can publish real slots,
-                add Saturday market events, and accept reservations against live inventory.
+                The next backend pass can wire these sections into Supabase so
+                farmers can publish real slots, add Saturday market events, and
+                accept reservations against live inventory.
               </Text>
               <View style={styles.footerChipRow}>
                 {marketHighlights.map((item) => (
