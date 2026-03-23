@@ -3,6 +3,7 @@
 FarmConnect is a mobile-first marketplace for local farms. Customers can browse weekly produce, reserve items, and choose a pickup slot at the farm or at a market day. Farmers can publish inventory, open pickup windows, and advertise recurring markets such as Saturdays.
 
 The app is built with Expo, React Native, TypeScript, and Expo Router.
+Unit and component tests use Jest with Expo's `jest-expo` preset.
 
 ## Current scope
 
@@ -48,6 +49,12 @@ Run the TypeScript typecheck:
 npm run typecheck
 ```
 
+Run the Jest test suite:
+
+```bash
+npm test
+```
+
 Format the repository with Prettier:
 
 ```bash
@@ -69,6 +76,7 @@ GitHub Actions runs the quality workflow on:
 
 The workflow currently runs:
 
+- `test`
 - `lint`
 - `typecheck`
 - `prettier`
