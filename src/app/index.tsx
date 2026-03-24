@@ -1,3 +1,4 @@
+import { Link, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import {
   ScrollView,
@@ -9,6 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { isSupabaseConfigured, supabaseConfigError } from "../lib/supabase";
+import { useAuth } from "../providers/auth-provider";
 
 const heroStats = [
   {
@@ -100,6 +102,7 @@ const saturdayMarkets = [
 
 export default function Index() {
   const { width } = useWindowDimensions();
+  const { session, user } = useAuth();
   const isWide = width >= 940;
   const isMedium = width >= 720;
   const phoneWidth = width < 390 ? 250 : 286;
@@ -289,6 +292,42 @@ export default function Index() {
                   <Text style={styles.infoBody}>{card.body}</Text>
                 </View>
               ))}
+            </View>
+
+            <View style={styles.authStatusCard}>
+              <Text style={styles.bootstrapEyebrow}>Account access</Text>
+              <Text style={styles.bootstrapTitle}>
+                {session
+                  ? "Your FarmConnect session is active."
+                  : "Create an account to reserve produce and manage pickups."}
+              </Text>
+              <Text style={styles.bootstrapBody}>
+                {session
+                  ? `Signed in as ${user?.email ?? "an existing user"}. Your session is persisted locally through Supabase auth storage.`
+                  : "The app now has separate registration and login flows, plus an email-confirmation path that redirects back into the mobile app."}
+              </Text>
+              <View style={styles.heroActionRow}>
+                {session ? (
+                  <Link
+                    href={"/account" as Href}
+                    style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                  >
+                    Open account
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      href={"/auth/register" as Href}
+                      style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                    >
+                      Create account
+                    </Link>
+                    <Link href={"/auth/login" as Href} style={styles.ctaLink}>
+                      Sign in
+                    </Link>
+                  </>
+                )}
+              </View>
             </View>
 
             <View style={styles.band}>
@@ -537,6 +576,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   ctaTextPrimary: {
+    color: "#FFFFFF",
+  },
+  ctaLink: {
+    borderWidth: 1,
+    borderColor: "#DDE4D9",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+    color: "#182019",
+    fontSize: 14,
+    fontWeight: "700",
+    overflow: "hidden",
+  },
+  ctaLinkPrimary: {
+    backgroundColor: "#2F6A3E",
+    borderColor: "#2F6A3E",
     color: "#FFFFFF",
   },
   statsRow: {
@@ -985,6 +1041,15 @@ const styles = StyleSheet.create({
     padding: 24,
     gap: 12,
     marginBottom: 12,
+    ...shadow,
+  },
+  authStatusCard: {
+    backgroundColor: "#FFFFFF",
+    borderWidth: 1,
+    borderColor: "#DDE4D9",
+    borderRadius: 32,
+    padding: 24,
+    gap: 12,
     ...shadow,
   },
   bootstrapCard: {

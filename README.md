@@ -11,7 +11,7 @@ Unit and component tests use Jest with Expo's `jest-expo` preset.
 - farm pickup slots
 - market day promotion
 - farmer-side reservation and packing concepts
-- Supabase bootstrap and env wiring
+- Supabase bootstrap, auth, and persisted sessions
 
 ## Getting started
 
@@ -51,6 +51,19 @@ EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 ```
 
 The app uses Expo public env variables for the client-side URL and publishable key. `.env.local` is ignored by git.
+
+For email confirmation links to return to the app, add this redirect URL in the Supabase dashboard:
+
+```bash
+farmconnect://auth/confirm
+```
+
+The current auth flow includes:
+
+- registration with email/password
+- login with email/password
+- persisted mobile sessions
+- email confirmation redirect back into the app
 
 ## Quality checks
 
