@@ -11,7 +11,7 @@ Unit and component tests use Jest with Expo's `jest-expo` preset.
 - farm pickup slots
 - market day promotion
 - farmer-side reservation and packing concepts
-- Supabase bootstrap and env wiring
+- Supabase bootstrap, auth, and persisted sessions
 
 ## Getting started
 
@@ -51,6 +51,32 @@ EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
 ```
 
 The app uses Expo public env variables for the client-side URL and publishable key. `.env.local` is ignored by git.
+
+For email confirmation links to return to the app, add this redirect URL in the Supabase dashboard:
+
+```bash
+farmconnect://auth/confirm
+```
+
+The current auth flow includes:
+
+- registration with email/password
+- profile role selection for customer or farmer
+- login with email/password
+- persisted mobile sessions
+- email confirmation redirect back into the app
+
+To create the `profiles` table and policies, run the SQL migration in the Supabase SQL editor:
+
+```bash
+supabase/migrations/202603241945_create_profiles.sql
+```
+
+That migration creates:
+
+- `public.profiles`
+- row-level policies so users can read and update only their own profile
+- a trigger that creates the profile row automatically from signup metadata
 
 ## Quality checks
 

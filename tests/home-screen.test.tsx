@@ -2,6 +2,28 @@ import { render, screen } from "@testing-library/react-native";
 
 import HomeScreen from "../src/app/index";
 
+jest.mock("expo-router", () => {
+  const React = require("react");
+  const { Text } = require("react-native");
+
+  return {
+    Link: ({ children }: { children: React.ReactNode }) => (
+      <Text>{children}</Text>
+    ),
+  };
+});
+
+jest.mock("../src/providers/auth-provider", () => ({
+  useAuth: () => ({
+    session: null,
+    user: null,
+    profile: null,
+    profileLoading: false,
+    profileError: null,
+    refreshProfile: jest.fn(),
+  }),
+}));
+
 describe("HomeScreen", () => {
   it("renders the main landing page messaging for customers", () => {
     render(<HomeScreen />);
@@ -13,6 +35,8 @@ describe("HomeScreen", () => {
     ).toBeTruthy();
     expect(screen.getByText("Browse pickups")).toBeTruthy();
     expect(screen.getByText("See market days")).toBeTruthy();
+    expect(screen.getByText("Create account")).toBeTruthy();
+    expect(screen.getByText("Sign in")).toBeTruthy();
   });
 
   it("shows pickup and market planning details for both roles", () => {
