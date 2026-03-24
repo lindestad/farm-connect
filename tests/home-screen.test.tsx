@@ -17,6 +17,10 @@ jest.mock("../src/providers/auth-provider", () => ({
   useAuth: () => ({
     session: null,
     user: null,
+    profile: null,
+    profileLoading: false,
+    profileError: null,
+    refreshProfile: jest.fn(),
   }),
 }));
 

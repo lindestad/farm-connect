@@ -12,7 +12,7 @@ import { AuthScreenShell } from "../components/auth-screen-shell";
 import { useAuth } from "../providers/auth-provider";
 
 export default function AccountScreen() {
-  const { signOut, user } = useAuth();
+  const { profile, profileError, profileLoading, signOut, user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -49,6 +49,24 @@ export default function AccountScreen() {
         <Text style={styles.infoMeta}>
           Email confirmed: {user?.email_confirmed_at ? "yes" : "no"}
         </Text>
+      </View>
+      <View style={styles.infoCard}>
+        <Text style={styles.infoTitle}>Profile</Text>
+        {profileLoading ? (
+          <Text style={styles.infoMeta}>Loading profile...</Text>
+        ) : (
+          <>
+            <Text style={styles.infoValue}>
+              {profile?.fullName ?? "No name saved yet"}
+            </Text>
+            <Text style={styles.infoMeta}>
+              Role: {profile?.role ?? "No role saved yet"}
+            </Text>
+          </>
+        )}
+        {profileError ? (
+          <Text style={styles.errorText}>{profileError}</Text>
+        ) : null}
       </View>
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>

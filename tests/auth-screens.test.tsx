@@ -8,6 +8,9 @@ jest.mock("../src/providers/auth-provider", () => ({
   useAuth: () => ({
     session: null,
     user: null,
+    profile: null,
+    profileLoading: false,
+    profileError: null,
     isLoading: false,
     authLinkStatus: "idle",
     authLinkMessage: null,
@@ -17,6 +20,7 @@ jest.mock("../src/providers/auth-provider", () => ({
     signOut: jest.fn(),
     clearAuthLinkState: jest.fn(),
     makeEmailRedirectUrl: () => "farmconnect://auth/confirm",
+    refreshProfile: jest.fn(),
   }),
 }));
 
@@ -39,6 +43,9 @@ describe("Auth screens", () => {
         "Create an account for farm-gate pickup and market planning.",
       ),
     ).toBeTruthy();
+    expect(screen.getByPlaceholderText("Your name")).toBeTruthy();
+    expect(screen.getByText("Customer")).toBeTruthy();
+    expect(screen.getByText("Farmer")).toBeTruthy();
     expect(screen.getByText("Create account")).toBeTruthy();
   });
 

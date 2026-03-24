@@ -10,14 +10,34 @@ import {
 } from "react-native";
 
 import { AuthScreenShell } from "../../components/auth-screen-shell";
+import type { ProfileRole } from "../../lib/profiles";
 import { useAuth } from "../../providers/auth-provider";
+
+const roleOptions: {
+  value: ProfileRole;
+  title: string;
+  body: string;
+}[] = [
+  {
+    value: "customer",
+    title: "Customer",
+    body: "Reserve produce, pick a collection slot, and follow local market days.",
+  },
+  {
+    value: "farmer",
+    title: "Farmer",
+    body: "Publish produce, manage pickup windows, and promote Saturday markets.",
+  },
+];
 
 export default function RegisterScreen() {
   const { makeEmailRedirectUrl, resendConfirmationEmail, signUpWithPassword } =
     useAuth();
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [role, setRole] = useState<ProfileRole>("customer");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -33,15 +53,22 @@ export default function RegisterScreen() {
         throw new Error("Enter an email address and matching password.");
       }
 
+      if (!fullName.trim()) {
+        throw new Error("Enter your name so the profile can be created.");
+      }
+
       if (password !== confirmPassword) {
         throw new Error("Passwords do not match.");
       }
 
-      const result = await signUpWithPassword(email.trim(), password);
+      const result = await signUpWithPassword(email.trim(), password, {
+        fullName,
+        role,
+      });
       setNeedsConfirmation(result.needsEmailConfirmation);
       setSuccessMessage(
         result.needsEmailConfirmation
-          ? "Check your inbox to confirm your email address before signing in."
+          ? `Check your inbox to confirm your email address before signing in as a ${role}.`
           : "Account created successfully. You can continue into the app.",
       );
     } catch (error) {
@@ -83,6 +110,16 @@ export default function RegisterScreen() {
       }
     >
       <View style={styles.fieldGroup}>
+        <Text style={styles.label}>Name</Text>
+        <TextInput
+          onChangeText={setFullName}
+          placeholder="Your name"
+          placeholderTextColor="#7A867D"
+          style={styles.input}
+          value={fullName}
+        />
+      </View>
+      <View style={styles.fieldGroup}>
         <Text style={styles.label}>Email</Text>
         <TextInput
           autoCapitalize="none"
@@ -118,6 +155,33 @@ export default function RegisterScreen() {
           style={styles.input}
           value={confirmPassword}
         />
+      </View>
+      <View style={styles.fieldGroup}>
+        <Text style={styles.label}>Account type</Text>
+        <View style={styles.roleGrid}>
+          {roleOptions.map((option) => {
+            const active = option.value === role;
+
+            return (
+              <Pressable
+                key={option.value}
+                onPress={() => setRole(option.value)}
+                style={[styles.roleCard, active && styles.roleCardActive]}
+              >
+                <Text
+                  style={[styles.roleTitle, active && styles.roleTitleActive]}
+                >
+                  {option.title}
+                </Text>
+                <Text
+                  style={[styles.roleBody, active && styles.roleBodyActive]}
+                >
+                  {option.body}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
       </View>
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
@@ -179,6 +243,37 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingHorizontal: 16,
     paddingVertical: 14,
+  },
+  roleGrid: {
+    gap: 12,
+  },
+  roleCard: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#DDE4D9",
+    borderRadius: 20,
+    borderWidth: 1,
+    gap: 6,
+    padding: 16,
+  },
+  roleCardActive: {
+    backgroundColor: "#EEF5EB",
+    borderColor: "#2F6A3E",
+  },
+  roleTitle: {
+    color: "#182019",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  roleTitleActive: {
+    color: "#224E2E",
+  },
+  roleBody: {
+    color: "#5D6A60",
+    fontSize: 13,
+    lineHeight: 20,
+  },
+  roleBodyActive: {
+    color: "#345540",
   },
   primaryButton: {
     alignItems: "center",

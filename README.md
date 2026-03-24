@@ -61,9 +61,22 @@ farmconnect://auth/confirm
 The current auth flow includes:
 
 - registration with email/password
+- profile role selection for customer or farmer
 - login with email/password
 - persisted mobile sessions
 - email confirmation redirect back into the app
+
+To create the `profiles` table and policies, run the SQL migration in the Supabase SQL editor:
+
+```bash
+supabase/migrations/202603241945_create_profiles.sql
+```
+
+That migration creates:
+
+- `public.profiles`
+- row-level policies so users can read and update only their own profile
+- a trigger that creates the profile row automatically from signup metadata
 
 ## Quality checks
 

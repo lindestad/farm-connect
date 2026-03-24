@@ -1,4 +1,5 @@
 import {
+  useCallback,
   createContext,
   type PropsWithChildren,
   useContext,
@@ -9,6 +10,14 @@ import {
 import * as Linking from "expo-linking";
 import type { Session, User } from "@supabase/supabase-js";
 
+import {
+  fetchProfile,
+  normalizeFullName,
+  normalizeProfileRole,
+  type ProfileRole,
+  type UserProfile,
+  upsertProfileFromUser,
+} from "../lib/profiles";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
 type AuthLinkStatus = "idle" | "processing" | "success" | "error";
@@ -17,9 +26,17 @@ type SignUpResult = {
   needsEmailConfirmation: boolean;
 };
 
+type SignUpProfileDetails = {
+  fullName: string;
+  role: ProfileRole;
+};
+
 type AuthContextValue = {
   session: Session | null;
   user: User | null;
+  profile: UserProfile | null;
+  profileLoading: boolean;
+  profileError: string | null;
   isLoading: boolean;
   authLinkStatus: AuthLinkStatus;
   authLinkMessage: string | null;
@@ -27,11 +44,13 @@ type AuthContextValue = {
   signUpWithPassword: (
     email: string,
     password: string,
+    details: SignUpProfileDetails,
   ) => Promise<SignUpResult>;
   resendConfirmationEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearAuthLinkState: () => void;
   makeEmailRedirectUrl: () => string;
+  refreshProfile: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -76,9 +95,41 @@ const normalizeEmailLinkType = (value?: string) => {
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [authLinkStatus, setAuthLinkStatus] = useState<AuthLinkStatus>("idle");
   const [authLinkMessage, setAuthLinkMessage] = useState<string | null>(null);
+
+  const syncProfile = useCallback(async (nextUser: User | null) => {
+    if (!nextUser) {
+      setProfile(null);
+      setProfileError(null);
+      setProfileLoading(false);
+      return;
+    }
+
+    try {
+      setProfileLoading(true);
+      setProfileError(null);
+
+      const existingProfile = await fetchProfile(nextUser.id);
+      const nextProfile =
+        existingProfile ?? (await upsertProfileFromUser(nextUser));
+
+      setProfile(nextProfile);
+    } catch (error) {
+      setProfile(null);
+      setProfileError(
+        error instanceof Error
+          ? error.message
+          : "Unable to load the FarmConnect profile.",
+      );
+    } finally {
+      setProfileLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (!supabase || !isSupabaseConfigured) {
@@ -182,8 +233,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
           setAuthLinkStatus("error");
           setAuthLinkMessage(error.message);
         }
-      } else if (isMounted) {
-        setSession(data.session ?? null);
+      } else {
+        if (isMounted) {
+          setSession(data.session ?? null);
+        }
+
+        await syncProfile(data.session?.user ?? null);
       }
 
       const initialUrl = await Linking.getInitialURL();
@@ -204,6 +259,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
       if (isMounted) {
         setSession(nextSession ?? null);
       }
+
+      void syncProfile(nextSession?.user ?? null);
     });
 
     const linkingSubscription = Linking.addEventListener("url", ({ url }) => {
@@ -215,12 +272,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
       subscription.unsubscribe();
       linkingSubscription.remove();
     };
-  }, []);
+  }, [syncProfile]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       session,
       user: session?.user ?? null,
+      profile,
+      profileLoading,
+      profileError,
       isLoading,
       authLinkStatus,
       authLinkMessage,
@@ -238,7 +298,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           throw error;
         }
       },
-      async signUpWithPassword(email, password) {
+      async signUpWithPassword(email, password, details) {
         if (!supabase) {
           throw new Error("Supabase is not configured.");
         }
@@ -248,6 +308,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
           password,
           options: {
             emailRedirectTo: createRedirectUrl(),
+            data: {
+              full_name: normalizeFullName(details.fullName),
+              role: normalizeProfileRole(details.role),
+            },
           },
         });
 
@@ -294,8 +358,20 @@ export function AuthProvider({ children }: PropsWithChildren) {
       makeEmailRedirectUrl() {
         return createRedirectUrl();
       },
+      async refreshProfile() {
+        await syncProfile(session?.user ?? null);
+      },
     }),
-    [authLinkMessage, authLinkStatus, isLoading, session],
+    [
+      authLinkMessage,
+      authLinkStatus,
+      isLoading,
+      profile,
+      profileError,
+      profileLoading,
+      session,
+      syncProfile,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
