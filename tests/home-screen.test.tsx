@@ -23,4 +23,15 @@ describe("HomeScreen", () => {
     expect(screen.getByText("Green Square")).toBeTruthy();
     expect(screen.getByText("River Barn Hall")).toBeTruthy();
   });
+
+  it("shows the Supabase bootstrap fallback when env vars are missing", () => {
+    render(<HomeScreen />);
+
+    expect(
+      screen.getByText(
+        "Supabase environment variables still need local setup.",
+      ),
+    ).toBeTruthy();
+    expect(screen.getByText("Add .env.local")).toBeTruthy();
+  });
 });
