@@ -464,11 +464,11 @@ export default function Index() {
 }
 
 const shadow = {
-  shadowColor: "#182019",
-  shadowOffset: { width: 0, height: 18 },
-  shadowOpacity: 0.08,
-  shadowRadius: 30,
-  elevation: 7,
+  boxShadow: "0px 18px 30px rgba(24, 32, 25, 0.08)",
+} as const;
+
+const cardShadow = {
+  boxShadow: "0px 10px 18px rgba(24, 32, 25, 0.05)",
 } as const;
 
 const styles = StyleSheet.create({
@@ -716,11 +716,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 14,
     gap: 12,
-    shadowColor: "#182019",
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.05,
-    shadowRadius: 18,
-    elevation: 2,
+    ...cardShadow,
   },
   mockCardMuted: {
     backgroundColor: "#F5F7F1",

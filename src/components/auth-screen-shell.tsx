@@ -34,11 +34,7 @@ export function AuthScreenShell({
 }
 
 const shadow = {
-  shadowColor: "#182019",
-  shadowOffset: { width: 0, height: 18 },
-  shadowOpacity: 0.08,
-  shadowRadius: 30,
-  elevation: 7,
+  boxShadow: "0px 18px 30px rgba(24, 32, 25, 0.08)",
 } as const;
 
 const styles = StyleSheet.create({
