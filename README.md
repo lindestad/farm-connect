@@ -2,7 +2,7 @@
 
 FarmConnect is a mobile-first marketplace for local farms. Customers can browse weekly produce, reserve items, and choose a pickup slot at the farm or at a market day. Farmers can publish inventory, open pickup windows, and advertise recurring markets such as Saturdays.
 
-The app is built with Expo, React Native, TypeScript, and Expo Router.
+The app is built with Expo, React Native, TypeScript, Expo Router, and Supabase.
 Unit and component tests use Jest with Expo's `jest-expo` preset.
 
 ## Current scope
@@ -11,7 +11,7 @@ Unit and component tests use Jest with Expo's `jest-expo` preset.
 - farm pickup slots
 - market day promotion
 - farmer-side reservation and packing concepts
-- Supabase integration planned for a later pass
+- Supabase bootstrap and env wiring
 
 ## Getting started
 
@@ -34,6 +34,23 @@ npm run android
 npm run ios
 npm run web
 ```
+
+## Supabase setup
+
+Copy the example environment file and add your project values:
+
+```bash
+cp .env.example .env.local
+```
+
+Expected variables:
+
+```bash
+EXPO_PUBLIC_SUPABASE_URL=...
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+The app uses Expo public env variables for the client-side URL and publishable key. `.env.local` is ignored by git.
 
 ## Quality checks
 

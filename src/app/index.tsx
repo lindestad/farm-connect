@@ -8,6 +8,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { isSupabaseConfigured, supabaseConfigError } from "../lib/supabase";
+
 const heroStats = [
   {
     value: "Pickup slots",
@@ -62,6 +64,18 @@ const marketHighlights = [
   "Fresh herbs",
 ];
 
+const configuredSupabaseHighlights = [
+  "Expo env wired",
+  "Session persistence ready",
+  "Auth can land next",
+];
+
+const missingSupabaseHighlights = [
+  "Add .env.local",
+  "Restart Expo after env changes",
+  "Use publishable key only",
+];
+
 const customerFlow = [
   "Find a nearby farm or Saturday market",
   "Choose produce and reserve it",
@@ -91,6 +105,9 @@ export default function Index() {
   const phoneWidth = width < 390 ? 250 : 286;
   const phoneHeight = width < 390 ? 520 : 580;
   const previewHeight = width < 390 ? 590 : 660;
+  const supabaseHighlights = isSupabaseConfigured
+    ? configuredSupabaseHighlights
+    : missingSupabaseHighlights;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -356,6 +373,27 @@ export default function Index() {
                   <View key={step} style={styles.flowStep}>
                     <Text style={styles.flowIndex}>0{index + 1}</Text>
                     <Text style={styles.flowText}>{step}</Text>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.bootstrapCard}>
+              <Text style={styles.bootstrapEyebrow}>Supabase bootstrap</Text>
+              <Text style={styles.bootstrapTitle}>
+                {isSupabaseConfigured
+                  ? "Backend config is wired for Expo."
+                  : "Supabase environment variables still need local setup."}
+              </Text>
+              <Text style={styles.bootstrapBody}>
+                {isSupabaseConfigured
+                  ? "The app now has a reusable Supabase client with persisted auth sessions, so the next pass can add sign-in, role-aware onboarding, and real data queries."
+                  : `${supabaseConfigError} Add the values to .env.local and restart Expo so the app can initialize the client.`}
+              </Text>
+              <View style={styles.footerChipRow}>
+                {supabaseHighlights.map((item) => (
+                  <View key={item} style={styles.bootstrapChip}>
+                    <Text style={styles.bootstrapChipText}>{item}</Text>
                   </View>
                 ))}
               </View>
@@ -948,6 +986,47 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 12,
     ...shadow,
+  },
+  bootstrapCard: {
+    backgroundColor: "#F7FBF5",
+    borderWidth: 1,
+    borderColor: "#D6E3D0",
+    borderRadius: 32,
+    padding: 24,
+    gap: 12,
+    ...shadow,
+  },
+  bootstrapEyebrow: {
+    color: "#2F6A3E",
+    fontSize: 12,
+    fontWeight: "800",
+    textTransform: "uppercase",
+    letterSpacing: 1.1,
+  },
+  bootstrapTitle: {
+    color: "#182019",
+    fontSize: 28,
+    lineHeight: 32,
+    fontWeight: "800",
+    letterSpacing: -0.8,
+    maxWidth: 760,
+  },
+  bootstrapBody: {
+    color: "#5D6A60",
+    fontSize: 15,
+    lineHeight: 23,
+    maxWidth: 780,
+  },
+  bootstrapChip: {
+    backgroundColor: "#E7F1E4",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  bootstrapChipText: {
+    color: "#2F6A3E",
+    fontSize: 12,
+    fontWeight: "700",
   },
   footerEyebrow: {
     color: "#2F6A3E",
