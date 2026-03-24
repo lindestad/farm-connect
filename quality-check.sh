@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "Running code formatting..."
+npm run format
+echo "Code formatting completed!"
+
+echo ""
+
+echo "Checking code formatting..."
+npm run format:check
+echo "Code formatting check passed!"
+
 echo "Running ESLint..."
 npm run lint
 echo "ESLint passed!"
@@ -18,13 +28,3 @@ npm test
 echo "All tests passed!"
 
 echo ""
-
-echo "Running code formatting..."
-npm run format
-echo "Code formatting completed!"
-
-echo ""
-
-echo "Checking code formatting..."
-npm run format:check
-echo "Code formatting check passed!"
