@@ -21,7 +21,23 @@ Unit and component tests use Jest with Expo's `jest-expo` preset.
 npm install
 ```
 
-2. Start the Expo dev server:
+2. Install EAS CLI
+
+```bash
+npm install --global eas-cli # Installs the tool globally on your system
+```
+
+Project should be linked to expo.dev under our organization automically via the app.json,
+which now includes a project-id refrence. If you encounter any issues with below command run:
+`eas init # link to farm-connect`
+
+3. Setup .env variables
+
+```bash
+eas env:pull # choose development when prompted
+```
+
+4. Start the Expo dev server:
 
 ```bash
 npm run start
@@ -36,19 +52,6 @@ npm run web
 ```
 
 ## Supabase setup
-
-Copy the example environment file and add your project values:
-
-```bash
-cp .env.example .env.local
-```
-
-Expected variables:
-
-```bash
-EXPO_PUBLIC_SUPABASE_URL=...
-EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
-```
 
 The app uses Expo public env variables for the client-side URL and publishable key. `.env.local` is ignored by git.
 
