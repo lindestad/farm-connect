@@ -24,10 +24,12 @@
    ```
 6. **Setup .env**
 
-   **Note:** You need to login first via the CLI: ```eas login```
+   **Note:** You need to login first via the CLI: `eas login`
+
    ```bash
    eas env:pull # choose development when prompted
    ```
+
 ---
 
 ## How to Contribute
