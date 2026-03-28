@@ -14,8 +14,20 @@
    ```bash
    git checkout -b [branch-name]
    ```
-4. **Install dependencies** and **setup .env variables.**
+4. **Install dependencies**
+   ```bash
+   npm install
+   ```
+5. **Install EAS CLI**
+   ```bash
+   npm install --global eas-cli # Installs the tool globally on your system
+   ```
+6. **Setup .env**
 
+   **Note:** You need to login first via the CLI: ```eas login```
+   ```bash
+   eas env:pull # choose development when prompted
+   ```
 ---
 
 ## How to Contribute
