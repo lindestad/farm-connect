@@ -17,39 +17,39 @@ Unit and component tests use Jest with Expo's `jest-expo` preset.
 
 1. Install dependencies:
 
-```bash
-npm install
-```
+   ```bash
+   npm install
+   ```
 
 2. Install EAS CLI
 
-```bash
-npm install --global eas-cli # Installs the tool globally on your system
-```
+   ```bash
+   npm install --global eas-cli # Installs the tool globally on your system
+   ```
 
-Project should be linked to expo.dev under our organization automically via the app.json,
-which now includes a project-id refrence. If you encounter any issues with below command run:
-`eas init # link to farm-connect`
+   Project should be linked to expo.dev under our organization automically via the app.json,
+   which now includes a project-id refrence. If you encounter any issues with below command run:
+   `eas init # link to farm-connect` 3. Setup .env variables
 
-3. Setup .env variables
+   **Note:** You need to login first via the CLI: `eas login`
 
-```bash
-eas env:pull # choose development when prompted
-```
+   ```bash
+   eas env:pull # choose development when prompted
+   ```
 
-4. Start the Expo dev server:
+   4. Start the Expo dev server:
 
-```bash
-npm run start
-```
+   ```bash
+   npm run start
+   ```
 
-You can also launch specific targets:
+   You can also launch specific targets:
 
-```bash
-npm run android
-npm run ios
-npm run web
-```
+   ```bash
+   npm run android
+   npm run ios
+   npm run web
+   ```
 
 ## Supabase setup
 
