@@ -330,6 +330,23 @@ export default function Index() {
               </View>
             </View>
 
+            <View style={styles.authStatusCard}>
+              <Text style={styles.bootstrapEyebrow}>Payments</Text>
+              <Text style={styles.bootstrapTitle}>Test the payment flow</Text>
+              <Text style={styles.bootstrapBody}>
+                Try out the Stripe payment sheet with a mock order from Solberg
+                Gård.
+              </Text>
+              <View style={styles.heroActionRow}>
+                <Link
+                  href={"/order/order-screen" as Href}
+                  style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                >
+                  Go to order
+                </Link>
+              </View>
+            </View>
+
             <View style={styles.band}>
               <View style={[styles.bandGrid, isMedium && styles.bandGridWide]}>
                 <View style={styles.bandCopy}>
