@@ -1,7 +1,8 @@
-import { Stack, type Href, usePathname, useRouter } from "expo-router";
+import { Stack, usePathname, useRouter, type Href } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
+import { StripeProvider } from "@stripe/stripe-react-native";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
 
 function RootNavigator() {
@@ -50,7 +51,11 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <RootNavigator />
+      <StripeProvider
+        publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+      >
+        <RootNavigator />
+      </StripeProvider>
     </AuthProvider>
   );
 }
