@@ -13,6 +13,24 @@ Unit and component tests use Jest with Expo's `jest-expo` preset.
 - farmer-side reservation and packing concepts
 - Supabase bootstrap, auth, and persisted sessions
 
+## Payments
+
+The app uses Stripe for payment processing via the `@stripe/stripe-react-native` SDK.
+
+Payments are handled through a Supabase Edge Function (`create-payment-intent`) which creates a Stripe PaymentIntent server-side, keeping the secret key off the client. Edge function is deployed to Supabase.
+
+The `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` is pulled automatically via `eas env:pull`.
+
+> **Note:** Web builds will not work. The app targets Android platform. Reason: `@stripe/stripe-react-native` is a native-only library and cannot run in a browser environment. Expo Go is also not supported, create a local build with "npx expo run:android". Check `CONTRIBUTE.MD` for more detailed instructions.
+
+To test a payment, use the following Stripe test card:
+
+| Field  | Value                 |
+| ------ | --------------------- |
+| Number | `4242 4242 4242 4242` |
+| Expiry | `05/55`               |
+| CVC    | `555`                 |
+
 ## Getting started
 
 1. Install dependencies:
