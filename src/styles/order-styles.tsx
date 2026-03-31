@@ -1,0 +1,75 @@
+import { StyleSheet } from "react-native";
+
+// This is AI generated code to match the styling of the landing page
+export const orderStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F6F7F3",
+    padding: 18,
+    justifyContent: "center",
+  },
+  card: {
+    backgroundColor: "rgba(255,255,255,0.88)",
+    borderWidth: 1,
+    borderColor: "#DDE4D9",
+    borderRadius: 32,
+    padding: 24,
+    gap: 12,
+    boxShadow: "0px 18px 30px rgba(24, 32, 25, 0.08)",
+  },
+  eyebrow: {
+    alignSelf: "flex-start",
+    backgroundColor: "#EEF5EB",
+    borderWidth: 1,
+    borderColor: "#DCE8D7",
+    color: "#2F6A3E",
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.4,
+  },
+  title: {
+    color: "#182019",
+    fontSize: 28,
+    fontWeight: "800",
+    letterSpacing: -0.8,
+    lineHeight: 32,
+  },
+  detail: {
+    color: "#5D6A60",
+    fontSize: 15,
+    lineHeight: 23,
+  },
+  price: {
+    color: "#182019",
+    fontSize: 23,
+    fontWeight: "800",
+  },
+  button: {
+    backgroundColor: "#2F6A3E",
+    borderRadius: 18,
+    padding: 16,
+    alignItems: "center",
+    marginTop: 8,
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontWeight: "700",
+    fontSize: 14,
+  },
+  successEyebrow: {
+    alignSelf: "flex-start",
+    backgroundColor: "#EEF5EB",
+    borderWidth: 1,
+    borderColor: "#DCE8D7",
+    color: "#2F6A3E",
+    borderRadius: 999,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.4,
+  },
+});
