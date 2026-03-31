@@ -13,9 +13,13 @@ import type { Session, User } from "@supabase/supabase-js";
 import {
   fetchProfile,
   normalizeFullName,
+  normalizeOptionalText,
   normalizeProfileRole,
+  normalizePreferredContactMethod,
   type ProfileRole,
+  type PreferredContactMethod,
   type UserProfile,
+  updateProfile,
   upsertProfileFromUser,
 } from "../lib/profiles";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
@@ -29,6 +33,16 @@ type SignUpResult = {
 type SignUpProfileDetails = {
   fullName: string;
   role: ProfileRole;
+};
+
+type UpdateProfileDetails = {
+  displayName: string;
+  fullName: string;
+  phoneNumber: string;
+  bio: string;
+  locationLabel: string;
+  preferredContactMethod: PreferredContactMethod;
+  defaultPickupNotes: string;
 };
 
 type AuthContextValue = {
@@ -51,6 +65,7 @@ type AuthContextValue = {
   clearAuthLinkState: () => void;
   makeEmailRedirectUrl: () => string;
   refreshProfile: () => Promise<void>;
+  updateOwnProfile: (details: UpdateProfileDetails) => Promise<UserProfile>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -360,6 +375,62 @@ export function AuthProvider({ children }: PropsWithChildren) {
       },
       async refreshProfile() {
         await syncProfile(session?.user ?? null);
+      },
+      async updateOwnProfile(details) {
+        if (!supabase) {
+          throw new Error("Supabase is not configured.");
+        }
+
+        if (!session?.user) {
+          throw new Error("You must be signed in to update your profile.");
+        }
+
+        const fullName = normalizeFullName(details.fullName);
+
+        if (!fullName) {
+          throw new Error("Enter your name before saving the profile.");
+        }
+
+        const displayName =
+          normalizeOptionalText(details.displayName) ?? fullName;
+        const phoneNumber = normalizeOptionalText(details.phoneNumber);
+        const bio = normalizeOptionalText(details.bio);
+        const locationLabel = normalizeOptionalText(details.locationLabel);
+        const preferredContactMethod = normalizePreferredContactMethod(
+          details.preferredContactMethod,
+        );
+        const defaultPickupNotes = normalizeOptionalText(
+          details.defaultPickupNotes,
+        );
+        const nextProfile = await updateProfile(session.user.id, {
+          displayName,
+          fullName,
+          phoneNumber: phoneNumber ?? "",
+          bio: bio ?? "",
+          locationLabel: locationLabel ?? "",
+          preferredContactMethod,
+          defaultPickupNotes: defaultPickupNotes ?? "",
+        });
+        const { error } = await supabase.auth.updateUser({
+          data: {
+            display_name: displayName,
+            full_name: fullName,
+            phone_number: phoneNumber,
+            bio,
+            location_label: locationLabel,
+            preferred_contact_method: preferredContactMethod,
+            default_pickup_notes: defaultPickupNotes,
+          },
+        });
+
+        if (error) {
+          throw error;
+        }
+
+        setProfile(nextProfile);
+        setProfileError(null);
+
+        return nextProfile;
       },
     }),
     [
