@@ -32,6 +32,22 @@
 
 ---
 
+## Creating a local development build
+
+A local build is required because the app uses native libraries that are not supported in Expo Go or Web.
+
+1. Make sure you have Android Studio installed with an emulator set up, or a physical Android device connected.
+
+2. Make sure `OpenJDK 17` is installed.
+
+3. Run the following command to build and launch the app:
+
+```bash
+   npx expo run:android
+```
+
+This compiles the native code and installs the app directly on your device or emulator.
+
 ## How to Contribute
 
 ### Reporting Bugs
