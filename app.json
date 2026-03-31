@@ -40,7 +40,7 @@
       [
         "@stripe/stripe-react-native",
         {
-          "enableGooglePay": false
+          "enableGooglePay": true
         }
       ]
     ],

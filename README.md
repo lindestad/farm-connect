@@ -25,11 +25,11 @@ The `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` is pulled automatically via `eas env:pu
 
 To test a payment, use the following Stripe test card:
 
-| Field      | Value               |
-|------------|---------------------|
-| Number     | `4242 4242 4242 4242` |
-| Expiry     | `05/55`             |
-| CVC        | `555`               |
+| Field  | Value                 |
+| ------ | --------------------- |
+| Number | `4242 4242 4242 4242` |
+| Expiry | `05/55`               |
+| CVC    | `555`                 |
 
 ## Getting started
 
