@@ -27,6 +27,12 @@
     "plugins": [
       "expo-router",
       [
+        "react-native-maps",
+        {
+           "androidGoogleMapsApiKey": "AIzaSyCRF2RPklf3lpsvbX5xz-YXW6l3owPD2Hk"
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "backgroundColor": "#208AEF",
