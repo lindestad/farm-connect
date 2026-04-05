@@ -1,0 +1,489 @@
+{
+  "source": "Matvaretabellen",
+  "language": [
+    "nb",
+    "en"
+  ],
+  "totalRequested": 53,
+  "totalMatched": 53,
+  "unmatched": [],
+  "items": [
+    {
+      "id": "potet",
+      "name_nb": "Potet",
+      "name_en": "Potatoes, storage, raw",
+      "foodId": "06.004",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Potet, lagringspotet, rå",
+      "apiFoodName_en": "Potatoes, storage, raw"
+    },
+    {
+      "id": "gulrot",
+      "name_nb": "Gulrot",
+      "name_en": "Carrot, Norwegian, raw",
+      "foodId": "06.036",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Gulrot, norsk, rå",
+      "apiFoodName_en": "Carrot, Norwegian, raw"
+    },
+    {
+      "id": "lok",
+      "name_nb": "Løk",
+      "name_en": "Onion, Norwegian, raw",
+      "foodId": "06.042",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Løk, gul, norsk, rå",
+      "apiFoodName_en": "Onion, Norwegian, raw"
+    },
+    {
+      "id": "hvitlok",
+      "name_nb": "Hvitløk",
+      "name_en": "Garlic, raw",
+      "foodId": "06.038",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Hvitløk, rå",
+      "apiFoodName_en": "Garlic, raw"
+    },
+    {
+      "id": "purre",
+      "name_nb": "Purre",
+      "name_en": "Leek, Norwegian, raw",
+      "foodId": "06.052",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Purreløk, norsk, rå",
+      "apiFoodName_en": "Leek, Norwegian, raw"
+    },
+    {
+      "id": "hodekal",
+      "name_nb": "Hodekål",
+      "name_en": "Cabbage, white, Norwegian, raw",
+      "foodId": "06.037",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Hodekål, norsk, rå",
+      "apiFoodName_en": "Cabbage, white, Norwegian, raw"
+    },
+    {
+      "id": "rodkal",
+      "name_nb": "Rødkål",
+      "name_en": "Cabbage, red, in vinegar",
+      "foodId": "06.268",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Rødkål",
+      "apiFoodName_en": "Cabbage, red, in vinegar"
+    },
+    {
+      "id": "blomkal",
+      "name_nb": "Blomkål",
+      "name_en": "Cauliflower, imported, raw",
+      "foodId": "06.852",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Blomkål, importert, rå",
+      "apiFoodName_en": "Cauliflower, imported, raw"
+    },
+    {
+      "id": "brokkoli",
+      "name_nb": "Brokkoli",
+      "name_en": "Broccoli, Norwegian, raw",
+      "foodId": "06.018",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Brokkoli, norsk, rå",
+      "apiFoodName_en": "Broccoli, Norwegian, raw"
+    },
+    {
+      "id": "rosenkal",
+      "name_nb": "Rosenkål",
+      "name_en": "Brussel sprouts, Norwegian, raw",
+      "foodId": "06.055",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Rosenkål, norsk, rå",
+      "apiFoodName_en": "Brussel sprouts, Norwegian, raw"
+    },
+    {
+      "id": "kinakal",
+      "name_nb": "Kinakål",
+      "name_en": "Cabbage, Chinese, Norwegian, raw",
+      "foodId": "06.040",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Kinakål, norsk, rå",
+      "apiFoodName_en": "Cabbage, Chinese, Norwegian, raw"
+    },
+    {
+      "id": "kalrot",
+      "name_nb": "Kålrot",
+      "name_en": "Swede, Norwegian, raw",
+      "foodId": "06.041",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Kålrot, kålrabi, norsk, rå",
+      "apiFoodName_en": "Swede, Norwegian, raw"
+    },
+    {
+      "id": "rodbete",
+      "name_nb": "Rødbete",
+      "name_en": "Beetroot, Norwegian, raw",
+      "foodId": "06.057",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Rødbete, norsk, rå",
+      "apiFoodName_en": "Beetroot, Norwegian, raw"
+    },
+    {
+      "id": "knollselleri",
+      "name_nb": "Knollselleri",
+      "name_en": "Celeriac root, raw",
+      "foodId": "06.060",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Sellerirot, rå",
+      "apiFoodName_en": "Celeriac root, raw"
+    },
+    {
+      "id": "agurk",
+      "name_nb": "Agurk",
+      "name_en": "Cucumber, Norwegian, raw",
+      "foodId": "06.010",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Agurk, norsk, rå",
+      "apiFoodName_en": "Cucumber, Norwegian, raw"
+    },
+    {
+      "id": "tomat",
+      "name_nb": "Tomat",
+      "name_en": "Tomato, Norwegian, raw",
+      "foodId": "06.069",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Tomat, norsk, rå",
+      "apiFoodName_en": "Tomato, Norwegian, raw"
+    },
+    {
+      "id": "isbergsalat",
+      "name_nb": "Isbergsalat",
+      "name_en": "Lettuce, Iceberg, Norwegian. raw",
+      "foodId": "06.281",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Isbergsalat, issalat, norsk, rå",
+      "apiFoodName_en": "Lettuce, Iceberg, Norwegian. raw"
+    },
+    {
+      "id": "salat",
+      "name_nb": "Salat",
+      "name_en": "Lettuce, Rapid, Norwegian",
+      "foodId": "06.097",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Rapidsalat, norsk, rå",
+      "apiFoodName_en": "Lettuce, Rapid, Norwegian"
+    },
+    {
+      "id": "spinat",
+      "name_nb": "Spinat",
+      "name_en": "Spinach, raw",
+      "foodId": "06.064",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Spinat, rå",
+      "apiFoodName_en": "Spinach, raw"
+    },
+    {
+      "id": "gronnkal",
+      "name_nb": "Grønnkål",
+      "name_en": "Kale, raw",
+      "foodId": "06.035",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Grønnkål, rå",
+      "apiFoodName_en": "Kale, raw"
+    },
+    {
+      "id": "nepe",
+      "name_nb": "Nepe",
+      "name_en": "Turnip, Norwegian, raw",
+      "foodId": "06.046",
+      "category": "grønnsaker",
+      "apiFoodName_nb": "Nepe, norsk, rå",
+      "apiFoodName_en": "Turnip, Norwegian, raw"
+    },
+    {
+      "id": "eple",
+      "name_nb": "Eple",
+      "name_en": "Apple, unspecified, raw",
+      "foodId": "06.758",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Eple, uspesifisert, rå",
+      "apiFoodName_en": "Apple, unspecified, raw"
+    },
+    {
+      "id": "paere",
+      "name_nb": "Pære",
+      "name_en": "Pear, unspecified, raw",
+      "foodId": "06.760",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Pære, uspesifisert, rå",
+      "apiFoodName_en": "Pear, unspecified, raw"
+    },
+    {
+      "id": "plomme",
+      "name_nb": "Plomme",
+      "name_en": "Plums, raw",
+      "foodId": "06.544",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Plomme, rå",
+      "apiFoodName_en": "Plums, raw"
+    },
+    {
+      "id": "kirsebaer",
+      "name_nb": "Kirsebær",
+      "name_en": "Cherries, raw",
+      "foodId": "06.506",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Kirsebær, rå",
+      "apiFoodName_en": "Cherries, raw"
+    },
+    {
+      "id": "morell",
+      "name_nb": "Morell",
+      "name_en": "Cherries, sweet, raw",
+      "foodId": "06.507",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Moreller, rå",
+      "apiFoodName_en": "Cherries, sweet, raw"
+    },
+    {
+      "id": "jordbaer",
+      "name_nb": "Jordbær",
+      "name_en": "Strawberries, raw",
+      "foodId": "06.504",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Jordbær, rå",
+      "apiFoodName_en": "Strawberries, raw"
+    },
+    {
+      "id": "bringebaer",
+      "name_nb": "Bringebær",
+      "name_en": "Raspberries, raw",
+      "foodId": "06.503",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Bringebær, rå",
+      "apiFoodName_en": "Raspberries, raw"
+    },
+    {
+      "id": "solbaer",
+      "name_nb": "Solbær",
+      "name_en": "Blackcurrants, raw",
+      "foodId": "06.513",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Solbær, rå",
+      "apiFoodName_en": "Blackcurrants, raw"
+    },
+    {
+      "id": "rips",
+      "name_nb": "Rips",
+      "name_en": "Redcurrants, raw",
+      "foodId": "06.512",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Rips, rå",
+      "apiFoodName_en": "Redcurrants, raw"
+    },
+    {
+      "id": "stikkelsbaer",
+      "name_nb": "Stikkelsbær",
+      "name_en": "Gooseberries, raw",
+      "foodId": "06.514",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Stikkelsbær, rå",
+      "apiFoodName_en": "Gooseberries, raw"
+    },
+    {
+      "id": "blabaer",
+      "name_nb": "Blåbær",
+      "name_en": "Blueberries, raw",
+      "foodId": "06.502",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Blåbær, rå",
+      "apiFoodName_en": "Blueberries, raw"
+    },
+    {
+      "id": "tyttebaer",
+      "name_nb": "Tyttebær",
+      "name_en": "Lingonberries, cowberries, raw",
+      "foodId": "06.515",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Tyttebær, rå",
+      "apiFoodName_en": "Lingonberries, cowberries, raw"
+    },
+    {
+      "id": "bjornebaer",
+      "name_nb": "Bjørnebær",
+      "name_en": "Blackberries, raw",
+      "foodId": "06.501",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Bjørnebær, rå",
+      "apiFoodName_en": "Blackberries, raw"
+    },
+    {
+      "id": "rabarbra",
+      "name_nb": "Rabarbra",
+      "name_en": "Rhubarb, raw",
+      "foodId": "06.053",
+      "category": "frukt og bær",
+      "apiFoodName_nb": "Rabarbra, rå",
+      "apiFoodName_en": "Rhubarb, raw"
+    },
+    {
+      "id": "persille",
+      "name_nb": "Persille",
+      "name_en": "Parsley, herb, Norwegian, raw",
+      "foodId": "06.050",
+      "category": "urter og krydder",
+      "apiFoodName_nb": "Persille, norsk, rå",
+      "apiFoodName_en": "Parsley, herb, Norwegian, raw"
+    },
+    {
+      "id": "dill",
+      "name_nb": "Dill",
+      "name_en": "Dill, raw",
+      "foodId": "06.120",
+      "category": "urter og krydder",
+      "apiFoodName_nb": "Dill, rå",
+      "apiFoodName_en": "Dill, raw"
+    },
+    {
+      "id": "gresslok",
+      "name_nb": "Gressløk",
+      "name_en": "Chives, raw",
+      "foodId": "06.034",
+      "category": "urter og krydder",
+      "apiFoodName_nb": "Gressløk, rå",
+      "apiFoodName_en": "Chives, raw"
+    },
+    {
+      "id": "basilikum",
+      "name_nb": "Basilikum",
+      "name_en": "Basil, fresh",
+      "foodId": "06.111",
+      "category": "urter og krydder",
+      "apiFoodName_nb": "Basilikum, rå",
+      "apiFoodName_en": "Basil, fresh"
+    },
+    {
+      "id": "mynte",
+      "name_nb": "Mynte",
+      "name_en": "Mint, raw",
+      "foodId": "06.259",
+      "category": "urter og krydder",
+      "apiFoodName_nb": "Mynte, rå",
+      "apiFoodName_en": "Mint, raw"
+    },
+    {
+      "id": "hasselnott",
+      "name_nb": "Hasselnøtt",
+      "name_en": "Hazelnuts",
+      "foodId": "06.553",
+      "category": "nøtter og frø",
+      "apiFoodName_nb": "Hasselnøtter",
+      "apiFoodName_en": "Hazelnuts"
+    },
+    {
+      "id": "valnott",
+      "name_nb": "Valnøtt",
+      "name_en": "Walnuts",
+      "foodId": "06.560",
+      "category": "nøtter og frø",
+      "apiFoodName_nb": "Valnøtter",
+      "apiFoodName_en": "Walnuts"
+    },
+    {
+      "id": "solsikkefro",
+      "name_nb": "Solsikkefrø",
+      "name_en": "Sunflower seeds",
+      "foodId": "05.126",
+      "category": "nøtter og frø",
+      "apiFoodName_nb": "Solsikkefrø",
+      "apiFoodName_en": "Sunflower seeds"
+    },
+    {
+      "id": "linfro",
+      "name_nb": "Linfrø",
+      "name_en": "Linseeds, flax seeds, crushed",
+      "foodId": "05.012",
+      "category": "nøtter og frø",
+      "apiFoodName_nb": "Linfrø, knuste",
+      "apiFoodName_en": "Linseeds, flax seeds, crushed"
+    },
+    {
+      "id": "egg",
+      "name_nb": "Egg",
+      "name_en": "Egg, raw",
+      "foodId": "02.001",
+      "category": "gårdsvarer",
+      "apiFoodName_nb": "Egg, rå",
+      "apiFoodName_en": "Egg, raw"
+    },
+    {
+      "id": "helmelk",
+      "name_nb": "Helmelk",
+      "name_en": "Milk, whole, unspecified",
+      "foodId": "01.236",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Helmelk, uspesifisert",
+      "apiFoodName_en": "Milk, whole, unspecified"
+    },
+    {
+      "id": "lettmelk",
+      "name_nb": "Lettmelk",
+      "name_en": "Milk, semi-skimmed, unspecified",
+      "foodId": "01.292",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Lettmelk, uspesifisert",
+      "apiFoodName_en": "Milk, semi-skimmed, unspecified"
+    },
+    {
+      "id": "smor",
+      "name_nb": "Smør",
+      "name_en": "Butter",
+      "foodId": "08.005",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Smør",
+      "apiFoodName_en": "Butter"
+    },
+    {
+      "id": "yoghurt",
+      "name_nb": "Yoghurt",
+      "name_en": "Yoghurt, whole milk, plain",
+      "foodId": "01.011",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Yoghurt, naturell",
+      "apiFoodName_en": "Yoghurt, whole milk, plain"
+    },
+    {
+      "id": "cottage_cheese",
+      "name_nb": "Cottage cheese",
+      "name_en": "Cottage cheese",
+      "foodId": "01.028",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Cottage cheese",
+      "apiFoodName_en": "Cottage cheese"
+    },
+    {
+      "id": "hvitost",
+      "name_nb": "Hvitost",
+      "name_en": "Cheese, white, unspecified",
+      "foodId": "01.185",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Gulost, uspesifisert",
+      "apiFoodName_en": "Cheese, white, unspecified"
+    },
+    {
+      "id": "geitost",
+      "name_nb": "Geitost",
+      "name_en": "Goat cheese, chevre, Naturell",
+      "foodId": "01.251",
+      "category": "meierivarer",
+      "apiFoodName_nb": "Chevre, geitost, naturell",
+      "apiFoodName_en": "Goat cheese, chevre, Naturell"
+    },
+    {
+      "id": "honning",
+      "name_nb": "Honning",
+      "name_en": "Honey",
+      "foodId": "09.003",
+      "category": "gårdsvarer",
+      "apiFoodName_nb": "Honning",
+      "apiFoodName_en": "Honey"
+    }
+  ]
+}

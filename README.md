@@ -131,6 +131,24 @@ Check formatting without changing files:
 npm run format:check
 ```
 
+## Generate produce data
+
+Run this script to generate `produceData.json` from Matvaretabellen data and the curated produce list in `src/data/produceList.ts`.
+
+Each produce item in `src/data/produceList.ts` must include a `foodId` that matches the correct Matvaretabellen entry. This `foodId` is used as the stable reference when generating product data. New items must therefore be matched manually in Matvaretabellen before they are added to the list.
+
+Input:
+- `src/data/produceList.ts`
+
+Run the script from the project root:
+
+```bash
+npx tsx scripts/generateProductData.ts
+```
+
+This command regenerates:
+- `src/data/produceData.json`
+
 ## CI
 
 GitHub Actions runs the quality workflow on:
