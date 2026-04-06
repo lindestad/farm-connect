@@ -5,13 +5,48 @@ import { produceList } from "../src/data/produceList";
 type MatvaretabellenFood = {
     foodId?: string;
     foodName?: string;
+    uri?: string;
+    // Energy in kj
+    energy?: {
+        quantity?: number;
+        unit?: string;
+        sourceId?: string;
+    };
+    // Energy in kcal
+    calories?: {
+        quantity?: number;
+        unit?: string;
+        sourceId?: string;
+    };
+    // Other nutrients
+    constituents?: {
+        nutrientId?: string;
+        quantity?: number;
+        unit?: string;
+        sourceId?: string;
+    }[];
     [key: string]: unknown;
+};
+
+// Final nutrition table
+type NutritionData = {
+    per: "100g";
+    energy_kj: number | null;
+    energy_kcal: number | null;
+    fat_g: number | null;
+    saturated_fat_g: number | null;
+    carbohydrates_g: number | null;
+    sugars_g: number | null;
+    fiber_g: number | null;
+    protein_g: number | null;
+    salt_g: number | null;
 };
 
 type MatvaretabellenFoodResponse = {
     foods: MatvaretabellenFood[];
 };
 
+// Final product table 
 type ProductDataItem = {
     id: string;
     name_nb: string;
@@ -20,6 +55,18 @@ type ProductDataItem = {
     category: string;
     apiFoodName_nb: string | null;
     apiFoodName_en: string | null;
+    matvareUrl: string | null;
+    nutrition: NutritionData;
+};
+
+const nutrientIdMap = {
+    fat_g: "Fett",
+    saturated_fat_g: "Mettet",
+    carbohydrates_g: "Karbo",
+    sugars_g: "Mono+Di",
+    fiber_g: "Fiber",
+    protein_g: "Protein",
+    salt_g: "NaCl",
 };
 
 async function fetchFoods(language: "nb" | "en"): Promise<MatvaretabellenFood[]> {
@@ -53,6 +100,42 @@ function buildFoodIdLookup(foods: MatvaretabellenFood[]): Map<string, Matvaretab
     return lookup;
 }
 
+function buildConstituentLookup(constituents: MatvaretabellenFood["constituents"]): Map<string, number> {
+    const lookup = new Map<string, number>();
+
+    if (!Array.isArray(constituents)) {
+        return lookup;
+    }
+
+    for (const constituent of constituents) {
+        if (typeof constituent.nutrientId !== "string" || typeof constituent.quantity !== "number") {
+            continue;
+        }
+
+        if (!lookup.has(constituent.nutrientId)) {
+            lookup.set(constituent.nutrientId, constituent.quantity);
+        }
+    }
+    return lookup;
+}
+
+function extractNutrition(food: MatvaretabellenFood | null): NutritionData {
+    const constituentsLookup = buildConstituentLookup(food?.constituents);
+
+    return {
+        per: "100g",
+        energy_kj: typeof food?.energy?.quantity === "number" ? food.energy.quantity : null,
+        energy_kcal: typeof food?.calories?.quantity === "number" ? food.calories.quantity : null,
+        fat_g: constituentsLookup.get(nutrientIdMap.fat_g) ?? null,
+        saturated_fat_g: constituentsLookup.get(nutrientIdMap.saturated_fat_g) ?? null,
+        carbohydrates_g: constituentsLookup.get(nutrientIdMap.carbohydrates_g) ?? null,
+        sugars_g: constituentsLookup.get(nutrientIdMap.sugars_g) ?? null,
+        fiber_g: constituentsLookup.get(nutrientIdMap.fiber_g) ?? null,
+        protein_g: constituentsLookup.get(nutrientIdMap.protein_g) ?? null,
+        salt_g: constituentsLookup.get(nutrientIdMap.salt_g) ?? null,
+    };
+}
+
 async function generateProductData(): Promise<void> {
     const foods_nb = await fetchFoods("nb");
     const foods_en = await fetchFoods("en");
@@ -72,6 +155,8 @@ async function generateProductData(): Promise<void> {
             category: produce.category,
             apiFoodName_nb: matchedFood_nb?.foodName ?? null,
             apiFoodName_en: matchedFood_en?.foodName ?? null,
+            matvareUrl: matchedFood_nb?.uri ?? null,
+            nutrition: extractNutrition(matchedFood_nb),
         };
     });
 

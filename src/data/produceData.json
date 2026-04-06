@@ -15,7 +15,20 @@
       "foodId": "06.004",
       "category": "grønnsaker",
       "apiFoodName_nb": "Potet, lagringspotet, rå",
-      "apiFoodName_en": "Potatoes, storage, raw"
+      "apiFoodName_en": "Potatoes, storage, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/potet-lagringspotet-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 340,
+        "energy_kcal": 80,
+        "fat_g": 0.1,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 17.1,
+        "sugars_g": 1.7,
+        "fiber_g": 2,
+        "protein_g": 1.9,
+        "salt_g": 0
+      }
     },
     {
       "id": "gulrot",
@@ -24,7 +37,20 @@
       "foodId": "06.036",
       "category": "grønnsaker",
       "apiFoodName_nb": "Gulrot, norsk, rå",
-      "apiFoodName_en": "Carrot, Norwegian, raw"
+      "apiFoodName_en": "Carrot, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/gulrot-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 107,
+        "energy_kcal": 25,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 5.3,
+        "sugars_g": 5.3,
+        "fiber_g": 2,
+        "protein_g": 0,
+        "salt_g": 0
+      }
     },
     {
       "id": "lok",
@@ -33,7 +59,20 @@
       "foodId": "06.042",
       "category": "grønnsaker",
       "apiFoodName_nb": "Løk, gul, norsk, rå",
-      "apiFoodName_en": "Onion, Norwegian, raw"
+      "apiFoodName_en": "Onion, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/lok-gul-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 124,
+        "energy_kcal": 30,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 4.4,
+        "sugars_g": 4.4,
+        "fiber_g": 4,
+        "protein_g": 1,
+        "salt_g": 0
+      }
     },
     {
       "id": "hvitlok",
@@ -42,7 +81,20 @@
       "foodId": "06.038",
       "category": "grønnsaker",
       "apiFoodName_nb": "Hvitløk, rå",
-      "apiFoodName_en": "Garlic, raw"
+      "apiFoodName_en": "Garlic, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/hvitlok-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 450,
+        "energy_kcal": 106,
+        "fat_g": 0.6,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 16.3,
+        "sugars_g": 1.6,
+        "fiber_g": 2,
+        "protein_g": 7.9,
+        "salt_g": 0
+      }
     },
     {
       "id": "purre",
@@ -51,7 +103,20 @@
       "foodId": "06.052",
       "category": "grønnsaker",
       "apiFoodName_nb": "Purreløk, norsk, rå",
-      "apiFoodName_en": "Leek, Norwegian, raw"
+      "apiFoodName_en": "Leek, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/purrelok-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 120,
+        "energy_kcal": 29,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 3.9,
+        "sugars_g": 3.9,
+        "fiber_g": 4,
+        "protein_g": 1.5,
+        "salt_g": 0
+      }
     },
     {
       "id": "hodekal",
@@ -60,7 +125,20 @@
       "foodId": "06.037",
       "category": "grønnsaker",
       "apiFoodName_nb": "Hodekål, norsk, rå",
-      "apiFoodName_en": "Cabbage, white, Norwegian, raw"
+      "apiFoodName_en": "Cabbage, white, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/hodekal-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 113,
+        "energy_kcal": 27,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 4.5,
+        "sugars_g": 4.5,
+        "fiber_g": 2,
+        "protein_g": 1.2,
+        "salt_g": 0
+      }
     },
     {
       "id": "rodkal",
@@ -69,7 +147,20 @@
       "foodId": "06.268",
       "category": "grønnsaker",
       "apiFoodName_nb": "Rødkål",
-      "apiFoodName_en": "Cabbage, red, in vinegar"
+      "apiFoodName_en": "Cabbage, red, in vinegar",
+      "matvareUrl": "https://www.matvaretabellen.no/rodkal/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 209,
+        "energy_kcal": 49,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 10.5,
+        "sugars_g": 10.5,
+        "fiber_g": 2,
+        "protein_g": 1,
+        "salt_g": 0.9
+      }
     },
     {
       "id": "blomkal",
@@ -78,7 +169,20 @@
       "foodId": "06.852",
       "category": "grønnsaker",
       "apiFoodName_nb": "Blomkål, importert, rå",
-      "apiFoodName_en": "Cauliflower, imported, raw"
+      "apiFoodName_en": "Cauliflower, imported, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/blomkal-importert-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 88,
+        "energy_kcal": 21,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 2.4,
+        "sugars_g": 2.4,
+        "fiber_g": 2,
+        "protein_g": 1.7,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "brokkoli",
@@ -87,7 +191,20 @@
       "foodId": "06.018",
       "category": "grønnsaker",
       "apiFoodName_nb": "Brokkoli, norsk, rå",
-      "apiFoodName_en": "Broccoli, Norwegian, raw"
+      "apiFoodName_en": "Broccoli, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/brokkoli-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 99,
+        "energy_kcal": 24,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 2,
+        "sugars_g": 2,
+        "fiber_g": 2,
+        "protein_g": 2.9,
+        "salt_g": 0
+      }
     },
     {
       "id": "rosenkal",
@@ -96,7 +213,20 @@
       "foodId": "06.055",
       "category": "grønnsaker",
       "apiFoodName_nb": "Rosenkål, norsk, rå",
-      "apiFoodName_en": "Brussel sprouts, Norwegian, raw"
+      "apiFoodName_en": "Brussel sprouts, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/rosenkal-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 221,
+        "energy_kcal": 53,
+        "fat_g": 0.6,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 4.4,
+        "sugars_g": 3.9,
+        "fiber_g": 5,
+        "protein_g": 5.1,
+        "salt_g": 0
+      }
     },
     {
       "id": "kinakal",
@@ -105,7 +235,20 @@
       "foodId": "06.040",
       "category": "grønnsaker",
       "apiFoodName_nb": "Kinakål, norsk, rå",
-      "apiFoodName_en": "Cabbage, Chinese, Norwegian, raw"
+      "apiFoodName_en": "Cabbage, Chinese, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/kinakal-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 63,
+        "energy_kcal": 15,
+        "fat_g": 0.1,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 1.8,
+        "sugars_g": 1.8,
+        "fiber_g": 1,
+        "protein_g": 1.1,
+        "salt_g": 0
+      }
     },
     {
       "id": "kalrot",
@@ -114,7 +257,20 @@
       "foodId": "06.041",
       "category": "grønnsaker",
       "apiFoodName_nb": "Kålrot, kålrabi, norsk, rå",
-      "apiFoodName_en": "Swede, Norwegian, raw"
+      "apiFoodName_en": "Swede, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/kalrot-kalrabi-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 118,
+        "energy_kcal": 28,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 4.9,
+        "sugars_g": 4.9,
+        "fiber_g": 3,
+        "protein_g": 0.8,
+        "salt_g": 0
+      }
     },
     {
       "id": "rodbete",
@@ -123,7 +279,20 @@
       "foodId": "06.057",
       "category": "grønnsaker",
       "apiFoodName_nb": "Rødbete, norsk, rå",
-      "apiFoodName_en": "Beetroot, Norwegian, raw"
+      "apiFoodName_en": "Beetroot, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/rodbete-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 206,
+        "energy_kcal": 49,
+        "fat_g": 0.2,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 8.9,
+        "sugars_g": 8.8,
+        "fiber_g": 3,
+        "protein_g": 1.6,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "knollselleri",
@@ -132,7 +301,20 @@
       "foodId": "06.060",
       "category": "grønnsaker",
       "apiFoodName_nb": "Sellerirot, rå",
-      "apiFoodName_en": "Celeriac root, raw"
+      "apiFoodName_en": "Celeriac root, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/sellerirot-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 91,
+        "energy_kcal": 22,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 2.5,
+        "sugars_g": 2.5,
+        "fiber_g": 3,
+        "protein_g": 1.3,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "agurk",
@@ -141,7 +323,20 @@
       "foodId": "06.010",
       "category": "grønnsaker",
       "apiFoodName_nb": "Agurk, norsk, rå",
-      "apiFoodName_en": "Cucumber, Norwegian, raw"
+      "apiFoodName_en": "Cucumber, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/agurk-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 38,
+        "energy_kcal": 9,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 1.3,
+        "sugars_g": 1.3,
+        "fiber_g": 0.4,
+        "protein_g": 0.8,
+        "salt_g": 0
+      }
     },
     {
       "id": "tomat",
@@ -150,7 +345,20 @@
       "foodId": "06.069",
       "category": "grønnsaker",
       "apiFoodName_nb": "Tomat, norsk, rå",
-      "apiFoodName_en": "Tomato, Norwegian, raw"
+      "apiFoodName_en": "Tomato, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/tomat-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 51,
+        "energy_kcal": 12,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 2.1,
+        "sugars_g": 2.1,
+        "fiber_g": 1,
+        "protein_g": 0.4,
+        "salt_g": 0
+      }
     },
     {
       "id": "isbergsalat",
@@ -159,7 +367,20 @@
       "foodId": "06.281",
       "category": "grønnsaker",
       "apiFoodName_nb": "Isbergsalat, issalat, norsk, rå",
-      "apiFoodName_en": "Lettuce, Iceberg, Norwegian. raw"
+      "apiFoodName_en": "Lettuce, Iceberg, Norwegian. raw",
+      "matvareUrl": "https://www.matvaretabellen.no/isbergsalat-issalat-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 48,
+        "energy_kcal": 11,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 1.8,
+        "sugars_g": 1.8,
+        "fiber_g": 0.3,
+        "protein_g": 1,
+        "salt_g": 0
+      }
     },
     {
       "id": "salat",
@@ -168,7 +389,20 @@
       "foodId": "06.097",
       "category": "grønnsaker",
       "apiFoodName_nb": "Rapidsalat, norsk, rå",
-      "apiFoodName_en": "Lettuce, Rapid, Norwegian"
+      "apiFoodName_en": "Lettuce, Rapid, Norwegian",
+      "matvareUrl": "https://www.matvaretabellen.no/rapidsalat-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 46,
+        "energy_kcal": 11,
+        "fat_g": 0.2,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 0.3,
+        "sugars_g": 0.3,
+        "fiber_g": 1,
+        "protein_g": 1.4,
+        "salt_g": 0
+      }
     },
     {
       "id": "spinat",
@@ -177,7 +411,20 @@
       "foodId": "06.064",
       "category": "grønnsaker",
       "apiFoodName_nb": "Spinat, rå",
-      "apiFoodName_en": "Spinach, raw"
+      "apiFoodName_en": "Spinach, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/spinat-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 70,
+        "energy_kcal": 17,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 0.1,
+        "sugars_g": 0.1,
+        "fiber_g": 3,
+        "protein_g": 2.8,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "gronnkal",
@@ -186,7 +433,20 @@
       "foodId": "06.035",
       "category": "grønnsaker",
       "apiFoodName_nb": "Grønnkål, rå",
-      "apiFoodName_en": "Kale, raw"
+      "apiFoodName_en": "Kale, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/gronnkal-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 150,
+        "energy_kcal": 36,
+        "fat_g": 0.7,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 2.2,
+        "sugars_g": 2.1,
+        "fiber_g": 4,
+        "protein_g": 3.3,
+        "salt_g": 0
+      }
     },
     {
       "id": "nepe",
@@ -195,7 +455,20 @@
       "foodId": "06.046",
       "category": "grønnsaker",
       "apiFoodName_nb": "Nepe, norsk, rå",
-      "apiFoodName_en": "Turnip, Norwegian, raw"
+      "apiFoodName_en": "Turnip, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/nepe-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 122,
+        "energy_kcal": 29,
+        "fat_g": 0.3,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 4.7,
+        "sugars_g": 4.6,
+        "fiber_g": 2,
+        "protein_g": 0.9,
+        "salt_g": 0
+      }
     },
     {
       "id": "eple",
@@ -204,7 +477,20 @@
       "foodId": "06.758",
       "category": "frukt og bær",
       "apiFoodName_nb": "Eple, uspesifisert, rå",
-      "apiFoodName_en": "Apple, unspecified, raw"
+      "apiFoodName_en": "Apple, unspecified, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/eple-uspesifisert-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 194,
+        "energy_kcal": 46,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 10.1,
+        "sugars_g": 10,
+        "fiber_g": 3,
+        "protein_g": 0,
+        "salt_g": 0
+      }
     },
     {
       "id": "paere",
@@ -213,7 +499,20 @@
       "foodId": "06.760",
       "category": "frukt og bær",
       "apiFoodName_nb": "Pære, uspesifisert, rå",
-      "apiFoodName_en": "Pear, unspecified, raw"
+      "apiFoodName_en": "Pear, unspecified, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/paere-uspesifisert-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 185,
+        "energy_kcal": 44,
+        "fat_g": 0.1,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 8.8,
+        "sugars_g": 8.8,
+        "fiber_g": 3,
+        "protein_g": 0.4,
+        "salt_g": 0
+      }
     },
     {
       "id": "plomme",
@@ -222,7 +521,20 @@
       "foodId": "06.544",
       "category": "frukt og bær",
       "apiFoodName_nb": "Plomme, rå",
-      "apiFoodName_en": "Plums, raw"
+      "apiFoodName_en": "Plums, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/plomme-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 186,
+        "energy_kcal": 44,
+        "fat_g": 0.1,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 9.3,
+        "sugars_g": 9.1,
+        "fiber_g": 2,
+        "protein_g": 0.5,
+        "salt_g": 0
+      }
     },
     {
       "id": "kirsebaer",
@@ -231,7 +543,20 @@
       "foodId": "06.506",
       "category": "frukt og bær",
       "apiFoodName_nb": "Kirsebær, rå",
-      "apiFoodName_en": "Cherries, raw"
+      "apiFoodName_en": "Cherries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/kirsebaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 174,
+        "energy_kcal": 41,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 9,
+        "sugars_g": 9,
+        "fiber_g": 1,
+        "protein_g": 0.7,
+        "salt_g": 0
+      }
     },
     {
       "id": "morell",
@@ -240,7 +565,20 @@
       "foodId": "06.507",
       "category": "frukt og bær",
       "apiFoodName_nb": "Moreller, rå",
-      "apiFoodName_en": "Cherries, sweet, raw"
+      "apiFoodName_en": "Cherries, sweet, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/moreller-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 222,
+        "energy_kcal": 52,
+        "fat_g": 0.1,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 11.3,
+        "sugars_g": 11.3,
+        "fiber_g": 1,
+        "protein_g": 0.9,
+        "salt_g": 0
+      }
     },
     {
       "id": "jordbaer",
@@ -249,7 +587,20 @@
       "foodId": "06.504",
       "category": "frukt og bær",
       "apiFoodName_nb": "Jordbær, rå",
-      "apiFoodName_en": "Strawberries, raw"
+      "apiFoodName_en": "Strawberries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/jordbaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 144,
+        "energy_kcal": 34,
+        "fat_g": 0.2,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 6.6,
+        "sugars_g": 6.6,
+        "fiber_g": 2,
+        "protein_g": 0.5,
+        "salt_g": 0
+      }
     },
     {
       "id": "bringebaer",
@@ -258,7 +609,20 @@
       "foodId": "06.503",
       "category": "frukt og bær",
       "apiFoodName_nb": "Bringebær, rå",
-      "apiFoodName_en": "Raspberries, raw"
+      "apiFoodName_en": "Raspberries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/bringebaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 122,
+        "energy_kcal": 29,
+        "fat_g": 0.4,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 3.2,
+        "sugars_g": 3.2,
+        "fiber_g": 4,
+        "protein_g": 1.1,
+        "salt_g": 0
+      }
     },
     {
       "id": "solbaer",
@@ -267,7 +631,20 @@
       "foodId": "06.513",
       "category": "frukt og bær",
       "apiFoodName_nb": "Solbær, rå",
-      "apiFoodName_en": "Blackcurrants, raw"
+      "apiFoodName_en": "Blackcurrants, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/solbaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 230,
+        "energy_kcal": 55,
+        "fat_g": 1,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 7.6,
+        "sugars_g": 7.6,
+        "fiber_g": 5,
+        "protein_g": 1.3,
+        "salt_g": 0
+      }
     },
     {
       "id": "rips",
@@ -276,7 +653,20 @@
       "foodId": "06.512",
       "category": "frukt og bær",
       "apiFoodName_nb": "Rips, rå",
-      "apiFoodName_en": "Redcurrants, raw"
+      "apiFoodName_en": "Redcurrants, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/rips-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 223,
+        "energy_kcal": 53,
+        "fat_g": 1.2,
+        "saturated_fat_g": 0.3,
+        "carbohydrates_g": 6.9,
+        "sugars_g": 6.9,
+        "fiber_g": 5,
+        "protein_g": 1.2,
+        "salt_g": 0
+      }
     },
     {
       "id": "stikkelsbaer",
@@ -285,7 +675,20 @@
       "foodId": "06.514",
       "category": "frukt og bær",
       "apiFoodName_nb": "Stikkelsbær, rå",
-      "apiFoodName_en": "Gooseberries, raw"
+      "apiFoodName_en": "Gooseberries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/stikkelsbaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 155,
+        "energy_kcal": 37,
+        "fat_g": 0.6,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 5.4,
+        "sugars_g": 5.4,
+        "fiber_g": 3,
+        "protein_g": 0.8,
+        "salt_g": 0
+      }
     },
     {
       "id": "blabaer",
@@ -294,7 +697,20 @@
       "foodId": "06.502",
       "category": "frukt og bær",
       "apiFoodName_nb": "Blåbær, rå",
-      "apiFoodName_en": "Blueberries, raw"
+      "apiFoodName_en": "Blueberries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/blabaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 215,
+        "energy_kcal": 51,
+        "fat_g": 0.9,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 7.5,
+        "sugars_g": 7.5,
+        "fiber_g": 5,
+        "protein_g": 1,
+        "salt_g": 0
+      }
     },
     {
       "id": "tyttebaer",
@@ -303,7 +719,20 @@
       "foodId": "06.515",
       "category": "frukt og bær",
       "apiFoodName_nb": "Tyttebær, rå",
-      "apiFoodName_en": "Lingonberries, cowberries, raw"
+      "apiFoodName_en": "Lingonberries, cowberries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/tyttebaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 183,
+        "energy_kcal": 44,
+        "fat_g": 0.6,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 7,
+        "sugars_g": 7,
+        "fiber_g": 4,
+        "protein_g": 0.7,
+        "salt_g": 0
+      }
     },
     {
       "id": "bjornebaer",
@@ -312,7 +741,20 @@
       "foodId": "06.501",
       "category": "frukt og bær",
       "apiFoodName_nb": "Bjørnebær, rå",
-      "apiFoodName_en": "Blackberries, raw"
+      "apiFoodName_en": "Blackberries, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/bjornebaer-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 172,
+        "energy_kcal": 41,
+        "fat_g": 0.5,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 5.3,
+        "sugars_g": 5.3,
+        "fiber_g": 5,
+        "protein_g": 1.3,
+        "salt_g": 0
+      }
     },
     {
       "id": "rabarbra",
@@ -321,7 +763,20 @@
       "foodId": "06.053",
       "category": "frukt og bær",
       "apiFoodName_nb": "Rabarbra, rå",
-      "apiFoodName_en": "Rhubarb, raw"
+      "apiFoodName_en": "Rhubarb, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/rabarbra-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 84,
+        "energy_kcal": 20,
+        "fat_g": 0.2,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 1.8,
+        "sugars_g": 1.6,
+        "fiber_g": 4,
+        "protein_g": 0.9,
+        "salt_g": 0
+      }
     },
     {
       "id": "persille",
@@ -330,7 +785,20 @@
       "foodId": "06.050",
       "category": "urter og krydder",
       "apiFoodName_nb": "Persille, norsk, rå",
-      "apiFoodName_en": "Parsley, herb, Norwegian, raw"
+      "apiFoodName_en": "Parsley, herb, Norwegian, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/persille-norsk-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 135,
+        "energy_kcal": 32,
+        "fat_g": 0.4,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 1.6,
+        "sugars_g": 1.6,
+        "fiber_g": 5,
+        "protein_g": 3.1,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "dill",
@@ -339,7 +807,20 @@
       "foodId": "06.120",
       "category": "urter og krydder",
       "apiFoodName_nb": "Dill, rå",
-      "apiFoodName_en": "Dill, raw"
+      "apiFoodName_en": "Dill, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/dill-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 200,
+        "energy_kcal": 48,
+        "fat_g": 1.1,
+        "saturated_fat_g": 0.1,
+        "carbohydrates_g": 4.9,
+        "sugars_g": 4.9,
+        "fiber_g": 2,
+        "protein_g": 3.5,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "gresslok",
@@ -348,7 +829,20 @@
       "foodId": "06.034",
       "category": "urter og krydder",
       "apiFoodName_nb": "Gressløk, rå",
-      "apiFoodName_en": "Chives, raw"
+      "apiFoodName_en": "Chives, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/gresslok-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 108,
+        "energy_kcal": 26,
+        "fat_g": 0.4,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 1.3,
+        "sugars_g": 1.3,
+        "fiber_g": 3,
+        "protein_g": 2.7,
+        "salt_g": 0
+      }
     },
     {
       "id": "basilikum",
@@ -357,7 +851,20 @@
       "foodId": "06.111",
       "category": "urter og krydder",
       "apiFoodName_nb": "Basilikum, rå",
-      "apiFoodName_en": "Basil, fresh"
+      "apiFoodName_en": "Basil, fresh",
+      "matvareUrl": "https://www.matvaretabellen.no/basilikum-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 97,
+        "energy_kcal": 23,
+        "fat_g": 0.6,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 0.4,
+        "sugars_g": 0.4,
+        "fiber_g": 2,
+        "protein_g": 3.2,
+        "salt_g": 0
+      }
     },
     {
       "id": "mynte",
@@ -366,7 +873,20 @@
       "foodId": "06.259",
       "category": "urter og krydder",
       "apiFoodName_nb": "Mynte, rå",
-      "apiFoodName_en": "Mint, raw"
+      "apiFoodName_en": "Mint, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/mynte-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 240,
+        "energy_kcal": 58,
+        "fat_g": 0.8,
+        "saturated_fat_g": 0.2,
+        "carbohydrates_g": 5.3,
+        "sugars_g": 5.3,
+        "fiber_g": 7,
+        "protein_g": 3.5,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "hasselnott",
@@ -375,7 +895,20 @@
       "foodId": "06.553",
       "category": "nøtter og frø",
       "apiFoodName_nb": "Hasselnøtter",
-      "apiFoodName_en": "Hazelnuts"
+      "apiFoodName_en": "Hazelnuts",
+      "matvareUrl": "https://www.matvaretabellen.no/hasselnotter/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 2760.7,
+        "energy_kcal": 670,
+        "fat_g": 65,
+        "saturated_fat_g": 3.7,
+        "carbohydrates_g": 3.3,
+        "sugars_g": 3,
+        "fiber_g": 9,
+        "protein_g": 13.2,
+        "salt_g": 0
+      }
     },
     {
       "id": "valnott",
@@ -384,7 +917,20 @@
       "foodId": "06.560",
       "category": "nøtter og frø",
       "apiFoodName_nb": "Valnøtter",
-      "apiFoodName_en": "Walnuts"
+      "apiFoodName_en": "Walnuts",
+      "matvareUrl": "https://www.matvaretabellen.no/valnotter/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 2804.6,
+        "energy_kcal": 680,
+        "fat_g": 66.5,
+        "saturated_fat_g": 4.7,
+        "carbohydrates_g": 2.8,
+        "sugars_g": 2.6,
+        "fiber_g": 7,
+        "protein_g": 14.1,
+        "salt_g": 0
+      }
     },
     {
       "id": "solsikkefro",
@@ -393,7 +939,20 @@
       "foodId": "05.126",
       "category": "nøtter og frø",
       "apiFoodName_nb": "Solsikkefrø",
-      "apiFoodName_en": "Sunflower seeds"
+      "apiFoodName_en": "Sunflower seeds",
+      "matvareUrl": "https://www.matvaretabellen.no/solsikkefro/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 2564.89,
+        "energy_kcal": 621,
+        "fat_g": 54.4,
+        "saturated_fat_g": 5.4,
+        "carbohydrates_g": 3.6,
+        "sugars_g": 3.4,
+        "fiber_g": 10,
+        "protein_g": 24.2,
+        "salt_g": 0
+      }
     },
     {
       "id": "linfro",
@@ -402,7 +961,20 @@
       "foodId": "05.012",
       "category": "nøtter og frø",
       "apiFoodName_nb": "Linfrø, knuste",
-      "apiFoodName_en": "Linseeds, flax seeds, crushed"
+      "apiFoodName_en": "Linseeds, flax seeds, crushed",
+      "matvareUrl": "https://www.matvaretabellen.no/linfro-knuste/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 2116.45,
+        "energy_kcal": 514,
+        "fat_g": 42.2,
+        "saturated_fat_g": 3.7,
+        "carbohydrates_g": 1.6,
+        "sugars_g": 1.6,
+        "fiber_g": 27,
+        "protein_g": 18.3,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "egg",
@@ -411,7 +983,20 @@
       "foodId": "02.001",
       "category": "gårdsvarer",
       "apiFoodName_nb": "Egg, rå",
-      "apiFoodName_en": "Egg, raw"
+      "apiFoodName_en": "Egg, raw",
+      "matvareUrl": "https://www.matvaretabellen.no/egg-ra/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 620,
+        "energy_kcal": 149,
+        "fat_g": 10.7,
+        "saturated_fat_g": 3,
+        "carbohydrates_g": 0.3,
+        "sugars_g": 0.3,
+        "fiber_g": 0,
+        "protein_g": 13,
+        "salt_g": 0.4
+      }
     },
     {
       "id": "helmelk",
@@ -420,7 +1005,20 @@
       "foodId": "01.236",
       "category": "meierivarer",
       "apiFoodName_nb": "Helmelk, uspesifisert",
-      "apiFoodName_en": "Milk, whole, unspecified"
+      "apiFoodName_en": "Milk, whole, unspecified",
+      "matvareUrl": "https://www.matvaretabellen.no/helmelk-uspesifisert/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 267,
+        "energy_kcal": 64,
+        "fat_g": 3.6,
+        "saturated_fat_g": 2.3,
+        "carbohydrates_g": 4.5,
+        "sugars_g": 4.5,
+        "fiber_g": 0,
+        "protein_g": 3.4,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "lettmelk",
@@ -429,7 +1027,20 @@
       "foodId": "01.292",
       "category": "meierivarer",
       "apiFoodName_nb": "Lettmelk, uspesifisert",
-      "apiFoodName_en": "Milk, semi-skimmed, unspecified"
+      "apiFoodName_en": "Milk, semi-skimmed, unspecified",
+      "matvareUrl": "https://www.matvaretabellen.no/lettmelk-uspesifisert/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 166,
+        "energy_kcal": 39,
+        "fat_g": 0.8,
+        "saturated_fat_g": 0.5,
+        "carbohydrates_g": 4.5,
+        "sugars_g": 4.5,
+        "fiber_g": 0,
+        "protein_g": 3.6,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "smor",
@@ -438,7 +1049,20 @@
       "foodId": "08.005",
       "category": "meierivarer",
       "apiFoodName_nb": "Smør",
-      "apiFoodName_en": "Butter"
+      "apiFoodName_en": "Butter",
+      "matvareUrl": "https://www.matvaretabellen.no/smor/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 3059.5,
+        "energy_kcal": 744,
+        "fat_g": 82,
+        "saturated_fat_g": 52,
+        "carbohydrates_g": 0.5,
+        "sugars_g": 0.5,
+        "fiber_g": 0,
+        "protein_g": 1,
+        "salt_g": 1.1
+      }
     },
     {
       "id": "yoghurt",
@@ -447,7 +1071,20 @@
       "foodId": "01.011",
       "category": "meierivarer",
       "apiFoodName_nb": "Yoghurt, naturell",
-      "apiFoodName_en": "Yoghurt, whole milk, plain"
+      "apiFoodName_en": "Yoghurt, whole milk, plain",
+      "matvareUrl": "https://www.matvaretabellen.no/yoghurt-naturell/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 289,
+        "energy_kcal": 69,
+        "fat_g": 3.4,
+        "saturated_fat_g": 2.2,
+        "carbohydrates_g": 5.6,
+        "sugars_g": 5.6,
+        "fiber_g": 0,
+        "protein_g": 4,
+        "salt_g": 0.1
+      }
     },
     {
       "id": "cottage_cheese",
@@ -456,7 +1093,20 @@
       "foodId": "01.028",
       "category": "meierivarer",
       "apiFoodName_nb": "Cottage cheese",
-      "apiFoodName_en": "Cottage cheese"
+      "apiFoodName_en": "Cottage cheese",
+      "matvareUrl": "https://www.matvaretabellen.no/cottage-cheese/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 406,
+        "energy_kcal": 97,
+        "fat_g": 4.3,
+        "saturated_fat_g": 2.7,
+        "carbohydrates_g": 1.5,
+        "sugars_g": 1.5,
+        "fiber_g": 0,
+        "protein_g": 13,
+        "salt_g": 0.4
+      }
     },
     {
       "id": "hvitost",
@@ -465,7 +1115,20 @@
       "foodId": "01.185",
       "category": "meierivarer",
       "apiFoodName_nb": "Gulost, uspesifisert",
-      "apiFoodName_en": "Cheese, white, unspecified"
+      "apiFoodName_en": "Cheese, white, unspecified",
+      "matvareUrl": "https://www.matvaretabellen.no/gulost-uspesifisert/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 1444.77,
+        "energy_kcal": 348,
+        "fat_g": 26.7,
+        "saturated_fat_g": 16.9,
+        "carbohydrates_g": 0,
+        "sugars_g": 0,
+        "fiber_g": 0,
+        "protein_g": 26.9,
+        "salt_g": 1.2
+      }
     },
     {
       "id": "geitost",
@@ -474,7 +1137,20 @@
       "foodId": "01.251",
       "category": "meierivarer",
       "apiFoodName_nb": "Chevre, geitost, naturell",
-      "apiFoodName_en": "Goat cheese, chevre, Naturell"
+      "apiFoodName_en": "Goat cheese, chevre, Naturell",
+      "matvareUrl": "https://www.matvaretabellen.no/chevre-geitost-naturell/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 1308,
+        "energy_kcal": 316,
+        "fat_g": 28,
+        "saturated_fat_g": 18.1,
+        "carbohydrates_g": 1,
+        "sugars_g": 1,
+        "fiber_g": 0,
+        "protein_g": 15,
+        "salt_g": 1.1
+      }
     },
     {
       "id": "honning",
@@ -483,7 +1159,20 @@
       "foodId": "09.003",
       "category": "gårdsvarer",
       "apiFoodName_nb": "Honning",
-      "apiFoodName_en": "Honey"
+      "apiFoodName_en": "Honey",
+      "matvareUrl": "https://www.matvaretabellen.no/honning/",
+      "nutrition": {
+        "per": "100g",
+        "energy_kj": 1346.4,
+        "energy_kcal": 317,
+        "fat_g": 0,
+        "saturated_fat_g": 0,
+        "carbohydrates_g": 78.9,
+        "sugars_g": 78.9,
+        "fiber_g": 0,
+        "protein_g": 0.3,
+        "salt_g": 0
+      }
     }
   ]
 }
