@@ -382,6 +382,11 @@ function FarmerProfileView() {
         fields are designed. This customer profile form is intentionally not
         shown here.
       </Text>
+      <Link href={"/dashboard" as Href} asChild>
+        <Pressable accessibilityRole="button" style={styles.primaryButton}>
+          <Text style={styles.primaryButtonText}>Open dashboard</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
@@ -621,6 +626,22 @@ const styles = StyleSheet.create({
     color: "#5D6A60",
     fontSize: 14,
     lineHeight: 21,
+  },
+  dashboardButtonRow: {
+    marginTop: 15,
+  },
+  dashboardButton: {
+    alignItems: "center",
+    backgroundColor: "#2F6A3E",
+    borderRadius: 18,
+    justifyContent: "center",
+    minHeight: 48,
+    paddingHorizontal: 18,
+  },
+  dashboardButtonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "700",
   },
   sectionHeader: {
     gap: 12,
