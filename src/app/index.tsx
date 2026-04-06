@@ -350,6 +350,12 @@ export default function Index() {
                 >
                   Open map
                 </Link>
+                <Link
+                  href={"/produce/egg" as Href}
+                  style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                >
+                  Open produce egg
+                </Link>
               </View>
             </View>
 

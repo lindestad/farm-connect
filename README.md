@@ -138,6 +138,7 @@ Run this script to generate `produceData.json` from Matvaretabellen data and the
 Each produce item in `src/data/produceList.ts` must include a `foodId` that matches the correct Matvaretabellen entry. This `foodId` is used as the stable reference when generating product data. New items must therefore be matched manually in Matvaretabellen before they are added to the list.
 
 Input:
+
 - `src/data/produceList.ts`
 
 Run the script from the project root:
@@ -147,6 +148,7 @@ npx tsx scripts/generateProductData.ts
 ```
 
 This command regenerates:
+
 - `src/data/produceData.json`
 
 ## CI

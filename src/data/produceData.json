@@ -1,9 +1,6 @@
 {
   "source": "Matvaretabellen",
-  "language": [
-    "nb",
-    "en"
-  ],
+  "language": ["nb", "en"],
   "totalRequested": 53,
   "totalMatched": 53,
   "unmatched": [],
