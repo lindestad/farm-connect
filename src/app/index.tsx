@@ -344,6 +344,12 @@ export default function Index() {
                 >
                   Go to order
                 </Link>
+                <Link
+                  href={"/map"}
+                  style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                >
+                  Open map
+                </Link>
               </View>
             </View>
 
