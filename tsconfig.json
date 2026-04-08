@@ -1,6 +1,7 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "types": ["node", "jest"],
     "strict": true,
     "paths": {
       "@/*": ["./src/*"],
