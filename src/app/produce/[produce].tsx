@@ -12,7 +12,8 @@ type ProductDataItem = {
   category: string;
   apiFoodName_nb: string | null;
   apiFoodName_en: string | null;
-  matvareUrl: string | null;
+  matvareUrl_nb: string | null;
+  matvareUrl_en: string | null;
   nutrition: NutritionData;
 };
 
@@ -93,12 +94,23 @@ export default function ProduceScreen() {
         <Text style={styles.metaText}>Food ID: {item.foodId}</Text>
       </View>
 
-      {item.matvareUrl ? (
+      {item.matvareUrl_nb ? (
         <Pressable
-          onPress={() => Linking.openURL(item.matvareUrl!)}
+          onPress={() => Linking.openURL(item.matvareUrl_nb!)}
           style={styles.linkButton}
         >
-          <Text style={styles.linkText}>Source: Matvaretabellen</Text>
+          <Text style={styles.linkText}>
+            Source (Norwegian): Matvaretabellen
+          </Text>
+        </Pressable>
+      ) : null}
+
+      {item.matvareUrl_en ? (
+        <Pressable
+          onPress={() => Linking.openURL(item.matvareUrl_en!)}
+          style={styles.linkButton}
+        >
+          <Text style={styles.linkText}>Source (English): Matvaretabellen</Text>
         </Pressable>
       ) : null}
 
@@ -141,7 +153,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   linkButton: {
-    paddingVertical: 8,
+    paddingVertical: 4,
   },
   linkText: {
     fontSize: 15,
