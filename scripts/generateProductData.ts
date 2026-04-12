@@ -55,7 +55,8 @@ type ProductDataItem = {
   category: string;
   apiFoodName_nb: string | null;
   apiFoodName_en: string | null;
-  matvareUrl: string | null;
+  matvareUrl_nb: string | null;
+  matvareUrl_en: string | null;
   nutrition: NutritionData;
 };
 
@@ -176,14 +177,19 @@ async function generateProductData(): Promise<void> {
       category: produce.category,
       apiFoodName_nb: matchedFood_nb?.foodName ?? null,
       apiFoodName_en: matchedFood_en?.foodName ?? null,
-      matvareUrl: matchedFood_nb?.uri ?? null,
+      matvareUrl_nb: matchedFood_nb?.uri ?? null,
+      matvareUrl_en: matchedFood_en?.uri ?? null,
       nutrition: extractNutrition(matchedFood_nb),
     };
   });
 
   const unmatched = items
     .filter(
-      (item) => item.apiFoodName_nb === null || item.apiFoodName_en === null,
+      (item) =>
+        item.apiFoodName_nb === null ||
+        item.apiFoodName_en === null ||
+        item.matvareUrl_nb === null ||
+        item.matvareUrl_en === null,
     )
     .map((item) => item.name_nb);
 
