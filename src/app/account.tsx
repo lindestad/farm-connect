@@ -382,7 +382,7 @@ function FarmerProfileView() {
         fields are designed. This customer profile form is intentionally not
         shown here.
       </Text>
-      <Link href={"/dashboard" as Href} asChild>
+      <Link href={"/farmer_dashboard" as Href} asChild>
         <Pressable accessibilityRole="button" style={styles.primaryButton}>
           <Text style={styles.primaryButtonText}>Open dashboard</Text>
         </Pressable>
