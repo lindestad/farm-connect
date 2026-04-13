@@ -1,6 +1,7 @@
+import { produceStyles } from "@/styles/produce-styles";
 import * as Linking from "expo-linking";
 import { useLocalSearchParams } from "expo-router";
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import produceData from "../../data/produceData.json";
 
 // Complete product data structure based on the output from generateProductData.ts
@@ -61,9 +62,9 @@ function formatValue(value: number | null, unit: string): string {
 
 function NutritionRow({ label, value }: { label: string; value: string }) {
   return (
-    <View style={styles.nutritionRow}>
-      <Text style={styles.nutritionLabel}>{label}</Text>
-      <Text style={styles.nutritionValue}>{value}</Text>
+    <View style={produceStyles.nutritionRow}>
+      <Text style={produceStyles.nutritionLabel}>{label}</Text>
+      <Text style={produceStyles.nutritionValue}>{value}</Text>
     </View>
   );
 }
@@ -74,123 +75,68 @@ export default function ProduceScreen() {
 
   if (!item) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.errorText}>Product not found</Text>
+      <View style={produceStyles.container}>
+        <View style={produceStyles.card}>
+          <Text style={produceStyles.errorText}>Product not found</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>{item.name_nb}</Text>
+    <ScrollView
+      style={produceStyles.scrollView}
+      contentContainerStyle={produceStyles.scrollContent}
+    >
+      <View style={produceStyles.card}>
+        <Text style={produceStyles.title}>{item.name_nb}</Text>
 
-      {item.name_en ? (
-        <Text style={styles.subtitle}>{item.name_en}</Text>
-      ) : null}
+        {item.name_en ? (
+          <Text style={produceStyles.detail}>{item.name_en}</Text>
+        ) : null}
 
-      <View style={styles.metaBox}>
-        <Text style={styles.metaText}>Category: {item.category}</Text>
-        <Text style={styles.metaText}>Per: {item.nutrition.per}</Text>
-        <Text style={styles.metaText}>Food ID: {item.foodId}</Text>
-      </View>
+        <View style={produceStyles.metaBox}>
+          <Text style={produceStyles.metaText}>Category: {item.category}</Text>
+          <Text style={produceStyles.metaText}>Per: {item.nutrition.per}</Text>
+          <Text style={produceStyles.metaText}>Food ID: {item.foodId}</Text>
+        </View>
 
-      {item.matvareUrl_nb ? (
-        <Pressable
-          onPress={() => Linking.openURL(item.matvareUrl_nb!)}
-          style={styles.linkButton}
-        >
-          <Text style={styles.linkText}>
-            Source (Norwegian): Matvaretabellen
-          </Text>
-        </Pressable>
-      ) : null}
+        {item.matvareUrl_nb ? (
+          <Pressable
+            onPress={() => Linking.openURL(item.matvareUrl_nb!)}
+            style={produceStyles.linkButton}
+          >
+            <Text style={produceStyles.linkText}>
+              Source (Norwegian): Matvaretabellen
+            </Text>
+          </Pressable>
+        ) : null}
 
-      {item.matvareUrl_en ? (
-        <Pressable
-          onPress={() => Linking.openURL(item.matvareUrl_en!)}
-          style={styles.linkButton}
-        >
-          <Text style={styles.linkText}>Source (English): Matvaretabellen</Text>
-        </Pressable>
-      ) : null}
+        {item.matvareUrl_en ? (
+          <Pressable
+            onPress={() => Linking.openURL(item.matvareUrl_en!)}
+            style={produceStyles.linkButton}
+          >
+            <Text style={produceStyles.linkText}>
+              Source (English): Matvaretabellen
+            </Text>
+          </Pressable>
+        ) : null}
 
-      <View style={styles.nutritionTable}>
-        <Text style={styles.tableTitle}>Nutrition</Text>
-        {nutritionFields.map((field) => (
-          <NutritionRow
-            key={field.key}
-            label={field.label}
-            value={formatValue(item.nutrition[field.key] as number, field.unit)}
-          />
-        ))}
+        <View style={produceStyles.nutritionTable}>
+          <Text style={produceStyles.tableTitle}>Nutrition</Text>
+          {nutritionFields.map((field) => (
+            <NutritionRow
+              key={field.key}
+              label={field.label}
+              value={formatValue(
+                item.nutrition[field.key] as number,
+                field.unit,
+              )}
+            />
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    gap: 12,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: "700",
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#666",
-  },
-  metaBox: {
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    gap: 4,
-    backgroundColor: "#f8f8f8",
-  },
-  metaText: {
-    fontSize: 14,
-  },
-  linkButton: {
-    paddingVertical: 4,
-  },
-  linkText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#1d4ed8",
-  },
-  nutritionTable: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    overflow: "hidden",
-  },
-  tableTitle: {
-    fontSize: 18,
-    fontWeight: "700",
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-    backgroundColor: "#f5f5f5",
-  },
-  nutritionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  nutritionLabel: {
-    fontSize: 15,
-  },
-  nutritionValue: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-  errorText: {
-    fontSize: 18,
-    color: "red",
-  },
-});
