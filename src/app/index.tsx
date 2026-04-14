@@ -8,7 +8,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
+import { useFarmProfile } from "../hooks/useFarmProfile";
 import { isSupabaseConfigured, supabaseConfigError } from "../lib/supabase";
 import { useAuth } from "../providers/auth-provider";
 
@@ -103,6 +103,7 @@ const saturdayMarkets = [
 export default function Index() {
   const { width } = useWindowDimensions();
   const { session, user } = useAuth();
+  const { farmProfile } = useFarmProfile(user?.id);
   const isWide = width >= 940;
   const isMedium = width >= 720;
   const phoneWidth = width < 390 ? 250 : 286;
@@ -308,12 +309,24 @@ export default function Index() {
               </Text>
               <View style={styles.heroActionRow}>
                 {session ? (
-                  <Link
-                    href={"/account" as Href}
-                    style={[styles.ctaLink, styles.ctaLinkPrimary]}
-                  >
-                    Open account
-                  </Link>
+                  <>
+                    <Link
+                      href={"/account" as Href}
+                      style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                    >
+                      Open account
+                    </Link>
+                    <Link
+                      href={
+                        farmProfile
+                          ? (`/farm/${farmProfile.id}` as Href)
+                          : ("/farm/edit" as Href)
+                      }
+                      style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                    >
+                      {farmProfile ? "Farm management" : "Create a farm"}
+                    </Link>
+                  </>
                 ) : (
                   <>
                     <Link
