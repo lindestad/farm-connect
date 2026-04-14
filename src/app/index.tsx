@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FarmList } from "../components/FarmList";
-import { useFarmProfile } from "../hooks/useFarmProfile";
+import { useAllFarmProfiles, useFarmProfile } from "../hooks/useFarmProfile";
 import { isSupabaseConfigured, supabaseConfigError } from "../lib/supabase";
 import { useAuth } from "../providers/auth-provider";
 
@@ -105,6 +105,7 @@ export default function Index() {
   const { width } = useWindowDimensions();
   const { session, user, profile } = useAuth();
   const { farmProfile } = useFarmProfile(user?.id);
+  const { farms, loading: farmsLoading } = useAllFarmProfiles();
   const isWide = width >= 940;
   const isMedium = width >= 720;
   const phoneWidth = width < 390 ? 250 : 286;
@@ -346,7 +347,7 @@ export default function Index() {
               </View>
             </View>
 
-            <FarmList />
+            <FarmList farms={farms} loading={farmsLoading} />
 
             <View style={styles.authStatusCard}>
               <Text style={styles.bootstrapEyebrow}>Payments</Text>

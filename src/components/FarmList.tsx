@@ -1,4 +1,4 @@
-import { type Href, useRouter } from "expo-router";
+import { Link, type Href } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -7,13 +7,15 @@ import {
   TextInput,
   View,
 } from "react-native";
-
-import { useAllFarmProfiles } from "../hooks/useFarmProfile";
+import { type FarmProfile } from "../lib/farmProfiles";
 import { farmStyles } from "../styles/farm-styles";
 
-export function FarmList() {
-  const router = useRouter();
-  const { farms, loading } = useAllFarmProfiles();
+type Props = {
+  farms: FarmProfile[];
+  loading: boolean;
+};
+
+export function FarmList({ farms, loading }: Props) {
   const [query, setQuery] = useState("");
 
   const filtered = query.trim()
@@ -41,17 +43,16 @@ export function FarmList() {
         <Text style={farmStyles.emptyText}>No farms found.</Text>
       ) : (
         filtered.map((farm) => (
-          <Pressable
-            key={farm.id}
-            accessibilityRole="button"
-            onPress={() => router.push(`/farm/${farm.id}` as Href)}
-            style={farmStyles.readonlyItem}
-          >
-            <Text style={farmStyles.rowName}>{farm.farm_name}</Text>
-            {farm.farm_location ? (
-              <Text style={farmStyles.readonlyMeta}>{farm.farm_location}</Text>
-            ) : null}
-          </Pressable>
+          <Link key={farm.id} href={`/farm/${farm.id}` as Href} asChild>
+            <Pressable style={farmStyles.readonlyItem}>
+              <Text style={farmStyles.rowName}>{farm.farm_name}</Text>
+              {farm.farm_location ? (
+                <Text style={farmStyles.readonlyMeta}>
+                  {farm.farm_location}
+                </Text>
+              ) : null}
+            </Pressable>
+          </Link>
         ))
       )}
     </View>
