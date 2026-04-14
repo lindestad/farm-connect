@@ -1,17 +1,20 @@
 import { supabase } from "@/lib/supabase";
-import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
+import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../providers/auth-provider";
@@ -112,13 +115,31 @@ function MarketDayCard({
 
   return (
     <View style={[styles.panel, isPast && { opacity: 0.6 }]}>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
         <View style={{ flex: 1, marginRight: 10, gap: 2 }}>
           <Text style={styles.panelTitle}>{formatDate(item.date)}</Text>
-          <Text style={styles.panelBody}>{formatTime(item.start_time)} – {formatTime(item.end_time)}</Text>
+          <Text style={styles.panelBody}>
+            {formatTime(item.start_time)} – {formatTime(item.end_time)}
+          </Text>
         </View>
-        <View style={[styles.inlineButton, { backgroundColor: STATUS_COLOR[item.status] + "1A" }]}>
-          <Text style={[styles.inlineButtonText, { color: STATUS_COLOR[item.status] }]}>
+        <View
+          style={[
+            styles.inlineButton,
+            { backgroundColor: STATUS_COLOR[item.status] + "1A" },
+          ]}
+        >
+          <Text
+            style={[
+              styles.inlineButtonText,
+              { color: STATUS_COLOR[item.status] },
+            ]}
+          >
             {STATUS_LABEL[item.status]}
           </Text>
         </View>
@@ -150,7 +171,9 @@ function MarketDayCard({
             onPress={() => onDelete(item.id)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.secondaryButtonText, { color: "#9C5B4D" }]}>Cancel</Text>
+            <Text style={[styles.secondaryButtonText, { color: "#9C5B4D" }]}>
+              Cancel
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -199,9 +222,12 @@ function MarketDayModal({
   }
 
   function pickerValue(): Date {
-    if (activePicker === "date") return form.date ? strToDate(form.date) : new Date();
-    if (activePicker === "start_time") return form.start_time ? strToTime(form.start_time) : strToTime("08:00");
-    if (activePicker === "end_time") return form.end_time ? strToTime(form.end_time) : strToTime("13:00");
+    if (activePicker === "date")
+      return form.date ? strToDate(form.date) : new Date();
+    if (activePicker === "start_time")
+      return form.start_time ? strToTime(form.start_time) : strToTime("08:00");
+    if (activePicker === "end_time")
+      return form.end_time ? strToTime(form.end_time) : strToTime("13:00");
     return new Date();
   }
 
@@ -235,15 +261,25 @@ function MarketDayModal({
             {initial?.date ? "Edit Market Day" : "New Market Day"}
           </Text>
 
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ gap: 12 }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ gap: 12 }}
+          >
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>Date</Text>
               <TouchableOpacity
                 style={[styles.input, { justifyContent: "center" }]}
-                onPress={() => setActivePicker(activePicker === "date" ? null : "date")}
+                onPress={() =>
+                  setActivePicker(activePicker === "date" ? null : "date")
+                }
                 activeOpacity={0.7}
               >
-                <Text style={{ color: form.date ? "#182019" : "#B0BAB4", fontSize: 15 }}>
+                <Text
+                  style={{
+                    color: form.date ? "#182019" : "#B0BAB4",
+                    fontSize: 15,
+                  }}
+                >
                   {form.date ? formatDate(form.date) : "Select a date"}
                 </Text>
               </TouchableOpacity>
@@ -264,10 +300,19 @@ function MarketDayModal({
                 <Text style={styles.label}>Start time</Text>
                 <TouchableOpacity
                   style={[styles.input, { justifyContent: "center" }]}
-                  onPress={() => setActivePicker(activePicker === "start_time" ? null : "start_time")}
+                  onPress={() =>
+                    setActivePicker(
+                      activePicker === "start_time" ? null : "start_time",
+                    )
+                  }
                   activeOpacity={0.7}
                 >
-                  <Text style={{ color: form.start_time ? "#182019" : "#B0BAB4", fontSize: 15 }}>
+                  <Text
+                    style={{
+                      color: form.start_time ? "#182019" : "#B0BAB4",
+                      fontSize: 15,
+                    }}
+                  >
                     {form.start_time ? formatTime(form.start_time) : "08:00"}
                   </Text>
                 </TouchableOpacity>
@@ -287,10 +332,19 @@ function MarketDayModal({
                 <Text style={styles.label}>End time</Text>
                 <TouchableOpacity
                   style={[styles.input, { justifyContent: "center" }]}
-                  onPress={() => setActivePicker(activePicker === "end_time" ? null : "end_time")}
+                  onPress={() =>
+                    setActivePicker(
+                      activePicker === "end_time" ? null : "end_time",
+                    )
+                  }
                   activeOpacity={0.7}
                 >
-                  <Text style={{ color: form.end_time ? "#182019" : "#B0BAB4", fontSize: 15 }}>
+                  <Text
+                    style={{
+                      color: form.end_time ? "#182019" : "#B0BAB4",
+                      fontSize: 15,
+                    }}
+                  >
                     {form.end_time ? formatTime(form.end_time) : "13:00"}
                   </Text>
                 </TouchableOpacity>
@@ -343,7 +397,11 @@ function MarketDayModal({
               <Text style={styles.secondaryButtonText}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.primaryButton, { flex: 1 }, saving && styles.buttonDisabled]}
+              style={[
+                styles.primaryButton,
+                { flex: 1 },
+                saving && styles.buttonDisabled,
+              ]}
               onPress={() => validate() && onSave(form)}
               activeOpacity={0.7}
               disabled={saving}
@@ -363,6 +421,7 @@ function MarketDayModal({
 
 export default function MarketDaysScreen() {
   const { user } = useAuth();
+  const router = useRouter();
   const [marketDays, setMarketDays] = useState<MarketDay[]>([]);
   const [filter, setFilter] = useState<Filter>("upcoming");
   const [loading, setLoading] = useState(true);
@@ -370,7 +429,9 @@ export default function MarketDaysScreen() {
   const [error, setError] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formInitial, setFormInitial] = useState<typeof EMPTY_FORM | null>(null);
+  const [formInitial, setFormInitial] = useState<typeof EMPTY_FORM | null>(
+    null,
+  );
 
   const fetchMarketDays = useCallback(async () => {
     if (!user || !supabase) return;
@@ -409,7 +470,7 @@ export default function MarketDaysScreen() {
     .sort((a, b) =>
       filter === "past"
         ? b.date.localeCompare(a.date)
-        : a.date.localeCompare(b.date)
+        : a.date.localeCompare(b.date),
     );
 
   function openCreate() {
@@ -496,32 +557,51 @@ export default function MarketDaysScreen() {
             }
           },
         },
-      ]
+      ],
     );
   }
 
   return (
     <SafeAreaView style={styles.page}>
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.heroCard}>
           <View style={styles.heroCopy}>
             <Text style={styles.eyebrow}>Farmer Dashboard</Text>
             <Text style={styles.heroTitle}>Market Days</Text>
             <Text style={styles.heroBody}>
-              Schedule and manage your market appearances. Customers can see where to find you.
+              Schedule and manage your market appearances. Customers can see
+              where to find you.
             </Text>
           </View>
           {upcoming.length > 0 && (
             <View style={styles.readonlyItem}>
               <Text style={styles.readonlyLabel}>Scheduled</Text>
               <Text style={styles.readonlyValue}>
-                {upcoming.length} {upcoming.length === 1 ? "market day" : "market days"}
+                {upcoming.length}{" "}
+                {upcoming.length === 1 ? "market day" : "market days"}
               </Text>
             </View>
           )}
           <View style={styles.dashboardButtonRow}>
-            <TouchableOpacity style={styles.dashboardButton} onPress={openCreate} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.dashboardButton}
+              onPress={openCreate}
+              activeOpacity={0.8}
+            >
               <Text style={styles.dashboardButtonText}>+ Add Market Day</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.dashboardButtonRow}>
+            <TouchableOpacity
+              style={styles.dashboardButton}
+              onPress={() => router.back()}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.dashboardButtonText}>Back to Dashboard</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -531,11 +611,19 @@ export default function MarketDaysScreen() {
             {(["upcoming", "past", "all"] as Filter[]).map((f) => (
               <TouchableOpacity
                 key={f}
-                style={[styles.inlineButton, filter === f && styles.optionCardActive]}
+                style={[
+                  styles.inlineButton,
+                  filter === f && styles.optionCardActive,
+                ]}
                 onPress={() => setFilter(f)}
                 activeOpacity={0.7}
               >
-                <Text style={[styles.inlineButtonText, filter === f && styles.optionTitleActive]}>
+                <Text
+                  style={[
+                    styles.inlineButtonText,
+                    filter === f && styles.optionTitleActive,
+                  ]}
+                >
                   {f.charAt(0).toUpperCase() + f.slice(1)}
                 </Text>
               </TouchableOpacity>
@@ -551,7 +639,10 @@ export default function MarketDaysScreen() {
         ) : error ? (
           <View style={styles.panel}>
             <Text style={styles.errorText}>{error}</Text>
-            <TouchableOpacity style={styles.inlineButton} onPress={fetchMarketDays}>
+            <TouchableOpacity
+              style={styles.inlineButton}
+              onPress={fetchMarketDays}
+            >
               <Text style={styles.inlineButtonText}>Try again</Text>
             </TouchableOpacity>
           </View>
@@ -568,7 +659,12 @@ export default function MarketDaysScreen() {
           </View>
         ) : (
           sorted.map((item) => (
-            <MarketDayCard key={item.id} item={item} onEdit={openEdit} onDelete={handleDelete} />
+            <MarketDayCard
+              key={item.id}
+              item={item}
+              onEdit={openEdit}
+              onDelete={handleDelete}
+            />
           ))
         )}
       </ScrollView>

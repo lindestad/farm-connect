@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAuth } from "../../providers/auth-provider";
 
-
 export default function DashboardScreen() {
   const { profile } = useAuth();
   const isFarmer = profile?.role === "farmer";
@@ -31,20 +30,19 @@ export default function DashboardScreen() {
               The dashboard page is in place. Add market-day and pickup
               management components next.
             </Text>
-            <Link href={'/farmer_dashboard/market' as Href} style={styles.panelButton}>
-              <Text style={styles.panelButtonText}>Go to Market Management</Text>
+            <Link
+              href={"/farmer_dashboard/market" as Href}
+              style={styles.panelButton}
+            >
+              <Text style={styles.panelButtonText}>
+                Go to Market Management
+              </Text>
             </Link>
           </View>
         ) : null}
 
         <View style={styles.footerRow}>
-          <Link href={'/market' as Href} style={styles.footerLink}>
-            Back to profile
-          </Link>
-        </View>
-
-        <View style={styles.footerRow}>
-          <Link href={'/account' as Href} style={styles.footerLink}>
+          <Link href={"/account" as Href} style={styles.footerLink}>
             Back to profile
           </Link>
         </View>
