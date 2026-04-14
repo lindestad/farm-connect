@@ -375,6 +375,12 @@ export default function Index() {
                 >
                   Open produce list
                 </Link>
+                <Link
+                  href={"../camera" as Href}
+                  style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                >
+                  Open camera
+                </Link>
               </View>
             </View>
 
