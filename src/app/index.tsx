@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FarmList } from "../components/FarmList";
 import { useFarmProfile } from "../hooks/useFarmProfile";
 import { isSupabaseConfigured, supabaseConfigError } from "../lib/supabase";
 import { useAuth } from "../providers/auth-provider";
@@ -102,7 +103,7 @@ const saturdayMarkets = [
 
 export default function Index() {
   const { width } = useWindowDimensions();
-  const { session, user } = useAuth();
+  const { session, user, profile } = useAuth();
   const { farmProfile } = useFarmProfile(user?.id);
   const isWide = width >= 940;
   const isMedium = width >= 720;
@@ -316,16 +317,18 @@ export default function Index() {
                     >
                       Open account
                     </Link>
-                    <Link
-                      href={
-                        farmProfile
-                          ? (`/farm/${farmProfile.id}` as Href)
-                          : ("/farm/edit" as Href)
-                      }
-                      style={[styles.ctaLink, styles.ctaLinkPrimary]}
-                    >
-                      {farmProfile ? "Farm management" : "Create a farm"}
-                    </Link>
+                    {profile?.role === "farmer" ? (
+                      <Link
+                        href={
+                          farmProfile
+                            ? (`/farm/${farmProfile.id}` as Href)
+                            : ("/farm/edit" as Href)
+                        }
+                        style={[styles.ctaLink, styles.ctaLinkPrimary]}
+                      >
+                        {farmProfile ? "Farm management" : "Create a farm"}
+                      </Link>
+                    ) : null}
                   </>
                 ) : (
                   <>
@@ -342,6 +345,8 @@ export default function Index() {
                 )}
               </View>
             </View>
+
+            <FarmList />
 
             <View style={styles.authStatusCard}>
               <Text style={styles.bootstrapEyebrow}>Payments</Text>

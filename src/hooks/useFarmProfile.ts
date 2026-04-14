@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 
 import {
   type FarmProfile,
+  fetchAllFarmProfiles,
   fetchFarmProfileByUserId,
 } from "../lib/farmProfiles";
 
@@ -37,4 +38,21 @@ export function useFarmProfile(userId: string | undefined): {
   }, [userId]);
 
   return { farmProfile, loading };
+}
+
+export function useAllFarmProfiles(): {
+  farms: FarmProfile[];
+  loading: boolean;
+} {
+  const [farms, setFarms] = useState<FarmProfile[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAllFarmProfiles()
+      .then(setFarms)
+      .catch(() => setFarms([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { farms, loading };
 }

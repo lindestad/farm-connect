@@ -183,4 +183,30 @@ export const farmStyles = StyleSheet.create({
     fontSize: 14,
     padding: 18,
   },
+  listEyebrow: {
+    color: "#2F6A3E",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1,
+    textTransform: "uppercase",
+  },
+  searchInput: {
+    backgroundColor: "#F7FBF5",
+    borderColor: "#D7E2D3",
+    borderRadius: 18,
+    borderWidth: 1,
+    color: "#182019",
+    fontSize: 15,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  emptyText: {
+    color: "#5D6A60",
+    fontSize: 14,
+  },
+  rowName: {
+    color: "#182019",
+    fontSize: 15,
+    fontWeight: "700",
+  },
 });

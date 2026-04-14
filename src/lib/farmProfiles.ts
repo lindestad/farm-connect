@@ -69,6 +69,18 @@ export async function upsertFarmProfile(
   return data;
 }
 
+export async function fetchAllFarmProfiles(): Promise<FarmProfile[]> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+
+  const { data, error } = await supabase
+    .from("farm_profiles")
+    .select("*")
+    .order("farm_name", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
 export async function deleteFarmProfile(userId: string): Promise<void> {
   if (!supabase) throw new Error("Supabase is not configured.");
 
