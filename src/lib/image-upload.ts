@@ -11,7 +11,9 @@ export default async function uploadConfirmedImage(uri: string): Promise<UploadI
         throw new Error("Supabase is not configured")
       }
     
+    // Convert the local image URI into a binary data (ArrayBuffer) before uploading
     const file = new File(uri)
+    const arrayBuffer = await file.arrayBuffer();
 
     // Create a unique file name and file path inside the bucket
     const fileName = `camera-${Date.now()}.jpg`;
@@ -20,7 +22,7 @@ export default async function uploadConfirmedImage(uri: string): Promise<UploadI
     // Upload the image file to Supabase Storage
     const { data, error } = await supabase.storage
       .from('farm-connect-images')
-      .upload(filePath, file, {
+      .upload(filePath, arrayBuffer, {
         contentType: 'image/jpeg',
       });
 
@@ -48,7 +50,7 @@ export default async function uploadConfirmedImage(uri: string): Promise<UploadI
         ]);
 
         if(insertError){
-          throw new Error('Error inserting image reference into database: ${insertError.message}');
+          throw new Error(`Error inserting image reference into database: ${insertError.message}`);
         }
 
         console.log('Image reference saved to image_uploads_development');
