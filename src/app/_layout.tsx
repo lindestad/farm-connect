@@ -15,6 +15,11 @@ function RootNavigator() {
       return;
     }
 
+    if (pathname === "/") {
+      router.replace("/(tabs)" as Href);
+      return;
+    }
+
     if (!session && pathname === "/account") {
       router.replace("/auth/login" as Href);
       return;
