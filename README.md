@@ -1,29 +1,63 @@
-# FarmConnect
+# `FarmConnect`
 
-FarmConnect is a mobile-first marketplace for local farms. Customers can browse weekly produce, reserve items, and choose a pickup slot at the farm or at a market day. Farmers can publish inventory, open pickup windows, and advertise recurring markets such as Saturdays.
+FarmConnect is a mobile-first marketplace that connects customers with local farms. Users can browse, reserve, and schedule pickups for fresh produce, while farmers manage inventory, pickup windows, and recurring market events—all in one streamlined platform.
 
-The app is built with Expo, React Native, TypeScript, Expo Router, and Supabase.
-Unit and component tests use Jest with Expo's `jest-expo` preset.
+---
 
-## Current scope
+<details>
+<summary><strong>View Progress (Features Implemented)</strong></summary>
 
-- customer landing and discovery flow
-- farm pickup slots
-- market day promotion
-- farmer-side reservation and packing concepts
-- Supabase bootstrap, auth, and persisted sessions
+- **Demo Landing Page** (feature showcase, customer/farmer flow overview, mock phone preview UI)
+- **Authentication System** (email/password login and registration, role selection, email confirmation redirect)
+- **Account System** (customer profile: display name, phone, location, bio, contact preference, pickup notes; farmer account access control)
+- **Farm Profile** (create, view, edit, and delete farm profiles; owner-only controls)
+- **Farmer Dashboard** (role-gated dashboard with navigation to market management)
+- **Market Day Management** (full CRUD: create, edit, and delete market days with date/time pickers, location, notes, status filtering)
+- **Produce Browser** (browse produce list with Norwegian/English names; detail view with full nutritional info sourced from Matvaretabellen)
+- **Map** (Google Maps integration displaying farm locations with markers, centered on Norway)
+- **Payment System** (Stripe test mode via Supabase Edge Function; order screen with payment sheet, Google Pay support)
 
-## Payments
+</details>
 
-The app uses Stripe for payment processing via the `@stripe/stripe-react-native` SDK.
+---
 
-Payments are handled through a Supabase Edge Function (`create-payment-intent`) which creates a Stripe PaymentIntent server-side, keeping the secret key off the client. Edge function is deployed to Supabase.
+<details>
+<summary><strong>Supabase Instructions</strong></summary>
 
-The `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` is pulled automatically via `eas env:pull`.
+For email confirmation links to return to the app, add this redirect URL in the Supabase dashboard:
 
-> **Note:** Web builds will not work. The app targets Android platform. Reason: `@stripe/stripe-react-native` is a native-only library and cannot run in a browser environment. Expo Go is also not supported, create a local build with "npx expo run:android". Check `CONTRIBUTE.MD` for more detailed instructions.
+```
+farmconnect://auth/confirm
+```
 
-To test a payment, use the following Stripe test card:
+The current auth flow includes:
+
+- Registration with email/password
+- Profile role selection for customer or farmer
+- Login with email/password
+- Persisted mobile sessions
+- Email confirmation redirect back into the app
+
+To create the profiles table and policies, run the SQL migration in the Supabase SQL editor:
+
+```
+supabase/migrations/202603241945_create_profiles.sql
+```
+
+That migration creates:
+
+- `public.profiles`
+- Row-level policies so users can read and update only their own profile
+- A trigger that creates the profile row automatically from signup metadata
+
+</details>
+
+---
+
+<details>
+<summary><strong>Stripe Instructions</strong></summary>
+
+The app uses Stripe for payment processing via the `@stripe/stripe-react-native` SDK. Payments are handled through a Supabase Edge Function (`create-payment-intent`) which creates a Stripe PaymentIntent server-side, keeping the secret key off the client. Edge function is deployed to Supabase. To test a payment, use the following Stripe test card:
 
 | Field  | Value                 |
 | ------ | --------------------- |
@@ -31,115 +65,18 @@ To test a payment, use the following Stripe test card:
 | Expiry | `05/55`               |
 | CVC    | `555`                 |
 
-## Getting started
+</details>
 
-1. Install dependencies:
+---
 
-   ```bash
-   npm install
-   ```
-
-2. Install EAS CLI
-
-   ```bash
-   npm install --global eas-cli # Installs the tool globally on your system
-   ```
-
-   Project should be linked to expo.dev under our organization automically via the app.json,
-   which now includes a project-id refrence. If you encounter any issues with below command run:
-   `eas init # link to farm-connect` 3. Setup .env variables
-
-   **Note:** You need to login first via the CLI: `eas login`
-
-   ```bash
-   eas env:pull # choose development when prompted
-   ```
-
-   4. Start the Expo dev server:
-
-   ```bash
-   npm run start
-   ```
-
-   You can also launch specific targets:
-
-   ```bash
-   npm run android
-   npm run ios
-   npm run web
-   ```
-
-## Supabase setup
-
-The app uses Expo public env variables for the client-side URL and publishable key. `.env.local` is ignored by git.
-
-For email confirmation links to return to the app, add this redirect URL in the Supabase dashboard:
-
-```bash
-farmconnect://auth/confirm
-```
-
-The current auth flow includes:
-
-- registration with email/password
-- profile role selection for customer or farmer
-- login with email/password
-- persisted mobile sessions
-- email confirmation redirect back into the app
-
-To create the `profiles` table and policies, run the SQL migration in the Supabase SQL editor:
-
-```bash
-supabase/migrations/202603241945_create_profiles.sql
-```
-
-That migration creates:
-
-- `public.profiles`
-- row-level policies so users can read and update only their own profile
-- a trigger that creates the profile row automatically from signup metadata
-
-## Quality checks
-
-Run ESLint:
-
-```bash
-npm run lint
-```
-
-Run the TypeScript typecheck:
-
-```bash
-npm run typecheck
-```
-
-Run the Jest test suite:
-
-```bash
-npm test
-```
-
-Format the repository with Prettier:
-
-```bash
-npm run format
-```
-
-Check formatting without changing files:
-
-```bash
-npm run format:check
-```
-
-## Generate produce data
+<details>
+<summary><strong>Generate Produce Data</strong></summary>
 
 Run this script to generate `produceData.json` from Matvaretabellen data and the curated produce list in `src/data/produceList.ts`.
 
 Each produce item in `src/data/produceList.ts` must include a `foodId` that matches the correct Matvaretabellen entry. This `foodId` is used as the stable reference when generating product data. New items must therefore be matched manually in Matvaretabellen before they are added to the list.
 
-Input:
-
-- `src/data/produceList.ts`
+**Input:** `src/data/produceList.ts`
 
 Run the script from the project root:
 
@@ -147,20 +84,40 @@ Run the script from the project root:
 npx tsx scripts/generateProductData.ts
 ```
 
-This command regenerates:
+This regenerates: `src/data/produceData.json`
 
-- `src/data/produceData.json`
+</details>
 
-## CI
+---
 
-GitHub Actions runs the quality workflow on:
+### `Getting Started`
 
-- pull requests
-- pushes to `main`
+See [CONTRIBUTE](CONTRIBUTE.md) for setup instructions and how to contribute.
 
-The workflow currently runs:
+---
 
-- `test`
-- `lint`
-- `typecheck`
-- `prettier`
+### `Tech Stack`
+
+| Layer     | Technology                                |
+| --------- | ----------------------------------------- |
+| Framework | React Native (Expo)                       |
+| Routing   | Expo Router                               |
+| Backend   | Supabase (Auth, Database, Edge Functions) |
+| Payments  | Stripe (`@stripe/stripe-react-native`)    |
+| Maps      | Google Maps (`react-native-maps`)         |
+| Language  | TypeScript                                |
+
+---
+
+### `Quality Checks`
+
+CI runs on every pull request and push to `main`. Recommended to install `Prettier` extension. You can run the checks locally:
+
+```bash
+npm run lint          # ESLint
+npm run typecheck     # TypeScript
+npm run format:check  # Prettier
+npm test              # Jest
+```
+
+---
