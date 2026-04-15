@@ -14,11 +14,12 @@
  *   <Text>{farmProfile.farm_name}</Text>
  */
 import { useEffect, useState } from "react";
-
 import {
   type FarmProfile,
+  fetchAllFarmProfiles,
   fetchFarmProfileByUserId,
 } from "../lib/farmProfiles";
+import { isSupabaseConfigured } from "../lib/supabase";
 
 export function useFarmProfile(userId: string | undefined): {
   farmProfile: FarmProfile | null;
@@ -37,4 +38,22 @@ export function useFarmProfile(userId: string | undefined): {
   }, [userId]);
 
   return { farmProfile, loading };
+}
+
+export function useAllFarmProfiles(): {
+  farms: FarmProfile[];
+  loading: boolean;
+} {
+  const [farms, setFarms] = useState<FarmProfile[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) return setLoading(false);
+    fetchAllFarmProfiles()
+      .then(setFarms)
+      .catch(() => setFarms([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  return { farms, loading };
 }
