@@ -47,8 +47,12 @@ supabase/migrations/202603241945_create_profiles.sql
 That migration creates:
 
 - `public.profiles`
+  <<<<<<< HEAD
 - Row-level policies so users can read and update only their own profile
-- A trigger that creates the profile row automatically from signup metadata
+- # A trigger that creates the profile row automatically from signup metadata
+- row-level policies so users can read and update only their own profile
+- a trigger that creates the profile row automatically from signup metadata
+  > > > > > > > 74f6d3a (Added CRUD polices, updated camera view and styles.)
 
 </details>
 
@@ -121,3 +125,56 @@ npm test              # Jest
 ```
 
 ---
+
+# <<<<<<< HEAD
+
+<details>
+<summary><strong>Camera functionality</strong></summary>
+
+`src/components/CameraCapture.tsx` handles:
+
+- camera permission
+- camera preview
+- taking a picture
+- previewing the image
+- retaking the image
+- confirming the image
+
+`src/lib/image-helpers/image-create.ts` handles uploading images
+`src/lib/image-helpers/image-delete.ts` handles deleting images
+
+How to use the camera functionality in another screen:
+
+```ts
+import CameraCapture from "@/components/CameraCapture";
+```
+
+Then create a function that receives the confirmed image URI. This runs after the user presses **Use Photo**.
+
+```ts
+const handlePhotoConfirmed = async (uri: string) => {
+  // Do something with the image URI here.
+};
+```
+
+If the image should be uploaded immediately, call the upload helper inside that function:
+
+```ts
+import uploadConfirmedImage from "@/lib/image-helpers/image-create";
+
+const handlePhotoConfirmed = async (uri: string) => {
+  const { imageUrl, imagePath } = await uploadConfirmedImage(uri);
+
+  // imageUrl is the public URL for showing the uploaded image.
+  // imagePath is the file path used to locate or delete the image in Storage later.
+};
+```
+
+Finally, render the camera component and pass the function to `onPhotoConfirmed`.
+
+```ts
+return <CameraCapture onPhotoConfirmed={handlePhotoConfirmed} />;
+```
+
+</details>
+>>>>>>> 74f6d3a (Added CRUD polices, updated camera view and styles.)

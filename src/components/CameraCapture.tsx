@@ -1,116 +1,112 @@
-import { CameraType, CameraView, useCameraPermissions } from 'expo-camera';
-import { useRef, useState } from 'react';
-import { Button, Image, StyleSheet, Text, View } from 'react-native';
+import { cameraStyles as styles } from "@/styles/camera-styles";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
+import { useRef, useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type CameraCaptureProps = {
-    onPhotoConfirmed?: (uri: string) => void;
+  onPhotoConfirmed?: (uri: string) => void;
 };
 
-export default function  CameraCapture({ onPhotoConfirmed }: CameraCaptureProps) {
-    const [facing] = useState<CameraType>('back');
-    const [permission, requestPermission] = useCameraPermissions();
-    const [photoUri, setPhotoUri] = useState<string | null>(null);
+export default function CameraCapture({
+  onPhotoConfirmed,
+}: CameraCaptureProps) {
+  const [facing] = useState<CameraType>("back");
+  const [permission, requestPermission] = useCameraPermissions();
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
 
-    // Ref to access the CameraView methods, such as takePictureAsync since we need to trigger it from a button outside the CameraView component
-    const cameraRef = useRef<CameraView | null>(null);
+  // Ref to access the CameraView methods, such as takePictureAsync since we need to trigger it from a button outside the CameraView component
+  const cameraRef = useRef<CameraView | null>(null);
+  const insets = useSafeAreaInsets();
 
-    if (!permission) {
-        return  <View />;
+  if (!permission) {
+    return <View style={styles.screen} />;
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={styles.permissionTitle}>Camera access needed</Text>
+        <Text style={styles.permissionText}>
+          Camera permission is required to use this feature.
+        </Text>
+
+        <Pressable
+          style={styles.permissionPressable}
+          onPress={requestPermission}
+        >
+          <Text style={styles.permissionPressableText}>Grant Permission</Text>
+        </Pressable>
+      </View>
+    );
+  }
+
+  const capturePicture = async () => {
+    if (!cameraRef.current) {
+      return;
     }
+    // Use the takePictureAsync method from the CameraView ref to capture a photo and get its URI
+    const result = await cameraRef.current.takePictureAsync();
 
-    if (!permission.granted) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.message}>Camera permission is required to use this feature.</Text>
-                <Button title="Grant Permission" onPress={requestPermission} />
-            </View>
-        );
+    setPhotoUri(result.uri);
+  };
+
+  const retakePicture = () => {
+    setPhotoUri(null);
+  };
+
+  const usePhoto = () => {
+    if (!photoUri) {
+      console.log("No photo to confirm");
+      return;
     }
-
-    const capturePicture = async () => {
-        if (!cameraRef.current) {
-            return;
-        }
-        // Use the takePictureAsync method from the CameraView ref to capture a photo and get its URI
-        const result = await cameraRef.current.takePictureAsync();
-
-        setPhotoUri(result.uri);
-
-        console.log('Picture taken:', result);
-    };
-
-    const retakePicture = () => {
-        setPhotoUri(null);
-    };
-
-    const usePhoto = () => {
-        if (!photoUri) {
-            console.log('No photo to confirm');
-            return;
-        }
-        // Here you can handle the confirmed photo URI, e.g., by passing it to a parent component or uploading it
-        console.log('Photo confirmed with URI:', photoUri);
-        onPhotoConfirmed?.(photoUri);
-    }
+    // Here you can handle the confirmed photo URI, e.g., by passing it to a parent component or uploading it
+    onPhotoConfirmed?.(photoUri);
+  };
 
   return (
-        <View style={styles.container}>
-            {photoUri ? (
-                <View style={styles.previewContainer}>
-                    <Image source={{ uri: photoUri }} style={styles.previewImage} />
-                    <View style={styles.previewButtonContainer}>
-                        <Button title="Retake" onPress={retakePicture} />
-                        <Button title="Use Photo" onPress={usePhoto} />
-                    </View>
-                </View>
-            ) : (
-        <View style={styles.cameraContainer}>
-                <CameraView ref={cameraRef} style={styles.camera} facing={facing}/>
+    <View style={styles.screen}>
+      {photoUri ? (
+        <View style={styles.previewContainer}>
+          <Image source={{ uri: photoUri }} style={styles.previewImage} />
 
-                <View style={styles.cameraOverlay}>
-                    <Button title="Take Picture" onPress={capturePicture} />
-                </View>
-            </View>
-            )}
+          <View
+            style={[
+              styles.previewBottomBar,
+              { paddingBottom: insets.bottom + 16 },
+            ]}
+          >
+            <Pressable
+              style={styles.previewActionButton}
+              onPress={retakePicture}
+            >
+              <Text style={styles.previewActionText}>Retake</Text>
+            </Pressable>
+
+            <Pressable style={styles.previewPrimaryButton} onPress={usePhoto}>
+              <Text style={styles.previewPrimaryText}>Use photo</Text>
+            </Pressable>
+          </View>
         </View>
-    );
-}
+      ) : (
+        <View style={styles.container}>
+          <CameraView ref={cameraRef} style={styles.camera} facing={facing} />
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    camera: {
-        flex: 1,
-    },
-    previewImage: {
-        flex: 1,
-    },
-    message: {
-        textAlign: 'center',
-        marginBottom: 10,
-    },
-    buttonContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        padding: 16,
-    },
-    previewContainer: {
-        flex: 1,    
-    },
-    previewButtonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 16,
-    },
-    cameraContainer: {
-        flex: 1,
-    },
-    cameraOverlay: {
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 16,
-        justifyContent: 'center',
-    },
-});
+          <View
+            style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}
+          >
+            <View style={styles.controlsRow}>
+              <View style={styles.sideControl} />
+
+              <Pressable style={styles.captureButton} onPress={capturePicture}>
+                <View style={styles.captureButtonInner} />
+              </Pressable>
+
+              <View style={styles.sideControl} />
+            </View>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+}
