@@ -47,12 +47,11 @@ supabase/migrations/202603241945_create_profiles.sql
 That migration creates:
 
 - `public.profiles`
-  <<<<<<< HEAD
+
 - Row-level policies so users can read and update only their own profile
 - # A trigger that creates the profile row automatically from signup metadata
 - row-level policies so users can read and update only their own profile
 - a trigger that creates the profile row automatically from signup metadata
-  > > > > > > > 74f6d3a (Added CRUD polices, updated camera view and styles.)
 
 </details>
 
@@ -126,8 +125,6 @@ npm test              # Jest
 
 ---
 
-# <<<<<<< HEAD
-
 <details>
 <summary><strong>Camera functionality</strong></summary>
 
@@ -175,6 +172,3 @@ Finally, render the camera component and pass the function to `onPhotoConfirmed`
 ```ts
 return <CameraCapture onPhotoConfirmed={handlePhotoConfirmed} />;
 ```
-
-</details>
->>>>>>> 74f6d3a (Added CRUD polices, updated camera view and styles.)

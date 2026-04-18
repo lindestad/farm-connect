@@ -25,6 +25,7 @@ export default function FarmEditScreen() {
 
   const [farmName, setFarmName] = useState(""); // State for farm name
   const [farmBio, setFarmBio] = useState(""); // New state for farm bio
+  const [farmLocation, setFarmLocation] = useState(""); // State for farm location
   const [isExisting, setIsExisting] = useState(false); // Track if we're editing an existing profile or creating a new one
   const [loading, setLoading] = useState(true); // Loading state for fetching existing profile
   const [saving, setSaving] = useState(false); // Saving state for when the user submits the form
@@ -36,8 +37,8 @@ export default function FarmEditScreen() {
     postalCode: "",
     street: "",
   });
-  const [latitude, setLatitude] = useState<number | null> (null); // Set state for latitude
-  const [longitude, setLongitude] = useState<number | null> (null); // Set state for longitude
+  const [, setLatitude] = useState<number | null>(null); // Set state for latitude
+  const [, setLongitude] = useState<number | null>(null); // Set state for longitude
 
   // Fetch existing farm profile
   useEffect(() => {
@@ -48,14 +49,15 @@ export default function FarmEditScreen() {
         if (existing) {
           setFarmName(existing.farm_name);
           setFarmBio(existing.farm_bio ?? "");
+          setFarmLocation(existing.farm_location ?? "");
           setAddress({
             country: existing.country ?? "",
             region: existing.region ?? "",
             city: existing.city ?? "",
             postalCode: existing.postal_code ?? "",
             street: existing.street ?? "",
-          })
-          setLatitude(existing.latitude ?? null );
+          });
+          setLatitude(existing.latitude ?? null);
           setLongitude(existing.longitude ?? null);
           setIsExisting(true);
         }
@@ -67,33 +69,39 @@ export default function FarmEditScreen() {
   // Handle save action
   const handleSave = async () => {
     if (!user) return;
-    if(
-      ! address.country.trim() ||
-      ! address.city.trim() ||
-      ! address.postalCode.trim() ||
-      ! address.street.trim()
-    ){
-      setErrorMessage("Please fill in all required fields. Required fields are marked with *.")
+    if (
+      !address.country.trim() ||
+      !address.city.trim() ||
+      !address.postalCode.trim() ||
+      !address.street.trim()
+    ) {
+      setErrorMessage(
+        "Please fill in all required fields. Required fields are marked with *.",
+      );
       return;
-    };
+    }
     try {
       setSaving(true);
       setErrorMessage(null);
       // Ask user for location permission
       const permission = await Location.requestForegroundPermissionsAsync();
-      if(permission.status !== "granted"){
+      if (permission.status !== "granted") {
         setErrorMessage("Location permission was not granted.");
         return;
       }
       // Convert the AddressInput(address) into latitde and longitude
-      const geocodeResult = await geocodeAddress(address)
-      if(!geocodeResult.success || !geocodeResult.coordinates){
-        setErrorMessage(geocodeResult.error ?? "Unable to convert address into latitude and longitude");
+      const geocodeResult = await geocodeAddress(address);
+      if (!geocodeResult.success || !geocodeResult.coordinates) {
+        setErrorMessage(
+          geocodeResult.error ??
+            "Unable to convert address into latitude and longitude",
+        );
         return;
       }
       const saved = await upsertFarmProfile(
         user.id,
         farmName,
+        farmLocation,
         farmBio,
         address,
         geocodeResult.coordinates.latitude,
@@ -145,6 +153,17 @@ export default function FarmEditScreen() {
               placeholderTextColor="#7A867D"
               style={farmStyles.input}
               value={farmName}
+            />
+          </View>
+
+          <View style={farmStyles.fieldGroup}>
+            <Text style={farmStyles.label}>Location</Text>
+            <TextInput
+              onChangeText={setFarmLocation}
+              placeholder="Town or area"
+              placeholderTextColor="#7A867D"
+              style={farmStyles.input}
+              value={farmLocation}
             />
           </View>
 

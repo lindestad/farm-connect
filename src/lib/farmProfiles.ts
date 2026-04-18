@@ -5,6 +5,7 @@ export type FarmProfile = {
   id: string;
   user_id: string;
   farm_name: string;
+  farm_location: string | null;
   farm_bio: string | null;
   farm_profile_picture_url: string | null;
   created_at: string;
@@ -51,6 +52,7 @@ export async function fetchFarmProfileById(
 export async function upsertFarmProfile(
   userId: string,
   farmName: string,
+  farmLocation: string | null,
   farmBio: string,
   address: AddressInput,
   latitude: number | null,
@@ -65,6 +67,7 @@ export async function upsertFarmProfile(
         user_id: userId,
         farm_name: farmName.trim(),
         farm_bio: farmBio.trim() || null,
+        farm_location: farmLocation?.trim() || null,
         farm_profile_picture_url: null, // Image uploads handled separately, not yet implemented
         country: address.country?.trim() || null, // Save country from the shared address object
         region: address.region?.trim() || null, // Save region from the shared address object
