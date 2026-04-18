@@ -1,3 +1,4 @@
+import { AddressInput } from "@/lib/location/types"; // Shared address object type
 import { supabase } from "./supabase";
 
 export type FarmProfile = {
@@ -5,10 +6,16 @@ export type FarmProfile = {
   user_id: string;
   farm_name: string;
   farm_bio: string | null;
-  farm_location: string | null;
   farm_profile_picture_url: string | null;
   created_at: string;
   updated_at: string;
+  country: string | null;
+  region?: string | null;
+  city: string | null;
+  postal_code: string | null;
+  street: string | null;
+  latitude: number | null;
+  longitude: number | null;
 };
 
 export async function fetchFarmProfileByUserId(
@@ -45,7 +52,9 @@ export async function upsertFarmProfile(
   userId: string,
   farmName: string,
   farmBio: string,
-  farmLocation: string,
+  address: AddressInput,
+  latitude: number | null,
+  longitude: number | null,
 ): Promise<FarmProfile> {
   if (!supabase) throw new Error("Supabase is not configured.");
 
@@ -56,8 +65,14 @@ export async function upsertFarmProfile(
         user_id: userId,
         farm_name: farmName.trim(),
         farm_bio: farmBio.trim() || null,
-        farm_location: farmLocation.trim() || null,
         farm_profile_picture_url: null, // Image uploads handled separately, not yet implemented
+        country: address.country?.trim() || null, // Save country from the shared address object
+        region: address.region?.trim() || null, // Save region from the shared address object
+        city: address.city?.trim() || null, // Save city from the shared address object
+        postal_code: address.postalCode?.trim() || null, // Save postal-code from the shared address object
+        street: address.street?.trim() || null, // Save street from the shared address object
+        latitude: latitude,
+        longitude: longitude,
         updated_at: new Date().toISOString(),
       },
       { onConflict: "user_id" },
