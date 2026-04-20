@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react-native";
-
 import HomeScreen from "../src/app/index";
 
 jest.mock("expo-router", () => {
@@ -7,6 +6,7 @@ jest.mock("expo-router", () => {
   const { Text } = require("react-native");
 
   return {
+    useRouter: () => ({ push: jest.fn() }),
     Link: ({ children }: { children: React.ReactNode }) => (
       <Text>{children}</Text>
     ),
@@ -24,38 +24,34 @@ jest.mock("../src/providers/auth-provider", () => ({
   }),
 }));
 
+jest.mock("../src/hooks/useFarmProfile", () => ({
+  useFarmProfile: () => ({ farmProfile: null, loading: false }),
+  useAllFarmProfiles: () => ({ farms: [], loading: false }),
+}));
+
 describe("HomeScreen", () => {
   it("renders the main landing page messaging for customers", () => {
     render(<HomeScreen />);
 
-    expect(
-      screen.getByText(
-        "Order from the farm, pick up in a slot, or meet at Saturday market.",
-      ),
-    ).toBeTruthy();
-    expect(screen.getByText("Browse pickups")).toBeTruthy();
+    expect(screen.getByText("Welcome to FarmConnect 👋")).toBeTruthy();
     expect(screen.getByText("See market days")).toBeTruthy();
     expect(screen.getByText("Create account")).toBeTruthy();
     expect(screen.getByText("Sign in")).toBeTruthy();
   });
 
-  it("shows pickup and market planning details for both roles", () => {
+  it("renders produce section", () => {
     render(<HomeScreen />);
 
-    expect(screen.getByText("Thursday pickup")).toBeTruthy();
-    expect(screen.getByText("Saturday market setup")).toBeTruthy();
-    expect(screen.getByText("Green Square")).toBeTruthy();
-    expect(screen.getByText("River Barn Hall")).toBeTruthy();
+    expect(screen.getByText("Produce")).toBeTruthy();
+    expect(screen.getByText("What's available")).toBeTruthy();
+    expect(screen.getByText("See all produce")).toBeTruthy();
   });
 
-  it("shows the Supabase bootstrap fallback when env vars are missing", () => {
+  it("renders auth section for unauthenticated user", () => {
     render(<HomeScreen />);
 
-    expect(
-      screen.getByText(
-        "Supabase environment variables still need local setup.",
-      ),
-    ).toBeTruthy();
-    expect(screen.getByText("Add .env.local")).toBeTruthy();
+    expect(screen.getByText("Create an account to get started.")).toBeTruthy();
+    expect(screen.getByText("Create account")).toBeTruthy();
+    expect(screen.getByText("Sign in")).toBeTruthy();
   });
 });
