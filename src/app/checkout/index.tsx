@@ -1,29 +1,24 @@
 import { useOrderPayment } from "@/hooks/useOrderPayment";
 import { createOrder } from "@/lib/checkout/order";
 import { useAuth } from "@/providers/auth-provider";
+import { useCart } from "@/providers/cart-provider";
 import { checkoutStyles as styles } from "@/styles/checkout-styles";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    Pressable,
-    ScrollView,
-    Text,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// TODO: replace with real produce listings from farm inventory
-// When inventory for each farm is implemented, this page should receive the
-// farm_id and fetch the items from the backend instead of using mock data
-const MOCK_FARM_ID = "005eb263-c5d6-42fc-bae5-47847b952c1a"; // Phonero Farm AS
-
-const MOCK_ITEMS = [
-  { id: "1", produce_name: "Tomatoes", qty: 2, unit: "kg", price: 35 },
-];
+// TODO: replace with real farm_id from farm inventory when per-farm produce is implemented
+const MOCK_FARM_ID = "005eb263-c5d6-42fc-bae5-47847b952c1a";
 
 type DeliveryMethod = "pickup" | "reservation";
 
@@ -31,13 +26,26 @@ export default function Checkout() {
   const farm_id = MOCK_FARM_ID;
   const { session } = useAuth();
   const router = useRouter();
+  const { cartItems, clearCart, removeItem } = useCart();
 
   const [delivery, setDelivery] = useState<DeliveryMethod>("pickup");
+  const deliveryRef = useRef(delivery);
+  useEffect(() => {
+    deliveryRef.current = delivery;
+  }, [delivery]);
+
   const [pickupNotes, setPickupNotes] = useState("");
   const pickupNotesRef = useRef(pickupNotes);
   useEffect(() => {
     pickupNotesRef.current = pickupNotes;
   }, [pickupNotes]);
+
+  // Capture cart items at payment time to avoid stale closure in payment effect
+  const cartItemsRef = useRef(cartItems);
+  useEffect(() => {
+    cartItemsRef.current = cartItems;
+  }, [cartItems]);
+
   const [loading, setLoading] = useState(false);
   const [reserved, setReserved] = useState(false);
 
@@ -47,21 +55,37 @@ export default function Checkout() {
     }, []),
   );
 
-  const subtotal = MOCK_ITEMS.reduce((sum, item) => sum + item.price, 0);
-  const { handlePayment, paymentSuccess } = useOrderPayment(subtotal);
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price_per_unit * item.qty,
+    0,
+  );
+  const { handlePayment, paymentSuccess, paymentError } =
+    useOrderPayment(subtotal);
 
-  // After Stripe payment succeeds, create the order and navigate back
+  useEffect(() => {
+    if (!paymentError) return;
+    Alert.alert("Payment failed", paymentError);
+  }, [paymentError]);
+
   useEffect(() => {
     if (!paymentSuccess) return;
+
+    const items = cartItemsRef.current.map((item) => ({
+      produce_name: item.produce_name,
+      qty: item.qty,
+      unit: item.unit,
+      price: item.price_per_unit * item.qty,
+    }));
 
     createOrder({
       customer_id: session!.user.id,
       farm_id,
-      delivery_method: "pickup",
+      delivery_method: deliveryRef.current,
       pickup_notes: pickupNotesRef.current,
-      items: MOCK_ITEMS,
+      items,
     })
       .then(() => {
+        clearCart();
         setPickupNotes("");
         router.replace("/");
       })
@@ -71,13 +95,20 @@ export default function Checkout() {
           "Payment succeeded but order could not be saved. Please contact support.",
         ),
       );
-  }, [paymentSuccess, session, farm_id, router]);
+  }, [paymentSuccess, session, farm_id, router, clearCart]);
 
   async function handleReserve() {
     if (!session?.user.id) {
       Alert.alert("Error", "You must be logged in.");
       return;
     }
+
+    const items = cartItems.map((item) => ({
+      produce_name: item.produce_name,
+      qty: item.qty,
+      unit: item.unit,
+      price: item.price_per_unit * item.qty,
+    }));
 
     setLoading(true);
     try {
@@ -86,8 +117,9 @@ export default function Checkout() {
         farm_id,
         delivery_method: "reservation",
         pickup_notes: pickupNotes,
-        items: MOCK_ITEMS,
+        items,
       });
+      clearCart();
       setPickupNotes("");
       setReserved(true);
     } catch {
@@ -100,6 +132,23 @@ export default function Checkout() {
     }
   }
 
+  if (cartItems.length === 0 && !reserved) {
+    return (
+      <SafeAreaView style={styles.page}>
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>Your cart is empty</Text>
+          <Text style={styles.emptyText}>Browse produce to add items.</Text>
+          <Pressable
+            style={styles.buyButton}
+            onPress={() => router.replace("/(tabs)/produce")}
+          >
+            <Text style={styles.buyButtonText}>Browse Produce</Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.page}>
       <ScrollView
@@ -108,23 +157,31 @@ export default function Checkout() {
       >
         <Text style={styles.pageTitle}>Checkout</Text>
 
-        {/* Produce list */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>YOUR ORDER</Text>
-          {MOCK_ITEMS.map((item) => (
-            <View key={item.id} style={styles.produceRow}>
+          {cartItems.map((item) => (
+            <View key={item.produce_id} style={styles.produceRow}>
               <View style={styles.produceInfo}>
                 <Text style={styles.produceName}>{item.produce_name}</Text>
                 <Text style={styles.produceMeta}>
                   {item.qty} {item.unit}
                 </Text>
               </View>
-              <Text style={styles.producePrice}>{item.price} kr</Text>
+              <View style={styles.produceRowRight}>
+                <Text style={styles.producePrice}>
+                  {item.price_per_unit * item.qty} kr
+                </Text>
+                <Pressable
+                  onPress={() => removeItem(item.produce_id)}
+                  hitSlop={8}
+                >
+                  <Text style={styles.removeButton}>✕</Text>
+                </Pressable>
+              </View>
             </View>
           ))}
         </View>
 
-        {/* Delivery method */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>DELIVERY METHOD</Text>
           <View style={styles.toggleRow}>
@@ -204,14 +261,11 @@ export default function Checkout() {
           />
         </View>
 
-        {/* Summary */}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>SUMMARY</Text>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>
-              Items ({MOCK_ITEMS.length}){" "}
-            </Text>
-            <Text style={styles.summaryValue}> {subtotal} kr </Text>
+            <Text style={styles.summaryLabel}>Items ({cartItems.length}) </Text>
+            <Text style={styles.summaryValue}>{subtotal} kr </Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>Delivery </Text>
@@ -219,8 +273,8 @@ export default function Checkout() {
           </View>
           <View style={styles.divider} />
           <View style={styles.summaryRow}>
-            <Text style={styles.totalLabel}>Total </Text>
-            <Text style={styles.totalValue}>{subtotal} kr </Text>
+            <Text style={styles.totalLabel}>Total</Text>
+            <Text style={styles.totalValue}>{subtotal} kr</Text>
           </View>
         </View>
       </ScrollView>

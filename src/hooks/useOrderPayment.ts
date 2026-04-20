@@ -1,21 +1,3 @@
-/**
- * useOrderPayment
- *
- * Handles the Stripe payment flow for a given order amount.
- *
- * Usage:
- * const { handlePayment, paymentSuccess } = useOrderPayment(amount);
- *
- * - amount: the order total in NOK (not øre)
- * - handlePayment: call this when the user taps "Pay Now"
- * - paymentSuccess: true after a successful payment
- *
- * When real products are added:
- * - Replace MOCK_ORDER in order-screen.tsx with real product data
- * - Pass the real order total as amountInNOK
- * - After paymentSuccess, update the order status in Supabase
- */
-
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/auth-provider";
 import { useStripe } from "@stripe/stripe-react-native";
@@ -26,9 +8,15 @@ export function useOrderPayment(amountInNOK: number) {
   const { session } = useAuth();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   const handlePayment = async () => {
-    if (!supabase) throw new Error("Supabase is not configured");
+    setPaymentError(null);
+
+    if (!supabase) {
+      setPaymentError("Supabase is not configured");
+      return;
+    }
     if (!session?.access_token) {
       Alert.alert("Not authenticated", "Please log in to continue.");
       return;
@@ -55,7 +43,7 @@ export function useOrderPayment(amountInNOK: number) {
           const { data, error } = await supabase!.functions.invoke(
             "create-payment-intent",
             {
-              body: { amount: amountInNOK * 100, currency: "nok" },
+              body: { amount: Math.round(amountInNOK * 100), currency: "nok" },
               headers: { Authorization: `Bearer ${session?.access_token}` },
             },
           );
@@ -72,13 +60,19 @@ export function useOrderPayment(amountInNOK: number) {
       },
     });
 
-    if (initError) throw new Error(initError.message);
+    if (initError) {
+      setPaymentError(initError.message);
+      return;
+    }
 
     const { error: payError } = await presentPaymentSheet();
     if (payError?.code === "Canceled") return;
-    if (payError) throw new Error(payError.message);
+    if (payError) {
+      setPaymentError(payError.message);
+      return;
+    }
     setPaymentSuccess(true);
   };
 
-  return { handlePayment, paymentSuccess };
+  return { handlePayment, paymentSuccess, paymentError };
 }

@@ -1,6 +1,8 @@
+import { useCart } from "@/providers/cart-provider";
 import { produceStyles } from "@/styles/produce-styles";
 import * as Linking from "expo-linking";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import produceData from "../../data/produceData.json";
 
@@ -11,6 +13,8 @@ type ProductDataItem = {
   name_en: string | null;
   foodId: string;
   category: string;
+  price: number;
+  unit: string;
   apiFoodName_nb: string | null;
   apiFoodName_en: string | null;
   matvareUrl_nb: string | null;
@@ -71,7 +75,11 @@ function NutritionRow({ label, value }: { label: string; value: string }) {
 
 export default function ProduceScreen() {
   const { produce } = useLocalSearchParams<{ produce: string }>();
-  const item = typedProduceData.items.find((item) => item.id === produce);
+  const router = useRouter();
+  const { addItem } = useCart();
+  const [qty, setQty] = useState(1);
+
+  const item = typedProduceData.items.find((i) => i.id === produce);
 
   if (!item) {
     return (
@@ -81,6 +89,17 @@ export default function ProduceScreen() {
         </View>
       </View>
     );
+  }
+
+  function handleAddToCart() {
+    addItem({
+      produce_id: item!.id,
+      produce_name: item!.name_nb,
+      qty,
+      unit: item!.unit,
+      price_per_unit: item!.price,
+    });
+    router.push("/(tabs)/checkout");
   }
 
   return (
@@ -135,6 +154,34 @@ export default function ProduceScreen() {
               )}
             />
           ))}
+        </View>
+
+        <View style={produceStyles.cartSection}>
+          <View style={produceStyles.qtyRow}>
+            <Pressable
+              style={produceStyles.qtyButton}
+              onPress={() => setQty((q) => Math.max(1, q - 1))}
+            >
+              <Text style={produceStyles.qtyButtonText}>−</Text>
+            </Pressable>
+            <Text style={produceStyles.qtyValue}>
+              {qty} {item.unit}
+            </Text>
+            <Pressable
+              style={produceStyles.qtyButton}
+              onPress={() => setQty((q) => q + 1)}
+            >
+              <Text style={produceStyles.qtyButtonText}>+</Text>
+            </Pressable>
+          </View>
+          <Pressable
+            style={produceStyles.addToCartButton}
+            onPress={handleAddToCart}
+          >
+            <Text style={produceStyles.addToCartText}>
+              Add to Cart · {item.price * qty} kr
+            </Text>
+          </Pressable>
         </View>
       </View>
     </ScrollView>
