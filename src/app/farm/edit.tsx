@@ -1,3 +1,6 @@
+import { geocodeAddress } from "@/lib/location/locationService";
+import { AddressInput } from "@/lib/location/types";
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -22,11 +25,20 @@ export default function FarmEditScreen() {
 
   const [farmName, setFarmName] = useState(""); // State for farm name
   const [farmBio, setFarmBio] = useState(""); // New state for farm bio
-  const [farmLocation, setFarmLocation] = useState(""); // New state for farm location
+  const [farmLocation, setFarmLocation] = useState(""); // State for farm location
   const [isExisting, setIsExisting] = useState(false); // Track if we're editing an existing profile or creating a new one
   const [loading, setLoading] = useState(true); // Loading state for fetching existing profile
   const [saving, setSaving] = useState(false); // Saving state for when the user submits the form
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // State for error messages
+  const [address, setAddress] = useState<AddressInput>({
+    country: "",
+    region: "",
+    city: "",
+    postalCode: "",
+    street: "",
+  });
+  const [, setLatitude] = useState<number | null>(null); // Set state for latitude
+  const [, setLongitude] = useState<number | null>(null); // Set state for longitude
 
   // Fetch existing farm profile
   useEffect(() => {
@@ -38,6 +50,15 @@ export default function FarmEditScreen() {
           setFarmName(existing.farm_name);
           setFarmBio(existing.farm_bio ?? "");
           setFarmLocation(existing.farm_location ?? "");
+          setAddress({
+            country: existing.country ?? "",
+            region: existing.region ?? "",
+            city: existing.city ?? "",
+            postalCode: existing.postal_code ?? "",
+            street: existing.street ?? "",
+          });
+          setLatitude(existing.latitude ?? null);
+          setLongitude(existing.longitude ?? null);
           setIsExisting(true);
         }
       })
@@ -48,14 +69,43 @@ export default function FarmEditScreen() {
   // Handle save action
   const handleSave = async () => {
     if (!user) return;
+    if (
+      !address.country.trim() ||
+      !address.city.trim() ||
+      !address.postalCode.trim() ||
+      !address.street.trim()
+    ) {
+      setErrorMessage(
+        "Please fill in all required fields. Required fields are marked with *.",
+      );
+      return;
+    }
     try {
       setSaving(true);
       setErrorMessage(null);
+      // Ask user for location permission
+      const permission = await Location.requestForegroundPermissionsAsync();
+      if (permission.status !== "granted") {
+        setErrorMessage("Location permission was not granted.");
+        return;
+      }
+      // Convert the AddressInput(address) into latitde and longitude
+      const geocodeResult = await geocodeAddress(address);
+      if (!geocodeResult.success || !geocodeResult.coordinates) {
+        setErrorMessage(
+          geocodeResult.error ??
+            "Unable to convert address into latitude and longitude",
+        );
+        return;
+      }
       const saved = await upsertFarmProfile(
         user.id,
         farmName,
-        farmBio,
         farmLocation,
+        farmBio,
+        address,
+        geocodeResult.coordinates.latitude,
+        geocodeResult.coordinates.longitude,
       );
       router.replace(`/farm/${saved.id}`);
     } catch (error) {
@@ -114,6 +164,86 @@ export default function FarmEditScreen() {
               placeholderTextColor="#7A867D"
               style={farmStyles.input}
               value={farmLocation}
+            />
+          </View>
+
+          <View style={farmStyles.fieldGroup}>
+            <Text style={farmStyles.label}>Country*</Text>
+            <TextInput
+              onChangeText={(text) =>
+                setAddress((prev) => ({
+                  ...prev,
+                  country: text,
+                }))
+              }
+              placeholder="Country"
+              placeholderTextColor="#7A867D"
+              style={farmStyles.input}
+              value={address.country ?? ""}
+            />
+          </View>
+
+          <View style={farmStyles.fieldGroup}>
+            <Text style={farmStyles.label}>Region</Text>
+            <TextInput
+              onChangeText={(text) =>
+                setAddress((prev) => ({
+                  ...prev,
+                  region: text,
+                }))
+              }
+              placeholder="Region"
+              placeholderTextColor="#7A867D"
+              style={farmStyles.input}
+              value={address.region ?? ""}
+            />
+          </View>
+
+          <View style={farmStyles.fieldGroup}>
+            <Text style={farmStyles.label}>City*</Text>
+            <TextInput
+              onChangeText={(text) =>
+                setAddress((prev) => ({
+                  ...prev,
+                  city: text,
+                }))
+              }
+              placeholder="City"
+              placeholderTextColor="#7A867D"
+              style={farmStyles.input}
+              value={address.city ?? ""}
+            />
+          </View>
+
+          <View style={farmStyles.fieldGroup}>
+            <Text style={farmStyles.label}>Postal code*</Text>
+            <TextInput
+              onChangeText={(text) =>
+                setAddress((prev) => ({
+                  ...prev,
+                  postalCode: text,
+                }))
+              }
+              placeholder="Postal code"
+              placeholderTextColor="#7A867D"
+              style={farmStyles.input}
+              value={address.postalCode ?? ""}
+            />
+          </View>
+
+          <View style={farmStyles.fieldGroup}>
+            <Text style={farmStyles.label}>Street*</Text>
+            <TextInput
+              onChangeText={(text) =>
+                setAddress((prev) => ({
+                  ...prev,
+                  street: text,
+                }))
+              }
+              placeholder="Street"
+              placeholderTextColor="#7A867D"
+              style={farmStyles.input}
+              value={address.street ?? ""}
             />
           </View>
 

@@ -32,6 +32,7 @@
     "expo-image": "~55.0.6",
     "expo-image-picker": "~55.0.18",
     "expo-linking": "~55.0.8",
+    "expo-location": "~55.1.8",
     "expo-router": "~55.0.7",
     "expo-splash-screen": "~55.0.12",
     "expo-sqlite": "~55.0.11",
