@@ -106,4 +106,51 @@ export const produceStyles = StyleSheet.create({
   listContent: {
     paddingBottom: 12,
   },
+  cartSection: {
+    borderTopColor: "#DDE4D9",
+    borderTopWidth: 1,
+    gap: 12,
+    paddingTop: 16,
+  },
+  qtyRow: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 16,
+    justifyContent: "center",
+  },
+  qtyButton: {
+    alignItems: "center",
+    backgroundColor: "#F7FBF5",
+    borderColor: "#D7E2D3",
+    borderRadius: 12,
+    borderWidth: 1,
+    height: 40,
+    justifyContent: "center",
+    width: 40,
+  },
+  qtyButtonText: {
+    color: "#182019",
+    fontSize: 20,
+    fontWeight: "600",
+    lineHeight: 24,
+  },
+  qtyValue: {
+    color: "#182019",
+    fontSize: 16,
+    fontWeight: "700",
+    minWidth: 60,
+    textAlign: "center",
+  },
+  addToCartButton: {
+    alignItems: "center",
+    backgroundColor: "#2F6A3E",
+    borderRadius: 18,
+    justifyContent: "center",
+    minHeight: 52,
+  },
+  addToCartText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
 });

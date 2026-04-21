@@ -1,7 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { useCart } from "@/providers/cart-provider";
 
 export default function TabsLayout() {
+  const { totalItems } = useCart();
+
   return (
     <Tabs
       screenOptions={{
@@ -55,6 +58,16 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="leaf-outline" size={size} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="checkout"
+        options={{
+          title: "Checkout",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="cart-outline" size={size} color={color} />
+          ),
+          tabBarBadge: totalItems > 0 ? totalItems : undefined,
         }}
       />
       <Tabs.Screen

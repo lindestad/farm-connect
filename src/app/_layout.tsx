@@ -4,11 +4,17 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
+import { CartProvider, useCart } from "../providers/cart-provider";
 
 function RootNavigator() {
   const { isLoading, session } = useAuth();
+  const { clearCart } = useCart();
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    if (!session) clearCart();
+  }, [session, clearCart]);
 
   useEffect(() => {
     if (isLoading) {
@@ -56,11 +62,13 @@ function RootNavigator() {
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <StripeProvider
-        publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
-      >
-        <RootNavigator />
-      </StripeProvider>
+      <CartProvider>
+        <StripeProvider
+          publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+        >
+          <RootNavigator />
+        </StripeProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }
