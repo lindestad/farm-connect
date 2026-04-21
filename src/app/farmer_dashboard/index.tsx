@@ -41,6 +41,23 @@ export default function DashboardScreen() {
           </View>
         ) : null}
 
+        {isFarmer ? (
+          <View style={styles.panel}>
+            <Text style={styles.panelTitle}>Pickup Inventory</Text>
+            <Text style={styles.panelBody}>
+              Manage your pickup inventory and schedule.
+            </Text>
+            <Link
+              href={"/farmer_dashboard/pickup-inventory" as Href}
+              style={styles.panelButton}
+            >
+              <Text style={styles.panelButtonText}>
+                Go to Pickup Inventory
+              </Text>
+            </Link>
+          </View>
+        ) : null}
+
         <View style={styles.footerRow}>
           <Link href={"/account" as Href} style={styles.footerLink}>
             Back to profile
