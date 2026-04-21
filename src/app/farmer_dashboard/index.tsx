@@ -51,9 +51,7 @@ export default function DashboardScreen() {
               href={"/farmer_dashboard/pickup-inventory" as Href}
               style={styles.panelButton}
             >
-              <Text style={styles.panelButtonText}>
-                Go to Pickup Inventory
-              </Text>
+              <Text style={styles.panelButtonText}>Go to Pickup Inventory</Text>
             </Link>
           </View>
         ) : null}
