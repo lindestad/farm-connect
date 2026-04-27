@@ -6,6 +6,8 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
 import { CartProvider, useCart } from "../providers/cart-provider";
 
+const AUTH_ROUTES = ["/auth/login", "/auth/register", "/auth/confirm"];
+
 function RootNavigator() {
   const { isLoading, session } = useAuth();
   const { clearCart } = useCart();
@@ -17,25 +19,20 @@ function RootNavigator() {
   }, [session, clearCart]);
 
   useEffect(() => {
-    if (isLoading) {
-      return;
-    }
+    if (isLoading) return;
 
-    if (pathname === "/") {
-      router.replace("/(tabs)" as Href);
-      return;
-    }
-
-    if (!session && pathname === "/account") {
+    if (!session && !AUTH_ROUTES.includes(pathname)) {
       router.replace("/auth/login" as Href);
       return;
     }
 
-    if (
-      session &&
-      (pathname === "/auth/login" || pathname === "/auth/register")
-    ) {
+    if (session && AUTH_ROUTES.includes(pathname)) {
       router.replace("/account" as Href);
+      return;
+    }
+
+    if (session && pathname === "/") {
+      router.replace("/(tabs)" as Href);
     }
   }, [isLoading, pathname, router, session]);
 
