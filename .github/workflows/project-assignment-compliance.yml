@@ -1,0 +1,42 @@
+name: Project assignment compliance
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  no-console-log:
+    name: No console.log calls
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check for console.log calls
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          pattern='console[[:space:]]*\.[[:space:]]*log[[:space:]]*\('
+
+          if git grep -n -E "$pattern" -- \
+            '*.js' \
+            '*.jsx' \
+            '*.ts' \
+            '*.tsx' \
+            ':(exclude).github/**' \
+            ':(exclude).expo/**' \
+            ':(exclude)android/**' \
+            ':(exclude)ios/**' \
+            ':(exclude)build/**' \
+            ':(exclude)coverage/**' \
+            ':(exclude)dist/**' \
+            ':(exclude)node_modules/**'; then
+            echo "::error::Project assignment compliance failed. Remove console.log calls before merging."
+            exit 1
+          fi
+
+          echo "No console.log calls found."
