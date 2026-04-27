@@ -205,15 +205,15 @@ async function generateProductData(): Promise<void> {
   const outputPath = path.resolve(process.cwd(), "src/data/produceData.json");
   await writeFile(outputPath, JSON.stringify(output, null, 2), "utf-8");
 
-  console.log(`Saved produce data to ${outputPath}`);
-  console.log(
-    `Matched ${output.totalMatched} out of ${output.totalRequested} produce items.`,
+  process.stdout.write(`Saved produce data to ${outputPath}\n`);
+  process.stdout.write(
+    `Matched ${output.totalMatched} out of ${output.totalRequested} produce items.\n`,
   );
 
   if (unmatched.length > 0) {
-    console.log("Unmatched products:");
+    process.stdout.write("Unmatched products:\n");
     for (const name of unmatched) {
-      console.log(`- ${name}`);
+      process.stdout.write(`- ${name}\n`);
     }
   }
 }

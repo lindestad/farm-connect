@@ -57,7 +57,6 @@ export default function CameraCapture({
 
   const usePhoto = () => {
     if (!photoUri) {
-      console.log("No photo to confirm");
       return;
     }
     // Here you can handle the confirmed photo URI, e.g., by passing it to a parent component or uploading it
