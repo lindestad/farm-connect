@@ -1,7 +1,7 @@
 import { geocodeAddress } from "@/lib/location/locationService";
 import { AddressInput } from "@/lib/location/types";
 import * as Location from "expo-location";
-import { useRouter } from "expo-router";
+import { useRouter, type Href } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -20,7 +20,7 @@ import { useAuth } from "../../providers/auth-provider";
 import { farmStyles } from "../../styles/farm-styles";
 
 export default function FarmEditScreen() {
-  const { user, profile } = useAuth();
+  const { user, profile, profileLoading } = useAuth();
   const router = useRouter();
 
   const [farmName, setFarmName] = useState(""); // State for farm name
@@ -39,6 +39,13 @@ export default function FarmEditScreen() {
   });
   const [, setLatitude] = useState<number | null>(null); // Set state for latitude
   const [, setLongitude] = useState<number | null>(null); // Set state for longitude
+
+  useEffect(() => {
+    if (profileLoading) return;
+    if (profile?.role !== "farmer") {
+      router.replace("/(tabs)" as Href);
+    }
+  }, [profile, profileLoading, router]);
 
   // Fetch existing farm profile
   useEffect(() => {
@@ -117,24 +124,16 @@ export default function FarmEditScreen() {
     }
   };
 
-  // Only allow farmers to access this screen
-  if (profile?.role !== "farmer") {
-    return (
-      <SafeAreaView style={farmStyles.page}>
-        <Text style={farmStyles.errorText}>
-          Only farmers can edit a farm profile.
-        </Text>
-      </SafeAreaView>
-    );
-  }
-
-  // Show loading state while fetching existing profile
-  if (loading) {
+  if (profileLoading || loading) {
     return (
       <SafeAreaView style={farmStyles.page}>
         <ActivityIndicator color="#2F6A3E" />
       </SafeAreaView>
     );
+  }
+
+  if (profile?.role !== "farmer") {
+    return null;
   }
 
   return (
