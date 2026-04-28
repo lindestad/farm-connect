@@ -6,23 +6,22 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 export default function MapScreen() {
   const router = useRouter();
 
-  // Loading farms with a hook for farm-profiles.
   const { farms } = useAllFarmProfiles();
 
-  // Filtering out farms without coordinates
   const farmsWithCoordinates = farms.filter(
     (farm) => farm.latitude !== null && farm.longitude !== null,
   );
+
   return (
     <View style={styles.container}>
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        // Setting the start possision for the map, and zoom level. Approximatly Kristiansand / Grimstad
+        // Setting the start position for the map, and zoom level. Approximately Kristiansand / Grimstad
         initialRegion={{
           latitude: 58.1467,
           longitude: 7.9956,
-          // Zoom leval
+          // Zoom level
           latitudeDelta: 0.5,
           longitudeDelta: 0.5,
         }}
@@ -48,6 +47,10 @@ export default function MapScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  map: { flex: 1 },
+  container: {
+    flex: 1,
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
 });
