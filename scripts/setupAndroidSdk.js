@@ -70,4 +70,4 @@ const currentContent = fs.existsSync(localPropertiesPath)
   : "";
 
 fs.writeFileSync(localPropertiesPath, upsertSdkDir(currentContent, sdkPath));
-console.log(`Updated android/local.properties with SDK path: ${sdkPath}`);
+console.info(`Updated android/local.properties with SDK path: ${sdkPath}`);
