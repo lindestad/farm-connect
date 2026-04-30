@@ -19,6 +19,20 @@ export type FarmProfile = {
   longitude: number | null;
 };
 
+export type FarmMarketDay = {
+  id: string;
+  farmer_id: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  location: string;
+  notes: string | null;
+};
+
+function dateKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 export async function fetchFarmProfileByUserId(
   userId: string,
 ): Promise<FarmProfile | null> {
@@ -94,6 +108,25 @@ export async function fetchAllFarmProfiles(): Promise<FarmProfile[]> {
     .from("farm_profiles")
     .select("*")
     .order("farm_name", { ascending: true });
+
+  if (error) throw error;
+  return data ?? [];
+}
+
+export async function fetchUpcomingMarketDaysByFarmerId(
+  farmerId: string,
+  limit = 3,
+): Promise<FarmMarketDay[]> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+
+  const { data, error } = await supabase
+    .from("market_days")
+    .select("id, farmer_id, date, start_time, end_time, location, notes")
+    .eq("farmer_id", farmerId)
+    .gte("date", dateKey(new Date()))
+    .order("date", { ascending: true })
+    .order("start_time", { ascending: true })
+    .limit(limit);
 
   if (error) throw error;
   return data ?? [];
