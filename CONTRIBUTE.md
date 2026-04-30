@@ -68,6 +68,32 @@ This writes `android/local.properties`, which is intentionally ignored by git be
 
 This compiles the native code and installs the app directly on your device or emulator.
 
+## Supabase migrations
+
+Database changes belong in versioned SQL files under `supabase/migrations/`.
+Do not copy-paste migration files into the Supabase SQL editor during normal development, because the CLI will not know those migrations were already applied.
+
+Before applying migrations to the linked project, inspect the pending list:
+
+```bash
+npx supabase migration list --linked
+npx supabase db push --dry-run --linked
+```
+
+If the dry run looks correct, apply the pending migrations:
+
+```bash
+npx supabase db push --linked
+```
+
+If a migration was already applied manually in the SQL editor, repair the remote migration history before running `db push`:
+
+```bash
+npx supabase migration repair <timestamp> --status applied --linked
+```
+
+See `supabase/migrations/migrations.md` for the full workflow.
+
 ## How to Contribute
 
 ### Reporting Bugs
