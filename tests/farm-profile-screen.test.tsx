@@ -3,6 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react-native";
 import FarmProfileScreen from "../src/app/farm/[farmId]";
 
 const mockReplace = jest.fn();
+const mockFetchFarmPickupDetailsByFarmerId = jest.fn();
 const mockFetchFarmProfileById = jest.fn();
 const mockFetchUpcomingMarketDaysByFarmerId = jest.fn();
 
@@ -19,6 +20,8 @@ jest.mock("../src/providers/auth-provider", () => ({
 
 jest.mock("../src/lib/farmProfiles", () => ({
   deleteFarmProfile: jest.fn(),
+  fetchFarmPickupDetailsByFarmerId: (...args: unknown[]) =>
+    mockFetchFarmPickupDetailsByFarmerId(...args),
   fetchFarmProfileById: (...args: unknown[]) =>
     mockFetchFarmProfileById(...args),
   fetchUpcomingMarketDaysByFarmerId: (...args: unknown[]) =>
@@ -46,12 +49,45 @@ const farmProfile = {
 describe("FarmProfileScreen", () => {
   beforeEach(() => {
     mockReplace.mockReset();
+    mockFetchFarmPickupDetailsByFarmerId.mockReset();
     mockFetchFarmProfileById.mockReset();
     mockFetchUpcomingMarketDaysByFarmerId.mockReset();
+    mockFetchFarmPickupDetailsByFarmerId.mockResolvedValue({
+      inventory: [],
+      slots: [],
+    });
+    mockFetchUpcomingMarketDaysByFarmerId.mockResolvedValue([]);
   });
 
-  it("renders upcoming market days for the farm profile", async () => {
+  it("renders pickup availability and upcoming market days for the farm profile", async () => {
     mockFetchFarmProfileById.mockResolvedValue(farmProfile);
+    mockFetchFarmPickupDetailsByFarmerId.mockResolvedValue({
+      inventory: [
+        {
+          id: "inventory-1",
+          farmer_id: "farmer-1",
+          produce_id: "carrots",
+          produce_name: "Carrots",
+          available_quantity: 12,
+          unit: "kg",
+          price_text: "40 kr/kg",
+          notes: "Washed and bundled.",
+          is_available: true,
+        },
+      ],
+      slots: [
+        {
+          id: "slot-1",
+          farmer_id: "farmer-1",
+          slot_date: "2026-05-10",
+          start_time: "14:00:00",
+          end_time: "16:00:00",
+          capacity: 5,
+          location: "Farm gate",
+          notes: "Ring the bell at the red barn.",
+        },
+      ],
+    });
     mockFetchUpcomingMarketDaysByFarmerId.mockResolvedValue([
       {
         id: "market-1",
@@ -71,9 +107,20 @@ describe("FarmProfileScreen", () => {
     });
 
     expect(mockFetchFarmProfileById).toHaveBeenCalledWith("farm-1");
+    expect(mockFetchFarmPickupDetailsByFarmerId).toHaveBeenCalledWith(
+      "farmer-1",
+    );
     expect(mockFetchUpcomingMarketDaysByFarmerId).toHaveBeenCalledWith(
       "farmer-1",
     );
+    expect(screen.getByText("Pickup availability")).toBeTruthy();
+    expect(screen.getByText("Carrots")).toBeTruthy();
+    expect(screen.getByText("12 kg - 40 kr/kg")).toBeTruthy();
+    expect(screen.getByText("Washed and bundled.")).toBeTruthy();
+    expect(screen.getByText("Sun, 10 May 2026")).toBeTruthy();
+    expect(screen.getByText("14:00-16:00 - 5 reservations")).toBeTruthy();
+    expect(screen.getByText("Farm gate")).toBeTruthy();
+    expect(screen.getByText("Ring the bell at the red barn.")).toBeTruthy();
     expect(screen.getByText("Sat, 9 May 2026")).toBeTruthy();
     expect(screen.getByText("09:00-13:00")).toBeTruthy();
     expect(screen.getByText("Kristiansand Torv")).toBeTruthy();
@@ -82,11 +129,15 @@ describe("FarmProfileScreen", () => {
 
   it("shows an empty state when the farm has no upcoming market days", async () => {
     mockFetchFarmProfileById.mockResolvedValue(farmProfile);
-    mockFetchUpcomingMarketDaysByFarmerId.mockResolvedValue([]);
 
     render(<FarmProfileScreen />);
 
     await waitFor(() => {
+      expect(
+        screen.getByText(
+          "No pickup produce or time slots are currently available.",
+        ),
+      ).toBeTruthy();
       expect(
         screen.getByText("No upcoming market days scheduled."),
       ).toBeTruthy();
