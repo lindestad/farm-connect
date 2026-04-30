@@ -2,6 +2,7 @@
   "name": "farm-connect",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "packageManager": "npm@11.12.1",
   "scripts": {
     "start": "expo start",
     "reset-project": "node ./scripts/reset-project.js",
@@ -70,6 +71,10 @@
     "typescript": "~5.9.2"
   },
   "private": true,
+  "engines": {
+    "node": ">=24.3.0 <25",
+    "npm": ">=11 <12"
+  },
   "jest": {
     "preset": "jest-expo",
     "setupFiles": [
