@@ -12,8 +12,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FarmHeroCard } from "../../components/FarmHeroCard";
 import {
   deleteFarmProfile,
+  type FarmMarketDay,
   type FarmProfile,
   fetchFarmProfileById,
+  fetchUpcomingMarketDaysByFarmerId,
 } from "../../lib/farmProfiles";
 import { useAuth } from "../../providers/auth-provider";
 import { farmStyles } from "../../styles/farm-styles";
@@ -27,6 +29,20 @@ function formatTimestamp(value: string): string {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+function formatMarketDate(value: string): string {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function formatMarketTime(value: string): string {
+  return value.slice(0, 5);
 }
 
 // Panel component to display farm details and actions for the owner
@@ -101,20 +117,111 @@ function FarmDetailsPanel({
   );
 }
 
+function UpcomingMarketDaysPanel({
+  marketDays,
+  loading,
+  error,
+}: {
+  marketDays: FarmMarketDay[];
+  loading: boolean;
+  error: string | null;
+}) {
+  return (
+    <View style={farmStyles.panel}>
+      <View style={farmStyles.sectionHeader}>
+        <Text style={farmStyles.panelTitle}>Upcoming market days</Text>
+        <Text style={farmStyles.readonlyMeta}>
+          See where this farm will be selling in person.
+        </Text>
+      </View>
+
+      {loading ? (
+        <View style={farmStyles.inlineStatus}>
+          <ActivityIndicator color="#2F6A3E" />
+          <Text style={farmStyles.readonlyMeta}>Loading market days...</Text>
+        </View>
+      ) : error ? (
+        <Text style={farmStyles.errorText}>{error}</Text>
+      ) : marketDays.length === 0 ? (
+        <Text style={farmStyles.emptyText}>
+          No upcoming market days scheduled.
+        </Text>
+      ) : (
+        <View style={farmStyles.readonlyGrid}>
+          {marketDays.map((marketDay) => (
+            <View key={marketDay.id} style={farmStyles.readonlyItem}>
+              <Text style={farmStyles.rowName}>
+                {formatMarketDate(marketDay.date)}
+              </Text>
+              <Text style={farmStyles.readonlyMeta}>
+                {formatMarketTime(marketDay.start_time)}-
+                {formatMarketTime(marketDay.end_time)}
+              </Text>
+              <Text style={farmStyles.longValue}>{marketDay.location}</Text>
+              {marketDay.notes ? (
+                <Text style={farmStyles.readonlyMeta}>{marketDay.notes}</Text>
+              ) : null}
+            </View>
+          ))}
+        </View>
+      )}
+    </View>
+  );
+}
+
 export default function FarmProfileScreen() {
   const { farmId } = useLocalSearchParams<{ farmId: string }>();
   const { user } = useAuth();
   const router = useRouter();
   const [farmProfile, setFarmProfile] = useState<FarmProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [marketDays, setMarketDays] = useState<FarmMarketDay[]>([]);
+  const [marketDaysLoading, setMarketDaysLoading] = useState(false);
+  const [marketDaysError, setMarketDaysError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
+    setLoading(true);
+    setFarmProfile(null);
+    setMarketDays([]);
+    setErrorMessage(null);
+    setMarketDaysError(null);
+
     fetchFarmProfileById(farmId)
-      .then(setFarmProfile)
-      .catch((error) => setErrorMessage(error.message))
-      .finally(() => setLoading(false));
+      .then((profile) => {
+        if (cancelled) return;
+        setFarmProfile(profile);
+        setLoading(false);
+
+        if (!profile) return;
+
+        setMarketDaysLoading(true);
+        fetchUpcomingMarketDaysByFarmerId(profile.user_id)
+          .then((days) => {
+            if (!cancelled) setMarketDays(days);
+          })
+          .catch(() => {
+            if (!cancelled) {
+              setMarketDaysError("Unable to load upcoming market days.");
+            }
+          })
+          .finally(() => {
+            if (!cancelled) setMarketDaysLoading(false);
+          });
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setErrorMessage(error.message);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [farmId]);
 
   const handleDelete = () => {
@@ -173,6 +280,11 @@ export default function FarmProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         <FarmHeroCard farmProfile={farmProfile} />
+        <UpcomingMarketDaysPanel
+          error={marketDaysError}
+          loading={marketDaysLoading}
+          marketDays={marketDays}
+        />
         <FarmDetailsPanel
           deleting={deleting}
           farmProfile={farmProfile}

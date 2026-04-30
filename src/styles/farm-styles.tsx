@@ -204,6 +204,11 @@ export const farmStyles = StyleSheet.create({
     color: "#5D6A60",
     fontSize: 14,
   },
+  inlineStatus: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 10,
+  },
   rowName: {
     color: "#182019",
     fontSize: 15,
