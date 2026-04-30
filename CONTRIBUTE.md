@@ -36,14 +36,30 @@
 
 A local build is required because the app uses native libraries that are not supported in Expo Go or Web.
 
-1. Make sure you have Android Studio installed with an emulator set up, or a physical Android device connected.
+1. Make sure you have Android Studio installed with an emulator set up, or a physical Android device connected. In Android Studio's SDK Manager, install:
+   - Android SDK Platform 36
+   - Android SDK Build-Tools 36.0.0
+   - NDK (Side by side) 27.1.12297006
+   - Android SDK Command-line Tools
 
 2. Make sure `OpenJDK 17` is installed.
 
-3. Run the following command to build and launch the app:
+3. Set up the local Android SDK path:
 
 ```bash
-   npx expo run:android
+   npm run setup:android
+```
+
+This writes `android/local.properties`, which is intentionally ignored by git because the SDK path is different on each developer machine. If your SDK is installed somewhere non-standard, pass the path explicitly:
+
+```bash
+   npm run setup:android -- /path/to/android/sdk
+```
+
+4. Run the following command to build and launch the app:
+
+```bash
+   npm run android
 ```
 
 This compiles the native code and installs the app directly on your device or emulator.
