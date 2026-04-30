@@ -14,15 +14,19 @@
    ```bash
    git checkout -b [branch-name]
    ```
-4. **Install dependencies**
+4. **Use Node 24 LTS**
+   ```bash
+   fnm use
+   ```
+5. **Install dependencies**
    ```bash
    npm install
    ```
-5. **Install EAS CLI**
+6. **Install EAS CLI**
    ```bash
    npm install --global eas-cli # Installs the tool globally on your system
    ```
-6. **Setup .env**
+7. **Setup .env**
 
    **Note:** You need to login first via the CLI: `eas login`
 
