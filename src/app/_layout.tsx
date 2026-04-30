@@ -1,16 +1,27 @@
+import * as Notifications from "expo-notifications";
 import { Stack, usePathname, useRouter, type Href } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
 import { CartProvider, useCart } from "../providers/cart-provider";
+import { usePushNotifications } from "../hooks/usePushNotifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowBanner: true,
+    shouldShowList: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 const AUTH_ROUTES = ["/auth/login", "/auth/register", "/auth/confirm"];
 
 function RootNavigator() {
   const { isLoading, session } = useAuth();
   const { clearCart } = useCart();
+  usePushNotifications();
   const pathname = usePathname();
   const router = useRouter();
 
