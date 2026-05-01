@@ -29,6 +29,34 @@ export type FarmMarketDay = {
   notes: string | null;
 };
 
+export type FarmPickupInventoryItem = {
+  id: string;
+  farmer_id: string;
+  produce_id: string | null;
+  produce_name: string;
+  available_quantity: number;
+  unit: string;
+  price_text: string | null;
+  notes: string | null;
+  is_available: boolean;
+};
+
+export type FarmPickupSlot = {
+  id: string;
+  farmer_id: string;
+  slot_date: string;
+  start_time: string;
+  end_time: string;
+  capacity: number;
+  location: string;
+  notes: string | null;
+};
+
+export type FarmPickupDetails = {
+  inventory: FarmPickupInventoryItem[];
+  slots: FarmPickupSlot[];
+};
+
 function dateKey(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -130,6 +158,45 @@ export async function fetchUpcomingMarketDaysByFarmerId(
 
   if (error) throw error;
   return data ?? [];
+}
+
+export async function fetchFarmPickupDetailsByFarmerId(
+  farmerId: string,
+  limit = 4,
+): Promise<FarmPickupDetails> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+
+  const today = dateKey(new Date());
+  const [inventoryResult, slotsResult] = await Promise.all([
+    supabase
+      .from("pickup_inventory")
+      .select(
+        "id, farmer_id, produce_id, produce_name, available_quantity, unit, price_text, notes, is_available",
+      )
+      .eq("farmer_id", farmerId)
+      .eq("is_available", true)
+      .gt("available_quantity", 0)
+      .order("produce_name", { ascending: true })
+      .limit(limit),
+    supabase
+      .from("pickup_time_slots")
+      .select(
+        "id, farmer_id, slot_date, start_time, end_time, capacity, location, notes",
+      )
+      .eq("farmer_id", farmerId)
+      .gte("slot_date", today)
+      .order("slot_date", { ascending: true })
+      .order("start_time", { ascending: true })
+      .limit(limit),
+  ]);
+
+  if (inventoryResult.error) throw inventoryResult.error;
+  if (slotsResult.error) throw slotsResult.error;
+
+  return {
+    inventory: inventoryResult.data ?? [],
+    slots: slotsResult.data ?? [],
+  };
 }
 
 export async function deleteFarmProfile(userId: string): Promise<void> {

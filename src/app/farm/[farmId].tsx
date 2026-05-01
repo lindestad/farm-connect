@@ -12,8 +12,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FarmHeroCard } from "../../components/FarmHeroCard";
 import {
   deleteFarmProfile,
+  type FarmPickupDetails,
   type FarmMarketDay,
   type FarmProfile,
+  fetchFarmPickupDetailsByFarmerId,
   fetchFarmProfileById,
   fetchUpcomingMarketDaysByFarmerId,
 } from "../../lib/farmProfiles";
@@ -43,6 +45,10 @@ function formatMarketDate(value: string): string {
 
 function formatMarketTime(value: string): string {
   return value.slice(0, 5);
+}
+
+function formatQuantity(value: number, unit: string): string {
+  return `${Number(value).toLocaleString("en-GB")} ${unit}`;
 }
 
 // Panel component to display farm details and actions for the owner
@@ -117,6 +123,97 @@ function FarmDetailsPanel({
   );
 }
 
+function PickupAvailabilityPanel({
+  details,
+  loading,
+  error,
+}: {
+  details: FarmPickupDetails;
+  loading: boolean;
+  error: string | null;
+}) {
+  const hasInventory = details.inventory.length > 0;
+  const hasSlots = details.slots.length > 0;
+
+  return (
+    <View style={farmStyles.panel}>
+      <View style={farmStyles.sectionHeader}>
+        <Text style={farmStyles.panelTitle}>Pickup availability</Text>
+        <Text style={farmStyles.readonlyMeta}>
+          See produce available for reservation and upcoming pickup windows.
+        </Text>
+      </View>
+
+      {loading ? (
+        <View style={farmStyles.inlineStatus}>
+          <ActivityIndicator color="#2F6A3E" />
+          <Text style={farmStyles.readonlyMeta}>Loading pickup details...</Text>
+        </View>
+      ) : error ? (
+        <Text style={farmStyles.errorText}>{error}</Text>
+      ) : !hasInventory && !hasSlots ? (
+        <Text style={farmStyles.emptyText}>
+          No pickup produce or time slots are currently available.
+        </Text>
+      ) : (
+        <View style={farmStyles.readonlyGrid}>
+          <View style={farmStyles.textBlock}>
+            <Text style={farmStyles.readonlyLabel}>Available produce</Text>
+            {hasInventory ? (
+              <View style={farmStyles.readonlyGrid}>
+                {details.inventory.map((item) => (
+                  <View key={item.id} style={farmStyles.readonlyItem}>
+                    <Text style={farmStyles.rowName}>{item.produce_name}</Text>
+                    <Text style={farmStyles.readonlyMeta}>
+                      {formatQuantity(item.available_quantity, item.unit)}
+                      {item.price_text ? ` - ${item.price_text}` : ""}
+                    </Text>
+                    {item.notes ? (
+                      <Text style={farmStyles.readonlyMeta}>{item.notes}</Text>
+                    ) : null}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text style={farmStyles.emptyText}>
+                No produce is currently listed for pickup.
+              </Text>
+            )}
+          </View>
+
+          <View style={farmStyles.textBlock}>
+            <Text style={farmStyles.readonlyLabel}>Pickup time slots</Text>
+            {hasSlots ? (
+              <View style={farmStyles.readonlyGrid}>
+                {details.slots.map((slot) => (
+                  <View key={slot.id} style={farmStyles.readonlyItem}>
+                    <Text style={farmStyles.rowName}>
+                      {formatMarketDate(slot.slot_date)}
+                    </Text>
+                    <Text style={farmStyles.readonlyMeta}>
+                      {formatMarketTime(slot.start_time)}-
+                      {formatMarketTime(slot.end_time)} - {slot.capacity}{" "}
+                      {slot.capacity === 1 ? "reservation" : "reservations"}
+                    </Text>
+                    <Text style={farmStyles.longValue}>{slot.location}</Text>
+                    {slot.notes ? (
+                      <Text style={farmStyles.readonlyMeta}>{slot.notes}</Text>
+                    ) : null}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text style={farmStyles.emptyText}>
+                No upcoming pickup slots are currently scheduled.
+              </Text>
+            )}
+          </View>
+        </View>
+      )}
+    </View>
+  );
+}
+
 function UpcomingMarketDaysPanel({
   marketDays,
   loading,
@@ -175,6 +272,14 @@ export default function FarmProfileScreen() {
   const router = useRouter();
   const [farmProfile, setFarmProfile] = useState<FarmProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [pickupDetails, setPickupDetails] = useState<FarmPickupDetails>({
+    inventory: [],
+    slots: [],
+  });
+  const [pickupDetailsLoading, setPickupDetailsLoading] = useState(false);
+  const [pickupDetailsError, setPickupDetailsError] = useState<string | null>(
+    null,
+  );
   const [marketDays, setMarketDays] = useState<FarmMarketDay[]>([]);
   const [marketDaysLoading, setMarketDaysLoading] = useState(false);
   const [marketDaysError, setMarketDaysError] = useState<string | null>(null);
@@ -186,8 +291,10 @@ export default function FarmProfileScreen() {
 
     setLoading(true);
     setFarmProfile(null);
+    setPickupDetails({ inventory: [], slots: [] });
     setMarketDays([]);
     setErrorMessage(null);
+    setPickupDetailsError(null);
     setMarketDaysError(null);
 
     fetchFarmProfileById(farmId)
@@ -199,6 +306,7 @@ export default function FarmProfileScreen() {
         if (!profile) return;
 
         setMarketDaysLoading(true);
+        setPickupDetailsLoading(true);
         fetchUpcomingMarketDaysByFarmerId(profile.user_id)
           .then((days) => {
             if (!cancelled) setMarketDays(days);
@@ -210,6 +318,18 @@ export default function FarmProfileScreen() {
           })
           .finally(() => {
             if (!cancelled) setMarketDaysLoading(false);
+          });
+        fetchFarmPickupDetailsByFarmerId(profile.user_id)
+          .then((details) => {
+            if (!cancelled) setPickupDetails(details);
+          })
+          .catch(() => {
+            if (!cancelled) {
+              setPickupDetailsError("Unable to load pickup availability.");
+            }
+          })
+          .finally(() => {
+            if (!cancelled) setPickupDetailsLoading(false);
           });
       })
       .catch((error) => {
@@ -280,6 +400,11 @@ export default function FarmProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         <FarmHeroCard farmProfile={farmProfile} />
+        <PickupAvailabilityPanel
+          details={pickupDetails}
+          error={pickupDetailsError}
+          loading={pickupDetailsLoading}
+        />
         <UpcomingMarketDaysPanel
           error={marketDaysError}
           loading={marketDaysLoading}
