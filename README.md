@@ -148,11 +148,11 @@ return <CameraCapture onPhotoConfirmed={handlePhotoConfirmed} />;
 <details>
 <summary><strong>Push Notifications</strong></summary>
 
-Push notifications are delivered via the Expo Push API backed by Firebase Cloud Messaging (FCM). Only works on native Android builds not Expo Go or web.
+Push notifications are delivered via the Expo Push API backed by Firebase Cloud Messaging (FCM). This only works on native Android builds, not Expo Go or web.
 
-On login the app registers an Expo push token stored in `push_tokens`. When an order is inserted, a Supabase database webhook triggers the `notify-payment-success` edge function which sends the appropriate notification.
+On login, the app registers an Expo push token stored in `push_tokens`. After checkout creates an order, the client calls the `notify-payment-success` edge function with the user's session JWT, and the function sends the appropriate notification.
 
-`google-services.json` is required in the project root for native builds, download it from the Firebase Console and place it there (gitignored).
+`google-services.json` is required in the project root for native builds and is tracked in this repo. It contains public Firebase client identifiers; service account credentials are managed separately through EAS credentials.
 
 | Event               | Recipient | Message               |
 | ------------------- | --------- | --------------------- |
