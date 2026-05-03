@@ -93,38 +93,6 @@ This regenerates: `src/data/produceData.json`
 
 ---
 
-### `Getting Started`
-
-See [CONTRIBUTE](CONTRIBUTE.md) for setup instructions and how to contribute.
-
----
-
-### `Tech Stack`
-
-| Layer     | Technology                                |
-| --------- | ----------------------------------------- |
-| Framework | React Native (Expo)                       |
-| Routing   | Expo Router                               |
-| Backend   | Supabase (Auth, Database, Edge Functions) |
-| Payments  | Stripe (`@stripe/stripe-react-native`)    |
-| Maps      | Google Maps (`react-native-maps`)         |
-| Language  | TypeScript                                |
-
----
-
-### `Quality Checks`
-
-CI runs on every pull request and push to `main`. Recommended to install `Prettier` extension. You can run the checks locally:
-
-```bash
-npm run lint          # ESLint
-npm run typecheck     # TypeScript
-npm run format:check  # Prettier
-npm test              # Jest
-```
-
----
-
 <details>
 <summary><strong>Camera functionality</strong></summary>
 
@@ -171,4 +139,56 @@ Finally, render the camera component and pass the function to `onPhotoConfirmed`
 
 ```ts
 return <CameraCapture onPhotoConfirmed={handlePhotoConfirmed} />;
+```
+
+</details>
+
+---
+
+<details>
+<summary><strong>Push Notifications</strong></summary>
+
+Push notifications are delivered via the Expo Push API backed by Firebase Cloud Messaging (FCM). This only works on native Android builds, not Expo Go or web.
+
+On login, the app registers an Expo push token stored in `push_tokens`. After checkout creates an order, the client calls the `notify-payment-success` edge function with the user's session JWT, and the function sends the appropriate notification.
+
+`google-services.json` is required in the project root for native builds and is tracked in this repo. It contains public Firebase client identifiers; service account credentials are managed separately through EAS credentials.
+
+| Event               | Recipient | Message               |
+| ------------------- | --------- | --------------------- |
+| Pickup order placed | Customer  | Payment confirmed     |
+| Reservation placed  | Customer  | Reservation confirmed |
+
+</details>
+
+---
+
+### `Getting Started`
+
+See [CONTRIBUTE](CONTRIBUTE.md) for setup instructions and how to contribute.
+
+---
+
+### `Tech Stack`
+
+| Layer     | Technology                                |
+| --------- | ----------------------------------------- |
+| Framework | React Native (Expo)                       |
+| Routing   | Expo Router                               |
+| Backend   | Supabase (Auth, Database, Edge Functions) |
+| Payments  | Stripe (`@stripe/stripe-react-native`)    |
+| Maps      | Google Maps (`react-native-maps`)         |
+| Language  | TypeScript                                |
+
+---
+
+### `Quality Checks`
+
+CI runs on every pull request and push to `main`. Recommended to install `Prettier` extension. You can run the checks locally:
+
+```bash
+npm run lint          # ESLint
+npm run typecheck     # TypeScript
+npm run format:check  # Prettier
+npm test              # Jest
 ```

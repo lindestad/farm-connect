@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87494225986",
+    "project_id": "farm-connect-6690e",
+    "storage_bucket": "farm-connect-6690e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87494225986:android:7ae33063f4440b59c4bddb",
+        "android_client_info": {
+          "package_name": "com.crusadez.farmconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLIQnOr90-4dDhRURV8Xa4_HtZ9kFPXmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
