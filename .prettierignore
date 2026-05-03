@@ -1,5 +1,4 @@
 node_modules
-supabase/functions
 .expo
 dist
 web-build

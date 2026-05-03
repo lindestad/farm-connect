@@ -1,5 +1,6 @@
 import { useOrderPayment } from "@/hooks/useOrderPayment";
 import { createOrder } from "@/lib/checkout/order";
+import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/auth-provider";
 import { useCart } from "@/providers/cart-provider";
 import { checkoutStyles as styles } from "@/styles/checkout-styles";
@@ -84,7 +85,15 @@ export default function Checkout() {
       pickup_notes: pickupNotesRef.current,
       items,
     })
-      .then(() => {
+      .then((order) => {
+        supabase?.functions.invoke("notify-payment-success", {
+          body: {
+            user_id: session!.user.id,
+            delivery_method: order.delivery_method,
+            amount: order.total_price,
+          },
+          headers: { Authorization: `Bearer ${session!.access_token}` },
+        });
         clearCart();
         setPickupNotes("");
         router.replace("/");
@@ -112,12 +121,20 @@ export default function Checkout() {
 
     setLoading(true);
     try {
-      await createOrder({
+      const order = await createOrder({
         customer_id: session.user.id,
         farm_id,
         delivery_method: "reservation",
         pickup_notes: pickupNotes,
         items,
+      });
+      supabase?.functions.invoke("notify-payment-success", {
+        body: {
+          user_id: session.user.id,
+          delivery_method: order.delivery_method,
+          amount: order.total_price,
+        },
+        headers: { Authorization: `Bearer ${session.access_token}` },
       });
       clearCart();
       setPickupNotes("");

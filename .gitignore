@@ -43,6 +43,3 @@ mock/
 # generated native folders
 /ios
 /android
-
-# Firebase
-/google-services.json

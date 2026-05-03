@@ -1,12 +1,13 @@
+import { StripeProvider } from "@stripe/stripe-react-native";
 import * as Notifications from "expo-notifications";
 import { Stack, usePathname, useRouter, type Href } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { StripeProvider } from "@stripe/stripe-react-native";
+import { usePushNotifications } from "../hooks/usePushNotifications";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
 import { CartProvider, useCart } from "../providers/cart-provider";
-import { usePushNotifications } from "../hooks/usePushNotifications";
 
+// Configure how notifications are displayed when the app is in the foreground
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowBanner: true,
