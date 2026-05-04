@@ -18,6 +18,10 @@ jest.mock("../src/providers/auth-provider", () => ({
   }),
 }));
 
+jest.mock("../src/lib/farmProduce", () => ({
+  fetchProduceByFarm: jest.fn().mockResolvedValue([]),
+}));
+
 jest.mock("../src/lib/farmProfiles", () => ({
   deleteFarmProfile: jest.fn(),
   fetchFarmPickupDetailsByFarmerId: (...args: unknown[]) =>
