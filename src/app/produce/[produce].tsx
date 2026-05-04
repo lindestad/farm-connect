@@ -74,12 +74,19 @@ function NutritionRow({ label, value }: { label: string; value: string }) {
 }
 
 export default function ProduceScreen() {
-  const { produce } = useLocalSearchParams<{ produce: string }>();
+  const { produce, farmId, price, unit } = useLocalSearchParams<{
+    produce: string;
+    farmId: string;
+    price: string;
+    unit: string;
+  }>();
   const router = useRouter();
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
 
   const item = typedProduceData.items.find((i) => i.id === produce);
+  const farmPrice = price ? parseFloat(price) : (item?.price ?? 0);
+  const farmUnit = unit ?? item?.unit ?? "";
 
   if (!item) {
     return (
@@ -95,9 +102,10 @@ export default function ProduceScreen() {
     addItem({
       produce_id: item!.id,
       produce_name: item!.name_nb,
+      farm_id: farmId,
       qty,
-      unit: item!.unit,
-      price_per_unit: item!.price,
+      unit: farmUnit,
+      price_per_unit: farmPrice,
     });
     router.push("/(tabs)/checkout");
   }
@@ -165,7 +173,7 @@ export default function ProduceScreen() {
               <Text style={produceStyles.qtyButtonText}>−</Text>
             </Pressable>
             <Text style={produceStyles.qtyValue}>
-              {qty} {item.unit}
+              {qty} {farmUnit}
             </Text>
             <Pressable
               style={produceStyles.qtyButton}
@@ -179,7 +187,7 @@ export default function ProduceScreen() {
             onPress={handleAddToCart}
           >
             <Text style={produceStyles.addToCartText}>
-              Add to Cart · {item.price * qty} kr
+              Add to Cart · {farmPrice * qty} kr
             </Text>
           </Pressable>
         </View>

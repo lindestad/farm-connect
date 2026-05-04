@@ -30,7 +30,7 @@ export type CreateOrderInput = {
   farm_id: string;
   delivery_method: DeliveryMethod;
   pickup_notes?: string;
-  items: Omit<OrderItem, "id" | "order_id">[];
+  items: (Omit<OrderItem, "id" | "order_id"> & { produce_id?: string })[];
 };
 
 export async function createOrder(input: CreateOrderInput): Promise<Order> {
@@ -69,6 +69,39 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
   );
 
   if (itemsError) throw itemsError;
+
+  // Decrement stock in farm_produce. farm_produce.farm_id references farm_profiles(id),
+  // while input.farm_id is profiles(id) = farm_profiles.user_id, so we resolve it first.
+  const itemsWithProduce = input.items.filter((i) => i.produce_id);
+  if (itemsWithProduce.length > 0) {
+    const { data: farmProfileData } = await supabase
+      .from("farm_profiles")
+      .select("id")
+      .eq("user_id", input.farm_id)
+      .single();
+
+    if (farmProfileData) {
+      for (const item of itemsWithProduce) {
+        const { data: stockRow } = await supabase
+          .from("farm_produce")
+          .select("stock")
+          .eq("farm_id", farmProfileData.id)
+          .eq("produce_id", item.produce_id!)
+          .single();
+
+        if (stockRow && stockRow.stock >= item.qty) {
+          await supabase
+            .from("farm_produce")
+            .update({
+              stock: stockRow.stock - item.qty,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("farm_id", farmProfileData.id)
+            .eq("produce_id", item.produce_id!);
+        }
+      }
+    }
+  }
 
   return order;
 }

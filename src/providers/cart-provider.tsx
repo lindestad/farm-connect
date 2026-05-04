@@ -10,6 +10,7 @@ import {
 export type CartItem = {
   produce_id: string;
   produce_name: string;
+  farm_id: string;
   qty: number;
   unit: string;
   price_per_unit: number;
@@ -30,11 +31,13 @@ export function CartProvider({ children }: PropsWithChildren) {
 
   const addItem = useCallback((item: CartItem) => {
     setCartItems((prev) => {
-      const alreadyInCart = prev.some((i) => i.produce_id === item.produce_id);
+      const alreadyInCart = prev.some(
+        (i) => i.produce_id === item.produce_id && i.farm_id === item.farm_id,
+      );
 
       if (alreadyInCart) {
         return prev.map((i) =>
-          i.produce_id === item.produce_id
+          i.produce_id === item.produce_id && i.farm_id === item.farm_id
             ? { ...i, qty: i.qty + item.qty }
             : i,
         );

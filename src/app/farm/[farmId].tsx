@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FarmHeroCard } from "../../components/FarmHeroCard";
+import { fetchProduceByFarm, type FarmProduce } from "../../lib/farmProduce";
 import {
   deleteFarmProfile,
   type FarmPickupDetails,
@@ -285,6 +286,7 @@ export default function FarmProfileScreen() {
   const [marketDaysError, setMarketDaysError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [farmProduce, setFarmProduce] = useState<FarmProduce[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -342,6 +344,11 @@ export default function FarmProfileScreen() {
     return () => {
       cancelled = true;
     };
+  }, [farmId]);
+
+  useEffect(() => {
+    if (!farmId) return;
+    fetchProduceByFarm(farmId).then(setFarmProduce);
   }, [farmId]);
 
   const handleDelete = () => {
@@ -417,6 +424,40 @@ export default function FarmProfileScreen() {
           onEdit={() => router.replace("/farm/edit")}
           onDelete={handleDelete}
         />
+        {isOwner ? (
+          <Pressable
+            onPress={() => router.push("/farm/stock")}
+            style={farmStyles.inlineButton}
+          >
+            <Text style={farmStyles.inlineButtonText}>Manage Stock</Text>
+          </Pressable>
+        ) : null}
+        {farmProduce.length > 0 ? (
+          <View style={farmStyles.panel}>
+            <Text style={farmStyles.panelTitle}>Products</Text>
+            {farmProduce.map((item) => (
+              <Pressable
+                key={item.id}
+                style={farmStyles.inlineButton}
+                onPress={() =>
+                  router.push({
+                    pathname: "/produce/[produce]",
+                    params: {
+                      produce: item.produce_id,
+                      farmId: farmProfile.user_id,
+                      price: item.price,
+                      unit: item.unit,
+                    },
+                  })
+                }
+              >
+                <Text style={farmStyles.inlineButtonText}>
+                  {item.name_nb} — {item.price} kr / {item.unit}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
