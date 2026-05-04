@@ -60,10 +60,13 @@ type AuthContextValue = {
     password: string,
     details: SignUpProfileDetails,
   ) => Promise<SignUpResult>;
+  requestPasswordReset: (email: string) => Promise<void>;
+  updatePassword: (password: string) => Promise<void>;
   resendConfirmationEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   clearAuthLinkState: () => void;
   makeEmailRedirectUrl: () => string;
+  makePasswordResetRedirectUrl: () => string;
   refreshProfile: () => Promise<void>;
   updateOwnProfile: (details: UpdateProfileDetails) => Promise<UserProfile>;
 };
@@ -71,6 +74,8 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 const createRedirectUrl = () => Linking.createURL("/auth/confirm");
+const createPasswordResetRedirectUrl = () =>
+  Linking.createURL("/auth/reset-password");
 
 const parseUrlParams = (url: string) => {
   const parsedUrl = new URL(url);
@@ -181,7 +186,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
           if (isMounted) {
             setAuthLinkStatus("success");
             setAuthLinkMessage(
-              "Email confirmed. Your session is now active on this device.",
+              params.type === "recovery"
+                ? "Password reset link verified. Choose a new password to finish recovering your account."
+                : "Email confirmed. Your session is now active on this device.",
             );
           }
           return;
@@ -206,9 +213,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
 
         if (params.token_hash) {
+          const linkType = normalizeEmailLinkType(params.type);
           const { error } = await supabaseClient.auth.verifyOtp({
             token_hash: params.token_hash,
-            type: normalizeEmailLinkType(params.type),
+            type: linkType,
           });
 
           if (error) {
@@ -218,7 +226,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
           if (isMounted) {
             setAuthLinkStatus("success");
             setAuthLinkMessage(
-              "Email confirmed. Your account is ready to use.",
+              linkType === "recovery"
+                ? "Password reset link verified. Choose a new password to finish recovering your account."
+                : "Email confirmed. Your account is ready to use.",
             );
           }
           return;
@@ -355,6 +365,30 @@ export function AuthProvider({ children }: PropsWithChildren) {
           throw error;
         }
       },
+      async requestPasswordReset(email) {
+        if (!supabase) {
+          throw new Error("Supabase is not configured.");
+        }
+
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: createPasswordResetRedirectUrl(),
+        });
+
+        if (error) {
+          throw error;
+        }
+      },
+      async updatePassword(password) {
+        if (!supabase) {
+          throw new Error("Supabase is not configured.");
+        }
+
+        const { error } = await supabase.auth.updateUser({ password });
+
+        if (error) {
+          throw error;
+        }
+      },
       async signOut() {
         if (!supabase) {
           throw new Error("Supabase is not configured.");
@@ -372,6 +406,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
       },
       makeEmailRedirectUrl() {
         return createRedirectUrl();
+      },
+      makePasswordResetRedirectUrl() {
+        return createPasswordResetRedirectUrl();
       },
       async refreshProfile() {
         await syncProfile(session?.user ?? null);
