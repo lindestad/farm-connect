@@ -7,6 +7,20 @@ import { usePushNotifications } from "../hooks/usePushNotifications";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
 import { CartProvider, useCart } from "../providers/cart-provider";
 
+const AUTH_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/confirm",
+  "/auth/forgot-password",
+  "/auth/reset-password",
+];
+const SESSION_REDIRECT_AUTH_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/confirm",
+  "/auth/forgot-password",
+];
+
 // Configure how notifications are displayed when the app is in the foreground
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -16,8 +30,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
-const AUTH_ROUTES = ["/auth/login", "/auth/register", "/auth/confirm"];
 
 function RootNavigator() {
   const { isLoading, session } = useAuth();
@@ -38,7 +50,7 @@ function RootNavigator() {
       return;
     }
 
-    if (session && AUTH_ROUTES.includes(pathname)) {
+    if (session && SESSION_REDIRECT_AUTH_ROUTES.includes(pathname)) {
       router.replace("/account" as Href);
       return;
     }

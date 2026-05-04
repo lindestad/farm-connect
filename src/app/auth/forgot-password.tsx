@@ -1,4 +1,4 @@
-import { Link, type Href, useRouter } from "expo-router";
+import { Link, type Href } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -12,23 +12,30 @@ import {
 import { AuthScreenShell } from "../../components/auth-screen-shell";
 import { useAuth } from "../../providers/auth-provider";
 
-export default function LoginScreen() {
-  const router = useRouter();
-  const { signInWithPassword } = useAuth();
+export default function ForgotPasswordScreen() {
+  const { makePasswordResetRedirectUrl, requestPasswordReset } = useAuth();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const handleLogin = async () => {
+  const handleRequestReset = async () => {
     try {
       setLoading(true);
       setErrorMessage(null);
-      await signInWithPassword(email.trim(), password);
-      router.replace("/account" as Href);
+      setSuccessMessage(null);
+
+      const normalizedEmail = email.trim();
+
+      if (!normalizedEmail) {
+        throw new Error("Enter the email address for your account.");
+      }
+
+      await requestPasswordReset(normalizedEmail);
+      setSuccessMessage("Check your inbox for a password reset link.");
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Unable to sign in.",
+        error instanceof Error ? error.message : "Unable to send reset email.",
       );
     } finally {
       setLoading(false);
@@ -37,14 +44,14 @@ export default function LoginScreen() {
 
   return (
     <AuthScreenShell
-      eyebrow="Login"
-      title="Sign in to manage pickups and market days."
-      subtitle="Use your FarmConnect account to access reservations, pickup slots, and farmer-side planning tools."
+      eyebrow="Password reset"
+      title="Send a password reset link."
+      subtitle="Supabase will email a recovery link that opens FarmConnect so you can choose a new password."
       footer={
         <Text style={styles.footerText}>
-          Don&apos;t have an account yet?{" "}
-          <Link href={"/auth/register" as Href} style={styles.footerLink}>
-            Create one
+          Remembered it?{" "}
+          <Link href={"/auth/login" as Href} style={styles.footerLink}>
+            Back to login
           </Link>
         </Text>
       }
@@ -62,33 +69,27 @@ export default function LoginScreen() {
           value={email}
         />
       </View>
-      <View style={styles.fieldGroup}>
-        <Text style={styles.label}>Password</Text>
-        <TextInput
-          autoCapitalize="none"
-          onChangeText={setPassword}
-          placeholder="Password"
-          placeholderTextColor="#7A867D"
-          secureTextEntry
-          style={styles.input}
-          value={password}
-        />
-      </View>
-      <Link href={"/auth/forgot-password" as Href} style={styles.inlineLink}>
-        Forgot your password?
-      </Link>
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
+      {successMessage ? (
+        <View style={styles.infoCard}>
+          <Text style={styles.infoTitle}>Reset email sent</Text>
+          <Text style={styles.infoBody}>{successMessage}</Text>
+          <Text style={styles.infoMeta}>
+            Redirect target: {makePasswordResetRedirectUrl()}
+          </Text>
+        </View>
+      ) : null}
       <Pressable
         disabled={loading}
-        onPress={handleLogin}
+        onPress={handleRequestReset}
         style={[styles.primaryButton, loading && styles.buttonDisabled]}
       >
         {loading ? (
           <ActivityIndicator color="#FFFFFF" />
         ) : (
-          <Text style={styles.primaryButtonText}>Sign in</Text>
+          <Text style={styles.primaryButtonText}>Send reset link</Text>
         )}
       </Pressable>
     </AuthScreenShell>
@@ -135,11 +136,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  inlineLink: {
-    alignSelf: "flex-start",
+  infoCard: {
+    backgroundColor: "#EEF5EB",
+    borderColor: "#DCE8D7",
+    borderRadius: 20,
+    borderWidth: 1,
+    gap: 6,
+    padding: 16,
+  },
+  infoTitle: {
     color: "#2F6A3E",
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  infoBody: {
+    color: "#334338",
     fontSize: 14,
-    fontWeight: "700",
+    lineHeight: 20,
+  },
+  infoMeta: {
+    color: "#5D6A60",
+    fontSize: 12,
+    lineHeight: 18,
   },
   footerText: {
     color: "#5D6A60",
