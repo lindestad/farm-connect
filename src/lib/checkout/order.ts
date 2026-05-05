@@ -25,6 +25,10 @@ export type OrderItem = {
   price: number;
 };
 
+export type OrderWithItems = Order & {
+  items: OrderItem[];
+};
+
 export type CreateOrderInput = {
   customer_id: string;
   farm_id: string;
@@ -111,6 +115,35 @@ export async function fetchOrderItems(orderId: string): Promise<OrderItem[]> {
 
   if (error) throw error;
   return data ?? [];
+}
+
+export async function fetchOrdersWithItems(
+  customerId: string,
+): Promise<OrderWithItems[]> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+  const { data: orders, error: ordersError } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("customer_id", customerId)
+    .order("created_at", { ascending: false });
+
+  if (ordersError) throw ordersError;
+  if (!orders || orders.length === 0) return [];
+
+  const { data: items, error: itemsError } = await supabase
+    .from("order_items")
+    .select("*")
+    .in(
+      "order_id",
+      orders.map((o) => o.id),
+    );
+
+  if (itemsError) throw itemsError;
+
+  return orders.map((order) => ({
+    ...order,
+    items: (items ?? []).filter((item) => item.order_id === order.id),
+  }));
 }
 
 export async function updateOrderStatus(

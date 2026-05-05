@@ -513,6 +513,23 @@ export default function AccountScreen() {
           <Text style={styles.successText}>{successMessage}</Text>
         ) : null}
 
+        {profile?.role === "customer" ? (
+          <View style={styles.panel}>
+            <Text style={styles.panelTitle}>Order history</Text>
+            <Text style={styles.panelBody}>
+              View your past purchases and pickup reservations.
+            </Text>
+            <Link href={"/order-history" as Href} asChild>
+              <Pressable
+                accessibilityRole="button"
+                style={styles.primaryButton}
+              >
+                <Text style={styles.primaryButtonText}>View order history</Text>
+              </Pressable>
+            </Link>
+          </View>
+        ) : null}
+
         <View style={styles.bottomRow}>
           <Pressable
             accessibilityRole="button"
