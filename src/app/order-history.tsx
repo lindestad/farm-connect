@@ -11,10 +11,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import {
-  fetchOrderItems,
-  fetchOrdersByCustomer,
-  type Order,
-  type OrderItem,
+  fetchOrdersWithItems,
+  type OrderWithItems,
 } from "../lib/checkout/order";
 import { useAuth } from "../providers/auth-provider";
 
@@ -31,15 +29,8 @@ function formatTimestamp(value: string | null | undefined) {
   });
 }
 
-function OrderCard({ order }: { order: Order }) {
+function OrderCard({ order }: { order: OrderWithItems }) {
   const isPickup = order.delivery_method === "pickup";
-  const [items, setItems] = useState<OrderItem[]>([]);
-
-  useEffect(() => {
-    fetchOrderItems(order.id)
-      .then(setItems)
-      .catch(() => {});
-  }, [order.id]);
 
   return (
     <View style={styles.orderCard}>
@@ -61,16 +52,12 @@ function OrderCard({ order }: { order: Order }) {
         </View>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Placed</Text>
-          <Text style={styles.metaValue}>
-            {formatTimestamp(order.created_at)}
-          </Text>
+          <Text style={styles.metaValue}>{formatTimestamp(order.created_at)}</Text>
         </View>
         {order.expires_at ? (
           <View style={styles.metaItem}>
             <Text style={styles.metaLabel}>Expires</Text>
-            <Text style={styles.metaValue}>
-              {formatTimestamp(order.expires_at)}
-            </Text>
+            <Text style={styles.metaValue}>{formatTimestamp(order.expires_at)}</Text>
           </View>
         ) : null}
       </View>
@@ -82,10 +69,10 @@ function OrderCard({ order }: { order: Order }) {
         </View>
       ) : null}
 
-      {items.length > 0 ? (
+      {order.items.length > 0 ? (
         <View style={styles.itemsBlock}>
           <Text style={styles.metaLabel}>Items</Text>
-          {items.map((item) => (
+          {order.items.map((item) => (
             <View key={item.id} style={styles.itemRow}>
               <Text style={styles.itemName}>{item.produce_name}</Text>
               <Text style={styles.itemDetail}>
@@ -101,7 +88,7 @@ function OrderCard({ order }: { order: Order }) {
 export default function OrderHistoryScreen() {
   const { user } = useAuth();
   const router = useRouter();
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -111,7 +98,7 @@ export default function OrderHistoryScreen() {
       setLoading(true);
       setError(null);
       try {
-        const result = await fetchOrdersByCustomer(user.id);
+        const result = await fetchOrdersWithItems(user.id);
         setOrders(result);
       } catch (err) {
         setError(
