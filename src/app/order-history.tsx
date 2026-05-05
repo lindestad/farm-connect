@@ -52,12 +52,16 @@ function OrderCard({ order }: { order: OrderWithItems }) {
         </View>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Placed</Text>
-          <Text style={styles.metaValue}>{formatTimestamp(order.created_at)}</Text>
+          <Text style={styles.metaValue}>
+            {formatTimestamp(order.created_at)}
+          </Text>
         </View>
         {order.expires_at ? (
           <View style={styles.metaItem}>
             <Text style={styles.metaLabel}>Expires</Text>
-            <Text style={styles.metaValue}>{formatTimestamp(order.expires_at)}</Text>
+            <Text style={styles.metaValue}>
+              {formatTimestamp(order.expires_at)}
+            </Text>
           </View>
         ) : null}
       </View>

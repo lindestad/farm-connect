@@ -25,8 +25,8 @@ export type OrderItem = {
   price: number;
 };
 
-export type OrderWithItems = Order & { 
-  items: OrderItem[] 
+export type OrderWithItems = Order & {
+  items: OrderItem[];
 };
 
 export type CreateOrderInput = {
@@ -117,7 +117,9 @@ export async function fetchOrderItems(orderId: string): Promise<OrderItem[]> {
   return data ?? [];
 }
 
-export async function fetchOrdersWithItems(customerId: string): Promise<OrderWithItems[]> {
+export async function fetchOrdersWithItems(
+  customerId: string,
+): Promise<OrderWithItems[]> {
   if (!supabase) throw new Error("Supabase is not configured.");
   const { data: orders, error: ordersError } = await supabase
     .from("orders")
@@ -131,9 +133,12 @@ export async function fetchOrdersWithItems(customerId: string): Promise<OrderWit
   const { data: items, error: itemsError } = await supabase
     .from("order_items")
     .select("*")
-    .in("order_id", orders.map((o) => o.id));
+    .in(
+      "order_id",
+      orders.map((o) => o.id),
+    );
 
-  if (ordersError) throw ordersError;
+  if (itemsError) throw itemsError;
 
   return orders.map((order) => ({
     ...order,
@@ -154,4 +159,3 @@ export async function updateOrderStatus(
 
   if (error) throw error;
 }
-
