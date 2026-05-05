@@ -96,7 +96,7 @@ export default function Index() {
                 {typedProduceData.items.slice(0, 8).map((item) => (
                   <ScaleButton
                     key={item.id}
-                    onPress={() => router.push(`/produce/${item.id}` as Href)}
+                    onPress={() => router.push("/produce" as Href)}
                     style={homeStyles.produceChip}
                     textStyle={homeStyles.produceChipText}
                   >

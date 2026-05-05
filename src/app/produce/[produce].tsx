@@ -1,7 +1,7 @@
 import { useCart } from "@/providers/cart-provider";
 import { produceStyles } from "@/styles/produce-styles";
 import * as Linking from "expo-linking";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { type Href, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import produceData from "../../data/produceData.json";
@@ -164,33 +164,44 @@ export default function ProduceScreen() {
           ))}
         </View>
 
-        <View style={produceStyles.cartSection}>
-          <View style={produceStyles.qtyRow}>
+        {farmId ? (
+          <View style={produceStyles.cartSection}>
+            <View style={produceStyles.qtyRow}>
+              <Pressable
+                style={produceStyles.qtyButton}
+                onPress={() => setQty((q) => Math.max(1, q - 1))}
+              >
+                <Text style={produceStyles.qtyButtonText}>−</Text>
+              </Pressable>
+              <Text style={produceStyles.qtyValue}>
+                {qty} {farmUnit}
+              </Text>
+              <Pressable
+                style={produceStyles.qtyButton}
+                onPress={() => setQty((q) => q + 1)}
+              >
+                <Text style={produceStyles.qtyButtonText}>+</Text>
+              </Pressable>
+            </View>
             <Pressable
-              style={produceStyles.qtyButton}
-              onPress={() => setQty((q) => Math.max(1, q - 1))}
+              style={produceStyles.addToCartButton}
+              onPress={handleAddToCart}
             >
-              <Text style={produceStyles.qtyButtonText}>−</Text>
-            </Pressable>
-            <Text style={produceStyles.qtyValue}>
-              {qty} {farmUnit}
-            </Text>
-            <Pressable
-              style={produceStyles.qtyButton}
-              onPress={() => setQty((q) => q + 1)}
-            >
-              <Text style={produceStyles.qtyButtonText}>+</Text>
+              <Text style={produceStyles.addToCartText}>
+                Add to Cart · {farmPrice * qty} kr
+              </Text>
             </Pressable>
           </View>
+        ) : (
           <Pressable
             style={produceStyles.addToCartButton}
-            onPress={handleAddToCart}
+            onPress={() => router.push("/produce" as Href)}
           >
             <Text style={produceStyles.addToCartText}>
-              Add to Cart · {farmPrice * qty} kr
+              Browse farms to purchase
             </Text>
           </Pressable>
-        </View>
+        )}
       </View>
     </ScrollView>
   );
