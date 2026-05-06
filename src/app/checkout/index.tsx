@@ -18,16 +18,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// TODO: replace with real farm_id from farm inventory when per-farm produce is implemented
-const MOCK_FARM_ID = "005eb263-c5d6-42fc-bae5-47847b952c1a";
-
 type DeliveryMethod = "pickup" | "reservation";
 
 export default function Checkout() {
-  const farm_id = MOCK_FARM_ID;
   const { session } = useAuth();
   const router = useRouter();
   const { cartItems, clearCart, removeItem } = useCart();
+  const farm_id = cartItems[0]?.farm_id ?? "";
+  const farmIdRef = useRef(farm_id);
+  useEffect(() => {
+    farmIdRef.current = farm_id;
+  }, [farm_id]);
 
   const [delivery, setDelivery] = useState<DeliveryMethod>("pickup");
   const deliveryRef = useRef(delivery);
@@ -70,8 +71,10 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!paymentSuccess) return;
+    if (!session?.user.id) return;
 
     const items = cartItemsRef.current.map((item) => ({
+      produce_id: item.produce_id,
       produce_name: item.produce_name,
       qty: item.qty,
       unit: item.unit,
@@ -79,8 +82,8 @@ export default function Checkout() {
     }));
 
     createOrder({
-      customer_id: session!.user.id,
-      farm_id,
+      customer_id: session.user.id,
+      farm_id: farmIdRef.current,
       delivery_method: deliveryRef.current,
       pickup_notes: pickupNotesRef.current,
       items,
@@ -104,7 +107,7 @@ export default function Checkout() {
           "Payment succeeded but order could not be saved. Please contact support.",
         ),
       );
-  }, [paymentSuccess, session, farm_id, router, clearCart]);
+  }, [paymentSuccess, session, router, clearCart]);
 
   async function handleReserve() {
     if (!session?.user.id) {
@@ -113,6 +116,7 @@ export default function Checkout() {
     }
 
     const items = cartItems.map((item) => ({
+      produce_id: item.produce_id,
       produce_name: item.produce_name,
       qty: item.qty,
       unit: item.unit,

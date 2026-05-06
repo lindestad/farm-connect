@@ -1,7 +1,7 @@
 import { useCart } from "@/providers/cart-provider";
 import { produceStyles } from "@/styles/produce-styles";
 import * as Linking from "expo-linking";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { type Href, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import produceData from "../../data/produceData.json";
@@ -74,12 +74,21 @@ function NutritionRow({ label, value }: { label: string; value: string }) {
 }
 
 export default function ProduceScreen() {
-  const { produce } = useLocalSearchParams<{ produce: string }>();
+  const { produce, farmId, price, unit, stock } = useLocalSearchParams<{
+    produce: string;
+    farmId: string;
+    price: string;
+    unit: string;
+    stock: string;
+  }>();
   const router = useRouter();
   const { addItem } = useCart();
   const [qty, setQty] = useState(1);
 
   const item = typedProduceData.items.find((i) => i.id === produce);
+  const farmPrice = price ? parseFloat(price) : (item?.price ?? 0);
+  const farmUnit = unit ?? item?.unit ?? "";
+  const availableStock = stock ? parseFloat(stock) : null;
 
   if (!item) {
     return (
@@ -95,9 +104,10 @@ export default function ProduceScreen() {
     addItem({
       produce_id: item!.id,
       produce_name: item!.name_nb,
+      farm_id: farmId,
       qty,
-      unit: item!.unit,
-      price_per_unit: item!.price,
+      unit: farmUnit,
+      price_per_unit: farmPrice,
     });
     router.push("/(tabs)/checkout");
   }
@@ -156,33 +166,55 @@ export default function ProduceScreen() {
           ))}
         </View>
 
-        <View style={produceStyles.cartSection}>
-          <View style={produceStyles.qtyRow}>
+        {farmId ? (
+          <View style={produceStyles.cartSection}>
+            {availableStock !== null ? (
+              <Text style={produceStyles.detail}>
+                {availableStock} {farmUnit} available
+              </Text>
+            ) : null}
+            <View style={produceStyles.qtyRow}>
+              <Pressable
+                style={produceStyles.qtyButton}
+                onPress={() => setQty((q) => Math.max(1, q - 1))}
+              >
+                <Text style={produceStyles.qtyButtonText}>−</Text>
+              </Pressable>
+              <Text style={produceStyles.qtyValue}>
+                {qty} {farmUnit}
+              </Text>
+              <Pressable
+                style={produceStyles.qtyButton}
+                onPress={() =>
+                  setQty((q) =>
+                    availableStock !== null
+                      ? Math.min(availableStock, q + 1)
+                      : q + 1,
+                  )
+                }
+              >
+                <Text style={produceStyles.qtyButtonText}>+</Text>
+              </Pressable>
+            </View>
             <Pressable
-              style={produceStyles.qtyButton}
-              onPress={() => setQty((q) => Math.max(1, q - 1))}
+              style={produceStyles.addToCartButton}
+              onPress={handleAddToCart}
             >
-              <Text style={produceStyles.qtyButtonText}>−</Text>
-            </Pressable>
-            <Text style={produceStyles.qtyValue}>
-              {qty} {item.unit}
-            </Text>
-            <Pressable
-              style={produceStyles.qtyButton}
-              onPress={() => setQty((q) => q + 1)}
-            >
-              <Text style={produceStyles.qtyButtonText}>+</Text>
+              <Text style={produceStyles.addToCartText}>
+                Add to Cart · {farmPrice * qty} kr
+              </Text>
             </Pressable>
           </View>
+        ) : (
           <Pressable
             style={produceStyles.addToCartButton}
-            onPress={handleAddToCart}
+            onPress={() => router.push("/produce" as Href)}
           >
             <Text style={produceStyles.addToCartText}>
-              Add to Cart · {item.price * qty} kr
+              Browse farms to purchase
             </Text>
           </Pressable>
-        </View>
+        )}
       </View>
     </ScrollView>
   );

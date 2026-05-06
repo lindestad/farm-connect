@@ -34,7 +34,7 @@ export type CreateOrderInput = {
   farm_id: string;
   delivery_method: DeliveryMethod;
   pickup_notes?: string;
-  items: Omit<OrderItem, "id" | "order_id">[];
+  items: (Omit<OrderItem, "id" | "order_id"> & { produce_id?: string })[];
 };
 
 export async function createOrder(input: CreateOrderInput): Promise<Order> {
@@ -73,6 +73,19 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
   );
 
   if (itemsError) throw itemsError;
+
+  const itemsWithProduce = input.items.filter((i) => i.produce_id);
+  if (itemsWithProduce.length > 0) {
+    await supabase.functions.invoke("decrement-stock", {
+      body: {
+        farm_user_id: input.farm_id,
+        items: itemsWithProduce.map((i) => ({
+          produce_id: i.produce_id,
+          qty: i.qty,
+        })),
+      },
+    });
+  }
 
   return order;
 }
