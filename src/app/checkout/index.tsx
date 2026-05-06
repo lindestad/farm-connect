@@ -71,6 +71,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (!paymentSuccess) return;
+    if (!session?.user.id) return;
 
     const items = cartItemsRef.current.map((item) => ({
       produce_id: item.produce_id,
@@ -81,7 +82,7 @@ export default function Checkout() {
     }));
 
     createOrder({
-      customer_id: session!.user.id,
+      customer_id: session.user.id,
       farm_id: farmIdRef.current,
       delivery_method: deliveryRef.current,
       pickup_notes: pickupNotesRef.current,

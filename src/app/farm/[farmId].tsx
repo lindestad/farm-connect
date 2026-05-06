@@ -447,6 +447,7 @@ export default function FarmProfileScreen() {
                       farmId: farmProfile.user_id,
                       price: item.price,
                       unit: item.unit,
+                      stock: item.stock,
                     },
                   })
                 }

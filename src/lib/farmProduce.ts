@@ -30,7 +30,8 @@ export async function fetchProduceByFarm(
     .from("farm_produce")
     .select("*")
     .eq("farm_id", farmId)
-    .eq("is_available", true);
+    .eq("is_available", true)
+    .gt("stock", 0);
 
   if (error) throw error;
 

@@ -74,11 +74,12 @@ function NutritionRow({ label, value }: { label: string; value: string }) {
 }
 
 export default function ProduceScreen() {
-  const { produce, farmId, price, unit } = useLocalSearchParams<{
+  const { produce, farmId, price, unit, stock } = useLocalSearchParams<{
     produce: string;
     farmId: string;
     price: string;
     unit: string;
+    stock: string;
   }>();
   const router = useRouter();
   const { addItem } = useCart();
@@ -87,6 +88,7 @@ export default function ProduceScreen() {
   const item = typedProduceData.items.find((i) => i.id === produce);
   const farmPrice = price ? parseFloat(price) : (item?.price ?? 0);
   const farmUnit = unit ?? item?.unit ?? "";
+  const availableStock = stock ? parseFloat(stock) : null;
 
   if (!item) {
     return (
@@ -166,6 +168,11 @@ export default function ProduceScreen() {
 
         {farmId ? (
           <View style={produceStyles.cartSection}>
+            {availableStock !== null ? (
+              <Text style={produceStyles.detail}>
+                {availableStock} {farmUnit} available
+              </Text>
+            ) : null}
             <View style={produceStyles.qtyRow}>
               <Pressable
                 style={produceStyles.qtyButton}
@@ -178,7 +185,13 @@ export default function ProduceScreen() {
               </Text>
               <Pressable
                 style={produceStyles.qtyButton}
-                onPress={() => setQty((q) => q + 1)}
+                onPress={() =>
+                  setQty((q) =>
+                    availableStock !== null
+                      ? Math.min(availableStock, q + 1)
+                      : q + 1,
+                  )
+                }
               >
                 <Text style={produceStyles.qtyButtonText}>+</Text>
               </Pressable>
