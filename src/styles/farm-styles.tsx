@@ -65,6 +65,16 @@ export const farmStyles = StyleSheet.create({
     padding: 18,
     ...shadow,
   },
+  panelHeaderRow: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "space-between",
+  },
+  panelHeaderCopy: {
+    flex: 1,
+    gap: 4,
+  },
   sectionHeader: {
     gap: 12,
   },
@@ -115,6 +125,17 @@ export const farmStyles = StyleSheet.create({
     color: "#214C2D",
     fontSize: 13,
     fontWeight: "700",
+  },
+  closeButton: {
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  closeButtonText: {
+    color: "#214C2D",
+    fontSize: 12,
+    fontWeight: "800",
   },
   card: {
     backgroundColor: "#FFFFFF",
@@ -199,6 +220,66 @@ export const farmStyles = StyleSheet.create({
     fontSize: 15,
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  mapSearchBar: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#D7E2D3",
+    borderRadius: 22,
+    borderWidth: 1,
+    minHeight: 52,
+    justifyContent: "center",
+    paddingHorizontal: 18,
+    ...shadow,
+  },
+  mapSearchPlaceholder: {
+    color: "#445148",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  filterGroup: {
+    gap: 8,
+  },
+  filterLabel: {
+    color: "#5D6A60",
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 0.3,
+    textTransform: "uppercase",
+  },
+  filterRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  filterChip: {
+    backgroundColor: "#F7FBF5",
+    borderColor: "#D7E2D3",
+    borderRadius: 999,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  filterChipActive: {
+    backgroundColor: "#21432D",
+    borderColor: "#21432D",
+  },
+  filterChipText: {
+    color: "#445148",
+    fontSize: 13,
+    fontWeight: "700",
+  },
+  filterChipTextActive: {
+    color: "#FFFFFF",
+  },
+  resultMeta: {
+    color: "#5D6A60",
+    fontSize: 13,
+  },
+  resultList: {
+    maxHeight: 360,
+  },
+  resultListContent: {
+    gap: 10,
   },
   emptyText: {
     color: "#5D6A60",

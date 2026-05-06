@@ -2,9 +2,8 @@ import { useRouter, type Href } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Animated, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { FarmList } from "../components/FarmList";
 import produceData from "../data/produceData.json";
-import { useAllFarmProfiles, useFarmProfile } from "../hooks/useFarmProfile";
+import { useFarmProfile } from "../hooks/useFarmProfile";
 import { useAuth } from "../providers/auth-provider";
 import { homeStyles } from "../styles/home-styles";
 
@@ -41,7 +40,6 @@ function ScaleButton({
 export default function Index() {
   const { session, user, profile } = useAuth();
   const { farmProfile } = useFarmProfile(user?.id);
-  const { farms, loading: farmsLoading } = useAllFarmProfiles();
   const router = useRouter();
 
   const firstName = user?.email?.split("@")[0] ?? null;
@@ -112,9 +110,6 @@ export default function Index() {
                 See all produce
               </ScaleButton>
             </View>
-
-            {/* Farms */}
-            <FarmList farms={farms} loading={farmsLoading} />
 
             {/* Account */}
             <View style={homeStyles.sectionCard}>
