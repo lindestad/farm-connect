@@ -114,7 +114,7 @@ export default function ProduceScreen() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={produceStyles.safeArea}>
       <Pressable
         accessibilityRole="button"
         onPress={() => router.back()}
@@ -123,6 +123,7 @@ export default function ProduceScreen() {
         <Text style={backButtonStyle.text}>← Back</Text>
       </Pressable>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={produceStyles.scrollView}
         contentContainerStyle={produceStyles.scrollContent}
       >
@@ -177,7 +178,10 @@ export default function ProduceScreen() {
               />
             ))}
           </View>
-
+        </View>
+      </ScrollView>
+      <View style={produceStyles.stickyFooter}>
+        <View style={produceStyles.stickyFooterCard}>
           {farmId ? (
             <View style={produceStyles.cartSection}>
               {availableStock !== null ? (
@@ -238,7 +242,7 @@ export default function ProduceScreen() {
             </Pressable>
           )}
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }

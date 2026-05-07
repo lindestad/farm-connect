@@ -44,7 +44,7 @@ jest.mock("../src/providers/auth-provider", () => ({
 }));
 
 jest.mock("expo-router", () => ({
-  useRouter: () => ({ replace: jest.fn(), push: jest.fn() }),
+  useRouter: () => ({ back: jest.fn(), replace: jest.fn(), push: jest.fn() }),
   useFocusEffect: jest.fn(),
 }));
 

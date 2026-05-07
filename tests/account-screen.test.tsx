@@ -44,6 +44,7 @@ jest.mock("expo-router", () => {
     Link: ({ children }: { children: React.ReactNode }) => (
       <Text>{children}</Text>
     ),
+    useRouter: () => ({ back: jest.fn() }),
   };
 });
 

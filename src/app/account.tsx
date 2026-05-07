@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -394,6 +394,7 @@ function FarmerProfileView() {
 }
 
 export default function AccountScreen() {
+  const router = useRouter();
   const {
     profile,
     profileError,
@@ -471,12 +472,27 @@ export default function AccountScreen() {
     }
   };
 
+  const handleBack = () => {
+    if (typeof router.canGoBack === "function" && router.canGoBack()) {
+      router.back();
+      return;
+    }
+    router.replace("/");
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.page}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={handleBack}
+          style={backButtonStyle.button}
+        >
+          <Text style={backButtonStyle.text}>← Back</Text>
+        </Pressable>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
@@ -522,7 +538,7 @@ export default function AccountScreen() {
 
           {profile?.role === "customer" ? (
             <View style={styles.panel}>
-              <Text style={styles.panelTitle}>Order history</Text>
+              <Text style={styles.panelTitle}>Order History</Text>
               <Text style={styles.panelBody}>
                 View your past purchases and pickup reservations.
               </Text>
@@ -557,11 +573,6 @@ export default function AccountScreen() {
                 <Text style={styles.primaryButtonText}>Sign out</Text>
               )}
             </Pressable>
-            <Text style={styles.footerText}>
-              <Link href={"/"} style={styles.footerLink}>
-                Back to landing page
-              </Link>
-            </Text>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -816,13 +827,24 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  footerText: {
-    color: "#5D6A60",
-    fontSize: 14,
-    lineHeight: 22,
-  },
-  footerLink: {
-    color: "#2F6A3E",
-    fontWeight: "700",
-  },
 });
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

@@ -200,6 +200,13 @@ export default function Checkout() {
   if (cartItems.length === 0 && !reserved) {
     return (
       <SafeAreaView style={styles.page}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          style={backButtonStyle.button}
+        >
+          <Text style={backButtonStyle.text}>← Back</Text>
+        </Pressable>
         <View style={styles.emptyState}>
           <Text style={styles.emptyTitle}>Your cart is empty</Text>
           <Text style={styles.emptyText}>Browse produce to add items.</Text>
@@ -221,6 +228,13 @@ export default function Checkout() {
       style={{ flex: 1 }}
     >
       <SafeAreaView style={styles.page}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          style={backButtonStyle.button}
+        >
+          <Text style={backButtonStyle.text}>← Back</Text>
+        </Pressable>
         <ScrollView
           contentContainerStyle={styles.scroll}
           showsVerticalScrollIndicator={false}
@@ -341,11 +355,11 @@ export default function Checkout() {
               <Text style={styles.summaryLabel}>
                 Items ({cartItems.length})
               </Text>
-              <Text style={styles.summaryValue}>{subtotal} kr</Text>
+              <Text style={styles.summaryValue}>{subtotal} kr </Text>
             </View>
             <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Delivery</Text>
-              <Text style={styles.summaryValue}>Free</Text>
+              <Text style={styles.summaryLabel}>Delivery </Text>
+              <Text style={styles.summaryValue}>Free </Text>
             </View>
             <View style={styles.divider} />
             <View style={styles.summaryRow}>
@@ -396,3 +410,23 @@ export default function Checkout() {
     </KeyboardAvoidingView>
   );
 }
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

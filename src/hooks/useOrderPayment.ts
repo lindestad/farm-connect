@@ -36,7 +36,7 @@ export function useOrderPayment(amountInNOK: number) {
       merchantDisplayName: "FarmConnect",
       googlePay: {
         merchantCountryCode: "NO",
-        testEnv: __DEV__,
+        testEnv: true,
       },
       // Apple Pay can be configured similarly if needed, also enable it in App.json
       intentConfiguration: {

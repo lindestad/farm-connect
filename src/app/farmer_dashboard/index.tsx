@@ -1,8 +1,9 @@
 import { supabase } from "@/lib/supabase";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -46,6 +47,7 @@ function formatTime(timeStr: string): string {
 }
 
 export default function DashboardScreen() {
+  const router = useRouter();
   const { profile, user } = useAuth();
   const isFarmer = profile?.role === "farmer";
   const [summary, setSummary] = useState<DashboardSummary>(EMPTY_SUMMARY);
@@ -138,6 +140,13 @@ export default function DashboardScreen() {
 
   return (
     <SafeAreaView style={styles.page}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
       <ScrollView
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
@@ -219,12 +228,6 @@ export default function DashboardScreen() {
             </Link>
           </View>
         ) : null}
-
-        <View style={styles.footerRow}>
-          <Link href={"/account"} style={styles.footerLink}>
-            Back to profile
-          </Link>
-        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -321,18 +324,29 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
   },
-  footerRow: {
-    alignItems: "center",
-    marginTop: 16,
-  },
-  footerLink: {
-    color: "#2F6A3E",
-    fontWeight: "700",
-    fontSize: 15,
-  },
   errorText: {
     color: "#9C5B4D",
     fontSize: 14,
     lineHeight: 20,
   },
 });
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};
