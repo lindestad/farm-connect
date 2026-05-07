@@ -9,6 +9,7 @@ import {
   Alert,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -26,14 +27,12 @@ type MarketDay = {
   start_time: string;
   end_time: string;
   location: string;
-  notes: string;
+  notes: string | null;
   status: "upcoming" | "active" | "past";
 };
 
 type Filter = "all" | "upcoming" | "past";
 type PickerField = "date" | "start_time" | "end_time" | null;
-
-const today = new Date();
 
 function formatDate(dateStr: string): string {
   const [y, m, d] = dateStr.split("-").map(Number);
@@ -54,7 +53,8 @@ function formatTime(timeStr: string): string {
 function deriveStatus(dateStr: string): MarketDay["status"] {
   const [y, m, d] = dateStr.split("-").map(Number);
   const date = new Date(y, m - 1, d);
-  const t = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const now = new Date();
+  const t = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   if (date < t) return "past";
   if (date.getTime() === t.getTime()) return "active";
   return "upcoming";
@@ -264,6 +264,7 @@ function MarketDayModal({
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ gap: 12 }}
+            keyboardDismissMode="on-drag"
           >
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>Date</Text>
@@ -287,7 +288,7 @@ function MarketDayModal({
                 <DateTimePicker
                   value={pickerValue()}
                   mode="date"
-                  display="spinner"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
                   minimumDate={new Date()}
                   onChange={handlePickerChange}
                   style={modalStyles.iosPicker}
@@ -320,7 +321,7 @@ function MarketDayModal({
                   <DateTimePicker
                     value={pickerValue()}
                     mode="time"
-                    display="spinner"
+                    display={Platform.OS === "ios" ? "spinner" : "default"}
                     is24Hour
                     onChange={handlePickerChange}
                     style={modalStyles.iosPicker}
@@ -352,7 +353,7 @@ function MarketDayModal({
                   <DateTimePicker
                     value={pickerValue()}
                     mode="time"
-                    display="spinner"
+                    display={Platform.OS === "ios" ? "spinner" : "default"}
                     is24Hour
                     onChange={handlePickerChange}
                     style={modalStyles.iosPicker}
@@ -563,6 +564,13 @@ export default function MarketDaysScreen() {
 
   return (
     <SafeAreaView style={styles.page}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -592,16 +600,6 @@ export default function MarketDaysScreen() {
               activeOpacity={0.8}
             >
               <Text style={styles.dashboardButtonText}>+ Add Market Day</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.dashboardButtonRow}>
-            <TouchableOpacity
-              style={styles.dashboardButton}
-              onPress={() => router.back()}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.dashboardButtonText}>Back to Dashboard</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -983,3 +981,23 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
 });
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

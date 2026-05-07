@@ -7,7 +7,11 @@ const shadow = {
 export const homeStyles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#F6F7F3" },
   page: { flex: 1, backgroundColor: "#F6F7F3" },
-  scrollContent: { paddingHorizontal: 18, paddingVertical: 24 },
+  scrollContent: {
+    paddingHorizontal: 18,
+    paddingTop: 24,
+    paddingBottom: 100,
+  },
   shell: { width: "100%", maxWidth: 1180, alignSelf: "center", gap: 28 },
   blob: { position: "absolute", borderRadius: 999, opacity: 0.9 },
   blobLeft: {

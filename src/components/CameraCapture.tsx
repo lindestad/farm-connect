@@ -6,10 +6,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type CameraCaptureProps = {
   onPhotoConfirmed?: (uri: string) => void;
+  onBack?: () => void;
 };
 
 export default function CameraCapture({
   onPhotoConfirmed,
+  onBack,
 }: CameraCaptureProps) {
   const [facing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
@@ -82,7 +84,11 @@ export default function CameraCapture({
               <Text style={styles.previewActionText}>Retake</Text>
             </Pressable>
 
-            <Pressable style={styles.previewPrimaryButton} onPress={usePhoto}>
+            <Pressable
+              accessibilityRole="button"
+              style={styles.previewPrimaryButton}
+              onPress={usePhoto}
+            >
               <Text style={styles.previewPrimaryText}>Use photo</Text>
             </Pressable>
           </View>
@@ -91,13 +97,41 @@ export default function CameraCapture({
         <View style={styles.container}>
           <CameraView ref={cameraRef} style={styles.camera} facing={facing} />
 
+          {onBack ? (
+            <Pressable
+              accessibilityRole="button"
+              onPress={onBack}
+              style={{
+                position: "absolute",
+                top: insets.top + 12,
+                left: 16,
+                backgroundColor: "rgba(0,0,0,0.45)",
+                borderRadius: 999,
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+                minHeight: 44,
+                minWidth: 44,
+                justifyContent: "center",
+                zIndex: 10,
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 13, fontWeight: "700" }}>
+                ← Back
+              </Text>
+            </Pressable>
+          ) : null}
+
           <View
             style={[styles.bottomBar, { paddingBottom: insets.bottom + 16 }]}
           >
             <View style={styles.controlsRow}>
               <View style={styles.sideControl} />
 
-              <Pressable style={styles.captureButton} onPress={capturePicture}>
+              <Pressable
+                accessibilityRole="button"
+                style={styles.captureButton}
+                onPress={capturePicture}
+              >
                 <View style={styles.captureButtonInner} />
               </Pressable>
 

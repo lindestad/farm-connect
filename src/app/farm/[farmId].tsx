@@ -348,7 +348,13 @@ export default function FarmProfileScreen() {
 
   useEffect(() => {
     if (!farmId) return;
-    fetchProduceByFarm(farmId).then(setFarmProduce);
+    let cancelled = false;
+    fetchProduceByFarm(farmId).then((rows) => {
+      if (!cancelled) setFarmProduce(rows);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [farmId]);
 
   const handleDelete = () => {
@@ -383,7 +389,11 @@ export default function FarmProfileScreen() {
   if (loading) {
     return (
       <SafeAreaView style={farmStyles.page}>
-        <ActivityIndicator color="#2F6A3E" />
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator color="#2F6A3E" />
+        </View>
       </SafeAreaView>
     );
   }
@@ -402,6 +412,13 @@ export default function FarmProfileScreen() {
 
   return (
     <SafeAreaView style={farmStyles.page}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
       <ScrollView
         contentContainerStyle={farmStyles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -463,3 +480,23 @@ export default function FarmProfileScreen() {
     </SafeAreaView>
   );
 }
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

@@ -1,11 +1,17 @@
 import produceData from "../data/produceData.json";
 import { supabase } from "./supabase";
 
-type ProduceDataFile = {
-  items: { id: string; name_nb: string; unit: string; price: number }[];
+type ProduceDataItem = {
+  id: string;
+  name_nb: string;
+  unit: string;
+  price: number;
 };
+type ProduceDataFile = { items: ProduceDataItem[] };
 
-const typedProduceData = produceData as ProduceDataFile;
+const produceNameById = new Map<string, string>(
+  (produceData as ProduceDataFile).items.map((i) => [i.id, i.name_nb]),
+);
 
 export type FarmProduce = {
   id: string;
@@ -35,11 +41,10 @@ export async function fetchProduceByFarm(
 
   if (error) throw error;
 
-  // Join med lokal produceData for å få navn
-  return (data ?? []).map((row) => {
-    const match = typedProduceData.items.find((i) => i.id === row.produce_id);
-    return { ...row, name_nb: match?.name_nb ?? row.produce_id };
-  });
+  return (data ?? []).map((row) => ({
+    ...row,
+    name_nb: produceNameById.get(row.produce_id) ?? row.produce_id,
+  }));
 }
 
 export async function upsertFarmProduce(

@@ -1,9 +1,10 @@
 import { useCart } from "@/providers/cart-provider";
 import { produceStyles } from "@/styles/produce-styles";
 import * as Linking from "expo-linking";
-import { type Href, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import produceData from "../../data/produceData.json";
 
 // Complete product data structure based on the output from generateProductData.ts
@@ -39,7 +40,7 @@ type NutritionData = {
 // Define the nutrition fields to display in the UI
 const nutritionFields: {
   label: string;
-  key: keyof NutritionData;
+  key: Exclude<keyof NutritionData, "per">;
   unit: string;
 }[] = [
   { label: "Energy", key: "energy_kj", unit: "kJ" },
@@ -113,109 +114,151 @@ export default function ProduceScreen() {
   }
 
   return (
-    <ScrollView
-      style={produceStyles.scrollView}
-      contentContainerStyle={produceStyles.scrollContent}
-    >
-      <View style={produceStyles.card}>
-        <Text style={produceStyles.title}>{item.name_nb}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
+      <ScrollView
+        style={produceStyles.scrollView}
+        contentContainerStyle={produceStyles.scrollContent}
+      >
+        <View style={produceStyles.card}>
+          <Text style={produceStyles.title}>{item.name_nb}</Text>
 
-        {item.name_en ? (
-          <Text style={produceStyles.detail}>{item.name_en}</Text>
-        ) : null}
+          {item.name_en ? (
+            <Text style={produceStyles.detail}>{item.name_en}</Text>
+          ) : null}
 
-        <View style={produceStyles.metaBox}>
-          <Text style={produceStyles.metaText}>Category: {item.category}</Text>
-          <Text style={produceStyles.metaText}>Per: {item.nutrition.per}</Text>
-          <Text style={produceStyles.metaText}>Food ID: {item.foodId}</Text>
-        </View>
-
-        {item.matvareUrl_nb ? (
-          <Pressable
-            onPress={() => Linking.openURL(item.matvareUrl_nb!)}
-            style={produceStyles.linkButton}
-          >
-            <Text style={produceStyles.linkText}>
-              Source (Norwegian): Matvaretabellen
+          <View style={produceStyles.metaBox}>
+            <Text style={produceStyles.metaText}>
+              Category: {item.category}
             </Text>
-          </Pressable>
-        ) : null}
-
-        {item.matvareUrl_en ? (
-          <Pressable
-            onPress={() => Linking.openURL(item.matvareUrl_en!)}
-            style={produceStyles.linkButton}
-          >
-            <Text style={produceStyles.linkText}>
-              Source (English): Matvaretabellen
+            <Text style={produceStyles.metaText}>
+              Per: {item.nutrition.per}
             </Text>
-          </Pressable>
-        ) : null}
+            <Text style={produceStyles.metaText}>Food ID: {item.foodId}</Text>
+          </View>
 
-        <View style={produceStyles.nutritionTable}>
-          <Text style={produceStyles.tableTitle}>Nutrition</Text>
-          {nutritionFields.map((field) => (
-            <NutritionRow
-              key={field.key}
-              label={field.label}
-              value={formatValue(
-                item.nutrition[field.key] as number,
-                field.unit,
-              )}
-            />
-          ))}
-        </View>
-
-        {farmId ? (
-          <View style={produceStyles.cartSection}>
-            {availableStock !== null ? (
-              <Text style={produceStyles.detail}>
-                {availableStock} {farmUnit} available
-              </Text>
-            ) : null}
-            <View style={produceStyles.qtyRow}>
-              <Pressable
-                style={produceStyles.qtyButton}
-                onPress={() => setQty((q) => Math.max(1, q - 1))}
-              >
-                <Text style={produceStyles.qtyButtonText}>−</Text>
-              </Pressable>
-              <Text style={produceStyles.qtyValue}>
-                {qty} {farmUnit}
-              </Text>
-              <Pressable
-                style={produceStyles.qtyButton}
-                onPress={() =>
-                  setQty((q) =>
-                    availableStock !== null
-                      ? Math.min(availableStock, q + 1)
-                      : q + 1,
-                  )
-                }
-              >
-                <Text style={produceStyles.qtyButtonText}>+</Text>
-              </Pressable>
-            </View>
+          {item.matvareUrl_nb ? (
             <Pressable
-              style={produceStyles.addToCartButton}
-              onPress={handleAddToCart}
+              accessibilityRole="link"
+              onPress={() => Linking.openURL(item.matvareUrl_nb!)}
+              style={produceStyles.linkButton}
             >
-              <Text style={produceStyles.addToCartText}>
-                Add to Cart · {farmPrice * qty} kr
+              <Text style={produceStyles.linkText}>
+                Source (Norwegian): Matvaretabellen
               </Text>
             </Pressable>
+          ) : null}
+
+          {item.matvareUrl_en ? (
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => Linking.openURL(item.matvareUrl_en!)}
+              style={produceStyles.linkButton}
+            >
+              <Text style={produceStyles.linkText}>
+                Source (English): Matvaretabellen
+              </Text>
+            </Pressable>
+          ) : null}
+
+          <View style={produceStyles.nutritionTable}>
+            <Text style={produceStyles.tableTitle}>Nutrition</Text>
+            {nutritionFields.map((field) => (
+              <NutritionRow
+                key={field.key}
+                label={field.label}
+                value={formatValue(item.nutrition[field.key], field.unit)}
+              />
+            ))}
           </View>
-        ) : (
-          <Pressable
-            style={produceStyles.addToCartButton}
-            onPress={() => router.push("/produce" as Href)}
-          >
-            <Text style={produceStyles.addToCartText}>
-              Browse farms to purchase
-            </Text>
-          </Pressable>
-        )}
-      </View>
-    </ScrollView>
+
+          {farmId ? (
+            <View style={produceStyles.cartSection}>
+              {availableStock !== null ? (
+                <Text style={produceStyles.detail}>
+                  {availableStock} {farmUnit} available
+                </Text>
+              ) : null}
+              <View style={produceStyles.qtyRow}>
+                <Pressable
+                  accessibilityRole="button"
+                  style={produceStyles.qtyButton}
+                  onPress={() => setQty((q) => Math.max(1, q - 1))}
+                >
+                  <Text style={produceStyles.qtyButtonText}>−</Text>
+                </Pressable>
+                <Text style={produceStyles.qtyValue}>
+                  {qty} {farmUnit}
+                </Text>
+                <Pressable
+                  accessibilityRole="button"
+                  style={produceStyles.qtyButton}
+                  onPress={() =>
+                    setQty((q) =>
+                      availableStock !== null
+                        ? Math.min(availableStock, q + 1)
+                        : q + 1,
+                    )
+                  }
+                >
+                  <Text style={produceStyles.qtyButtonText}>+</Text>
+                </Pressable>
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                style={[
+                  produceStyles.addToCartButton,
+                  availableStock === 0 && { opacity: 0.4 },
+                ]}
+                onPress={handleAddToCart}
+                disabled={availableStock === 0}
+              >
+                <Text style={produceStyles.addToCartText}>
+                  {availableStock === 0
+                    ? "Out of stock"
+                    : `Add to Cart · ${farmPrice * qty} kr`}
+                </Text>
+              </Pressable>
+            </View>
+          ) : (
+            <Pressable
+              accessibilityRole="button"
+              style={produceStyles.addToCartButton}
+              onPress={() => router.push("/produce")}
+            >
+              <Text style={produceStyles.addToCartText}>
+                Browse farms to purchase
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

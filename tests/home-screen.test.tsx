@@ -34,7 +34,8 @@ describe("HomeScreen", () => {
     render(<HomeScreen />);
 
     expect(screen.getByText("Welcome to FarmConnect 👋")).toBeTruthy();
-    expect(screen.getByText("See market days")).toBeTruthy();
+    // "See market days" is farmer-only; profile is null here so it should be absent
+    expect(screen.queryByText("See market days")).toBeNull();
     expect(screen.getByText("Create account")).toBeTruthy();
     expect(screen.getByText("Sign in")).toBeTruthy();
   });

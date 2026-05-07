@@ -1,4 +1,4 @@
-import { Link, type Href, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -25,7 +25,7 @@ export default function LoginScreen() {
       setLoading(true);
       setErrorMessage(null);
       await signInWithPassword(email.trim(), password);
-      router.replace("/account" as Href);
+      router.replace("/account");
     } catch (error) {
       setErrorMessage(
         error instanceof Error ? error.message : "Unable to sign in.",
@@ -43,7 +43,7 @@ export default function LoginScreen() {
       footer={
         <Text style={styles.footerText}>
           Don&apos;t have an account yet?{" "}
-          <Link href={"/auth/register" as Href} style={styles.footerLink}>
+          <Link href={"/auth/register"} style={styles.footerLink}>
             Create one
           </Link>
         </Text>
@@ -74,13 +74,14 @@ export default function LoginScreen() {
           value={password}
         />
       </View>
-      <Link href={"/auth/forgot-password" as Href} style={styles.inlineLink}>
+      <Link href={"/auth/forgot-password"} style={styles.inlineLink}>
         Forgot your password?
       </Link>
       {errorMessage ? (
         <Text style={styles.errorText}>{errorMessage}</Text>
       ) : null}
       <Pressable
+        accessibilityRole="button"
         disabled={loading}
         onPress={handleLogin}
         style={[styles.primaryButton, loading && styles.buttonDisabled]}

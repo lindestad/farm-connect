@@ -58,7 +58,6 @@
           }
         }
       ],
-      "expo-sqlite",
       [
         "expo-notifications",
         {
@@ -67,12 +66,7 @@
           "defaultChannel": "default"
         }
       ],
-      [
-        "@stripe/stripe-react-native",
-        {
-          "enableGooglePay": true
-        }
-      ]
+      ["@stripe/stripe-react-native", {}]
     ],
     "experiments": {
       "typedRoutes": true,

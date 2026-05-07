@@ -12,6 +12,7 @@ export type GeocodeResult = {
   success: boolean;
   coordinates: Coordinates | null;
   error: string | null;
+  ambiguous: boolean;
 };
 
 // Helper function which converts AdrressInput into a string instead of object
@@ -41,25 +42,22 @@ export async function geocodeAddress(
         success: false,
         coordinates: null,
         error: "Empty address field",
+        ambiguous: false,
       };
     }
 
     // Expo Location tries to convert the address string into coordinate numbers
     const results = await Location.geocodeAsync(addressString);
 
-    if (results.length > 1) {
-      console.warn("Multiple geocode locations found:", results);
-    }
-
     if (!results.length) {
       return {
         success: false,
         coordinates: null,
         error: "No matching coordinates for that address",
+        ambiguous: false,
       };
     }
 
-    // Array of possible matches
     const firstMatch = results[0];
 
     return {
@@ -69,12 +67,14 @@ export async function geocodeAddress(
         longitude: Number(firstMatch.longitude.toFixed(6)),
       },
       error: null,
+      ambiguous: results.length > 1,
     };
   } catch (error) {
     return {
       success: false,
       coordinates: null,
       error: error instanceof Error ? error.message : "Geocode failing",
+      ambiguous: false,
     };
   }
 }

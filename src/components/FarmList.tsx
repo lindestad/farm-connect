@@ -1,4 +1,4 @@
-import { Link, type Href } from "expo-router";
+import { Link } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { type FarmProfile } from "../lib/farmProfiles";
 import { farmStyles } from "../styles/farm-styles";
+import { distanceKm, searchableText } from "./FarmList.helpers";
 
 type Props = {
   farms: FarmProfile[];
@@ -23,11 +24,6 @@ type Props = {
 type SortMode = "distance" | "name" | "location";
 type RadiusKm = 50 | 100 | "all";
 
-const DEFAULT_CENTER = {
-  latitude: 58.1467,
-  longitude: 7.9956,
-};
-
 const SORT_OPTIONS: { label: string; value: SortMode }[] = [
   { label: "Nearest", value: "distance" },
   { label: "Name", value: "name" },
@@ -39,35 +35,6 @@ const RADIUS_OPTIONS: { label: string; value: RadiusKm }[] = [
   { label: "100 km", value: 100 },
   { label: "All", value: "all" },
 ];
-
-function distanceKm(farm: FarmProfile): number | null {
-  if (farm.latitude === null || farm.longitude === null) return null;
-
-  const earthRadiusKm = 6371;
-  const toRadians = (degrees: number) => (degrees * Math.PI) / 180;
-  const latDelta = toRadians(farm.latitude - DEFAULT_CENTER.latitude);
-  const lonDelta = toRadians(farm.longitude - DEFAULT_CENTER.longitude);
-  const originLat = toRadians(DEFAULT_CENTER.latitude);
-  const farmLat = toRadians(farm.latitude);
-  const a =
-    Math.sin(latDelta / 2) ** 2 +
-    Math.cos(originLat) * Math.cos(farmLat) * Math.sin(lonDelta / 2) ** 2;
-
-  return earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function searchableText(farm: FarmProfile): string {
-  return [
-    farm.farm_name,
-    farm.farm_location,
-    farm.city,
-    farm.region,
-    farm.country,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-}
 
 function compareNullableText(left: string | null, right: string | null) {
   return (left ?? "").localeCompare(right ?? "");
@@ -89,7 +56,10 @@ export function FarmList({
     const trimmedQuery = query.trim().toLowerCase();
 
     return farms
-      .map((farm) => ({ farm, distance: distanceKm(farm) }))
+      .map((farm) => ({
+        farm,
+        distance: distanceKm(farm.latitude, farm.longitude),
+      }))
       .filter(({ farm, distance }) => {
         const matchesQuery =
           !trimmedQuery || searchableText(farm).includes(trimmedQuery);
@@ -233,7 +203,7 @@ export function FarmList({
             style={farmStyles.resultList}
           >
             {filtered.map(({ farm, distance }) => (
-              <Link key={farm.id} href={`/farm/${farm.id}` as Href} asChild>
+              <Link key={farm.id} href={`/farm/${farm.id}`} asChild>
                 <Pressable
                   style={farmStyles.readonlyItem}
                   testID="farm-list-item"

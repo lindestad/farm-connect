@@ -17,5 +17,10 @@ export default function CameraScreen() {
     }
   };
 
-  return <CameraCapture onPhotoConfirmed={handlePhotoConfirmed} />;
+  return (
+    <CameraCapture
+      onPhotoConfirmed={handlePhotoConfirmed}
+      onBack={() => router.back()}
+    />
+  );
 }

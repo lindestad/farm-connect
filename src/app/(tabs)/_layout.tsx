@@ -12,6 +12,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: "#1A3F24",
         tabBarInactiveTintColor: "#B0BDB0",
         tabBarStyle: {
+          position: "absolute",
           backgroundColor: "#C2DDB9",
           borderTopWidth: 0,
           borderRadius: 24,
@@ -49,22 +50,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="map-outline" size={size} color={color} />
           ),
-          tabBarStyle: {
-            position: "absolute",
-            backgroundColor: "#C2DDB9",
-            borderTopWidth: 0,
-            borderRadius: 24,
-            marginHorizontal: 16,
-            marginBottom: 20,
-            elevation: 4,
-            shadowOpacity: 0.04,
-            shadowRadius: 4,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: -1 },
-            height: 64,
-            paddingBottom: 10,
-            paddingTop: 8,
-          },
         }}
       />
       <Tabs.Screen

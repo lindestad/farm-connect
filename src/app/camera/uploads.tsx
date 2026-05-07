@@ -1,8 +1,10 @@
 import deleteImage from "@/lib/image-helpers/image-delete";
 import { supabase } from "@/lib/supabase";
 import { cameraStyles as styles } from "@/styles/camera-styles";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, Image, ScrollView, Text, View } from "react-native";
+import { Button, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type UploadedImageRows = {
   id: string;
@@ -11,7 +13,28 @@ type UploadedImageRows = {
   created_at: string;
 };
 
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};
+
 export default function CameraUploadScreen() {
+  const router = useRouter();
   // Store the uploaded rows from supabase, starts with empty array.
   const [uploads, setUploads] = useState<UploadedImageRows[]>([]);
 
@@ -86,32 +109,41 @@ export default function CameraUploadScreen() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.uploadContainer}>
-      {uploads.length === 0 ? (
-        <Text style={styles.uploadEmptyText}>No uploaded images found.</Text>
-      ) : (
-        uploads.map((upload) => (
-          <View key={upload.id} style={styles.uploadCard}>
-            <Image
-              source={{ uri: upload.image_url }}
-              style={styles.uploadImage}
-            />
-
-            <Text style={styles.uploadLabel}>Path:</Text>
-            <Text style={styles.uploadValue}>{upload.image_path}</Text>
-
-            <Text style={styles.uploadLabel}>Created:</Text>
-            <Text style={styles.uploadValue}>{upload.created_at}</Text>
-
-            <View style={styles.uploadButtonWrapper}>
-              <Button
-                title="Delete"
-                onPress={() => handleDelete(upload.id, upload.image_path)}
+    <SafeAreaView style={{ flex: 1 }}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
+      <ScrollView contentContainerStyle={styles.uploadContainer}>
+        {uploads.length === 0 ? (
+          <Text style={styles.uploadEmptyText}>No uploaded images found.</Text>
+        ) : (
+          uploads.map((upload) => (
+            <View key={upload.id} style={styles.uploadCard}>
+              <Image
+                source={{ uri: upload.image_url }}
+                style={styles.uploadImage}
               />
+
+              <Text style={styles.uploadLabel}>Path:</Text>
+              <Text style={styles.uploadValue}>{upload.image_path}</Text>
+
+              <Text style={styles.uploadLabel}>Created:</Text>
+              <Text style={styles.uploadValue}>{upload.created_at}</Text>
+
+              <View style={styles.uploadButtonWrapper}>
+                <Button
+                  title="Delete"
+                  onPress={() => handleDelete(upload.id, upload.image_path)}
+                />
+              </View>
             </View>
-          </View>
-        ))
-      )}
-    </ScrollView>
+          ))
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 }

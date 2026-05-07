@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { Link, type Href } from "expo-router";
+import { Link } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -63,50 +63,69 @@ export default function DashboardScreen() {
     setSummaryError(null);
     const today = dateToStr(new Date());
 
-    const [marketResult, inventoryResult, slotsResult] = await Promise.all([
+    const [
+      marketCountResult,
+      inventoryCountResult,
+      slotsCountResult,
+      nextMarketResult,
+      nextSlotResult,
+    ] = await Promise.all([
       supabase
         .from("market_days")
-        .select("id,date,start_time,location")
+        .select("*", { count: "exact", head: true })
+        .eq("farmer_id", user.id)
+        .gte("date", today),
+      supabase
+        .from("pickup_inventory")
+        .select("*", { count: "exact", head: true })
+        .eq("farmer_id", user.id)
+        .eq("is_available", true)
+        .gt("available_quantity", 0),
+      supabase
+        .from("pickup_time_slots")
+        .select("*", { count: "exact", head: true })
+        .eq("farmer_id", user.id)
+        .gte("slot_date", today),
+      supabase
+        .from("market_days")
+        .select("date,start_time")
         .eq("farmer_id", user.id)
         .gte("date", today)
         .order("date", { ascending: true })
-        .order("start_time", { ascending: true }),
-      supabase
-        .from("pickup_inventory")
-        .select("id,produce_name,available_quantity,unit,is_available")
-        .eq("farmer_id", user.id)
-        .eq("is_available", true)
-        .gt("available_quantity", 0)
-        .order("produce_name", { ascending: true }),
+        .order("start_time", { ascending: true })
+        .limit(1),
       supabase
         .from("pickup_time_slots")
-        .select("id,slot_date,start_time,end_time,location")
+        .select("slot_date,start_time")
         .eq("farmer_id", user.id)
         .gte("slot_date", today)
         .order("slot_date", { ascending: true })
-        .order("start_time", { ascending: true }),
+        .order("start_time", { ascending: true })
+        .limit(1),
     ]);
 
-    if (marketResult.error || inventoryResult.error || slotsResult.error) {
+    if (
+      marketCountResult.error ||
+      inventoryCountResult.error ||
+      slotsCountResult.error ||
+      nextMarketResult.error ||
+      nextSlotResult.error
+    ) {
       setSummaryError("Unable to load dashboard overview.");
       setSummary(EMPTY_SUMMARY);
     } else {
-      const marketDays = marketResult.data ?? [];
-      const inventoryItems = inventoryResult.data ?? [];
-      const pickupSlots = slotsResult.data ?? [];
-      const nextMarket = marketDays[0]
-        ? `${formatDate(marketDays[0].date)} at ${formatTime(marketDays[0].start_time)}`
-        : null;
-      const nextPickup = pickupSlots[0]
-        ? `${formatDate(pickupSlots[0].slot_date)} at ${formatTime(pickupSlots[0].start_time)}`
-        : null;
-
+      const firstMarket = nextMarketResult.data?.[0];
+      const firstSlot = nextSlotResult.data?.[0];
       setSummary({
-        marketDays: marketDays.length,
-        pickupSlots: pickupSlots.length,
-        inventoryItems: inventoryItems.length,
-        nextMarket,
-        nextPickup,
+        marketDays: marketCountResult.count ?? 0,
+        pickupSlots: slotsCountResult.count ?? 0,
+        inventoryItems: inventoryCountResult.count ?? 0,
+        nextMarket: firstMarket
+          ? `${formatDate(firstMarket.date)} at ${formatTime(firstMarket.start_time)}`
+          : null,
+        nextPickup: firstSlot
+          ? `${formatDate(firstSlot.slot_date)} at ${formatTime(firstSlot.start_time)}`
+          : null,
       });
     }
 
@@ -178,10 +197,7 @@ export default function DashboardScreen() {
             <Text style={styles.panelBody}>
               Create and update upcoming market days, locations, and notes.
             </Text>
-            <Link
-              href={"/farmer_dashboard/market" as Href}
-              style={styles.panelButton}
-            >
+            <Link href={"/farmer_dashboard/market"} style={styles.panelButton}>
               <Text style={styles.panelButtonText}>
                 Go to Market Management
               </Text>
@@ -196,7 +212,7 @@ export default function DashboardScreen() {
               Manage pickup inventory quantities and customer collection slots.
             </Text>
             <Link
-              href={"/farmer_dashboard/pickup-inventory" as Href}
+              href={"/farmer_dashboard/pickup-inventory"}
               style={styles.panelButton}
             >
               <Text style={styles.panelButtonText}>Go to Pickup Inventory</Text>
@@ -205,7 +221,7 @@ export default function DashboardScreen() {
         ) : null}
 
         <View style={styles.footerRow}>
-          <Link href={"/account" as Href} style={styles.footerLink}>
+          <Link href={"/account"} style={styles.footerLink}>
             Back to profile
           </Link>
         </View>

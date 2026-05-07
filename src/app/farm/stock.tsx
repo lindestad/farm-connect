@@ -158,7 +158,11 @@ export default function FarmStockScreen() {
   if (loading) {
     return (
       <SafeAreaView style={farmStyles.page}>
-        <ActivityIndicator color="#2F6A3E" />
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator color="#2F6A3E" />
+        </View>
       </SafeAreaView>
     );
   }
@@ -189,6 +193,7 @@ export default function FarmStockScreen() {
           >
             <Text style={farmStyles.panelTitle}>My Stock</Text>
             <Pressable
+              accessibilityRole="button"
               onPress={() => router.back()}
               style={farmStyles.inlineButton}
             >
@@ -218,12 +223,14 @@ export default function FarmStockScreen() {
                   </View>
                   <View style={{ flexDirection: "row", gap: 8 }}>
                     <Pressable
+                      accessibilityRole="button"
                       onPress={() => openEdit(item)}
                       style={farmStyles.inlineButton}
                     >
                       <Text style={farmStyles.inlineButtonText}>Edit</Text>
                     </Pressable>
                     <Pressable
+                      accessibilityRole="button"
                       onPress={() => handleDelete(item)}
                       style={[
                         farmStyles.inlineButton,
@@ -274,6 +281,7 @@ export default function FarmStockScreen() {
                     </Text>
                   </View>
                   <Pressable
+                    accessibilityRole="button"
                     onPress={() => openAdd(item)}
                     style={farmStyles.inlineButton}
                   >
@@ -326,6 +334,7 @@ export default function FarmStockScreen() {
             </View>
 
             <Pressable
+              accessibilityRole="button"
               style={[
                 farmStyles.primaryButton,
                 saving && farmStyles.buttonDisabled,
@@ -341,6 +350,7 @@ export default function FarmStockScreen() {
             </Pressable>
 
             <Pressable
+              accessibilityRole="button"
               style={[farmStyles.inlineButton, { alignSelf: "center" }]}
               onPress={() => setModal(null)}
             >

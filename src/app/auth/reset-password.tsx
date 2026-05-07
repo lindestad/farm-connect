@@ -1,4 +1,4 @@
-import { Link, type Href, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -31,8 +31,8 @@ export default function ResetPasswordScreen() {
         throw new Error("Enter and confirm your new password.");
       }
 
-      if (password.length < 6) {
-        throw new Error("Password must be at least 6 characters.");
+      if (password.length < 8) {
+        throw new Error("Password must be at least 8 characters.");
       }
 
       if (password !== confirmPassword) {
@@ -68,10 +68,7 @@ export default function ResetPasswordScreen() {
       footer={
         <Text style={styles.footerText}>
           Need a new link?{" "}
-          <Link
-            href={"/auth/forgot-password" as Href}
-            style={styles.footerLink}
-          >
+          <Link href={"/auth/forgot-password"} style={styles.footerLink}>
             Send another email
           </Link>
         </Text>
@@ -116,6 +113,7 @@ export default function ResetPasswordScreen() {
             </View>
           ) : null}
           <Pressable
+            accessibilityRole="button"
             disabled={loading}
             onPress={handleUpdatePassword}
             style={[styles.primaryButton, loading && styles.buttonDisabled]}
@@ -128,7 +126,8 @@ export default function ResetPasswordScreen() {
           </Pressable>
           {successMessage ? (
             <Pressable
-              onPress={() => router.replace("/account" as Href)}
+              accessibilityRole="button"
+              onPress={() => router.replace("/account")}
               style={styles.secondaryButton}
             >
               <Text style={styles.secondaryButtonText}>
@@ -144,7 +143,8 @@ export default function ResetPasswordScreen() {
             reset email before it can change the password.
           </Text>
           <Pressable
-            onPress={() => router.replace("/auth/forgot-password" as Href)}
+            accessibilityRole="button"
+            onPress={() => router.replace("/auth/forgot-password")}
             style={styles.primaryButton}
           >
             <Text style={styles.primaryButtonText}>Send reset link</Text>

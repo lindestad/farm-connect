@@ -24,36 +24,55 @@ import { isSupabaseConfigured } from "../lib/supabase";
 export function useFarmProfile(userId: string | undefined): {
   farmProfile: FarmProfile | null;
   loading: boolean;
+  error: string | null;
 } {
   const [farmProfile, setFarmProfile] = useState<FarmProfile | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!userId) return setFarmProfile(null);
+    if (!userId) {
+      setFarmProfile(null);
+      return;
+    }
     setLoading(true);
+    setError(null);
     fetchFarmProfileByUserId(userId)
       .then(setFarmProfile)
-      .catch(() => setFarmProfile(null))
+      .catch((err) => {
+        setFarmProfile(null);
+        setError(
+          err instanceof Error ? err.message : "Failed to load farm profile.",
+        );
+      })
       .finally(() => setLoading(false));
   }, [userId]);
 
-  return { farmProfile, loading };
+  return { farmProfile, loading, error };
 }
 
 export function useAllFarmProfiles(): {
   farms: FarmProfile[];
   loading: boolean;
+  error: string | null;
 } {
   const [farms, setFarms] = useState<FarmProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isSupabaseConfigured) return setLoading(false);
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     fetchAllFarmProfiles()
       .then(setFarms)
-      .catch(() => setFarms([]))
+      .catch((err) => {
+        setFarms([]);
+        setError(err instanceof Error ? err.message : "Failed to load farms.");
+      })
       .finally(() => setLoading(false));
   }, []);
 
-  return { farms, loading };
+  return { farms, loading, error };
 }

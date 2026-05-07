@@ -1,4 +1,4 @@
-import { Link, type Href, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 
@@ -22,17 +22,22 @@ export default function ConfirmEmailScreen() {
       title={
         authLinkStatus === "success"
           ? "Your email link worked."
-          : "Open the confirmation link from your inbox."
+          : authLinkStatus === "error"
+            ? "Something went wrong."
+            : "Open the confirmation link from your inbox."
       }
       subtitle={
         authLinkStatus === "success"
           ? "FarmConnect can now keep your session on this device."
-          : "Supabase will redirect back into the app when the link is tapped."
+          : authLinkStatus === "error"
+            ? (authLinkMessage ??
+              "The confirmation link could not be processed. Try requesting a new one.")
+            : "Supabase will redirect back into the app when the link is tapped."
       }
       footer={
         <Text style={styles.footerText}>
           Need a different step?{" "}
-          <Link href={"/auth/login" as Href} style={styles.footerLink}>
+          <Link href={"/auth/login"} style={styles.footerLink}>
             Go to login
           </Link>
         </Text>
@@ -46,9 +51,8 @@ export default function ConfirmEmailScreen() {
         <Text style={styles.metaText}>Signed in as {user.email}</Text>
       ) : null}
       <Pressable
-        onPress={() =>
-          router.replace((user ? "/account" : "/auth/login") as Href)
-        }
+        accessibilityRole="button"
+        onPress={() => router.replace(user ? "/account" : "/auth/login")}
         style={styles.primaryButton}
       >
         <Text style={styles.primaryButtonText}>

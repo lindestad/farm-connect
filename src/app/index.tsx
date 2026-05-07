@@ -1,5 +1,6 @@
-import { useRouter, type Href } from "expo-router";
+import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useRef } from "react";
 import { Animated, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import produceData from "../data/produceData.json";
@@ -21,7 +22,7 @@ function ScaleButton({
   textStyle?: object;
   children: React.ReactNode;
 }) {
-  const scale = new Animated.Value(1);
+  const scale = useRef(new Animated.Value(1)).current;
 
   const onPressIn = () =>
     Animated.spring(scale, { toValue: 0.95, useNativeDriver: true }).start();
@@ -29,7 +30,12 @@ function ScaleButton({
     Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
 
   return (
-    <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+    >
       <Animated.View style={[style, { transform: [{ scale }] }]}>
         <Text style={textStyle}>{children}</Text>
       </Animated.View>
@@ -39,7 +45,9 @@ function ScaleButton({
 
 export default function Index() {
   const { session, user, profile } = useAuth();
-  const { farmProfile } = useFarmProfile(user?.id);
+  const { farmProfile } = useFarmProfile(
+    profile?.role === "farmer" ? user?.id : undefined,
+  );
   const router = useRouter();
 
   const firstName = user?.email?.split("@")[0] ?? null;
@@ -70,19 +78,21 @@ export default function Index() {
               </Text>
               <View style={homeStyles.actionRow}>
                 <ScaleButton
-                  onPress={() => router.push("/produce" as Href)}
+                  onPress={() => router.push("/produce")}
                   style={[homeStyles.ctaLink, homeStyles.ctaLinkPrimary]}
                   textStyle={homeStyles.ctaLinkTextPrimary}
                 >
                   Browse Produce
                 </ScaleButton>
-                <ScaleButton
-                  onPress={() => router.push("/")}
-                  style={homeStyles.ctaLink}
-                  textStyle={homeStyles.ctaLinkText}
-                >
-                  See market days
-                </ScaleButton>
+                {profile?.role === "farmer" ? (
+                  <ScaleButton
+                    onPress={() => router.push("/farmer_dashboard/market")}
+                    style={homeStyles.ctaLink}
+                    textStyle={homeStyles.ctaLinkText}
+                  >
+                    See market days
+                  </ScaleButton>
+                ) : null}
               </View>
             </View>
 
@@ -94,7 +104,7 @@ export default function Index() {
                 {typedProduceData.items.slice(0, 8).map((item) => (
                   <ScaleButton
                     key={item.id}
-                    onPress={() => router.push("/produce" as Href)}
+                    onPress={() => router.push("/produce")}
                     style={homeStyles.produceChip}
                     textStyle={homeStyles.produceChipText}
                   >
@@ -103,7 +113,7 @@ export default function Index() {
                 ))}
               </View>
               <ScaleButton
-                onPress={() => router.push("/produce" as Href)}
+                onPress={() => router.push("/produce")}
                 style={[homeStyles.ctaLink, homeStyles.ctaLinkSecondary]}
                 textStyle={homeStyles.ctaLinkTextSecondary}
               >
@@ -128,7 +138,7 @@ export default function Index() {
                 {session ? (
                   <>
                     <ScaleButton
-                      onPress={() => router.push("/account" as Href)}
+                      onPress={() => router.push("/account")}
                       style={[homeStyles.ctaLink, homeStyles.ctaLinkPrimary]}
                       textStyle={homeStyles.ctaLinkTextPrimary}
                     >
@@ -139,8 +149,8 @@ export default function Index() {
                         onPress={() =>
                           router.push(
                             farmProfile
-                              ? (`/farm/${farmProfile.id}` as Href)
-                              : ("/farm/edit" as Href),
+                              ? `/farm/${farmProfile.id}`
+                              : "/farm/edit",
                           )
                         }
                         style={[homeStyles.ctaLink, homeStyles.ctaLinkPrimary]}
@@ -153,14 +163,14 @@ export default function Index() {
                 ) : (
                   <>
                     <ScaleButton
-                      onPress={() => router.push("/auth/register" as Href)}
+                      onPress={() => router.push("/auth/register")}
                       style={[homeStyles.ctaLink, homeStyles.ctaLinkPrimary]}
                       textStyle={homeStyles.ctaLinkTextPrimary}
                     >
                       Create account
                     </ScaleButton>
                     <ScaleButton
-                      onPress={() => router.push("/auth/login" as Href)}
+                      onPress={() => router.push("/auth/login")}
                       style={homeStyles.ctaLink}
                       textStyle={homeStyles.ctaLinkText}
                     >
@@ -168,27 +178,6 @@ export default function Index() {
                     </ScaleButton>
                   </>
                 )}
-              </View>
-            </View>
-
-            {/* Camera */}
-            <View style={homeStyles.sectionCard}>
-              <Text style={homeStyles.eyebrow}>Camera</Text>
-              <View style={homeStyles.actionRow}>
-                <ScaleButton
-                  onPress={() => router.push("../camera" as Href)}
-                  style={[homeStyles.ctaLink, homeStyles.ctaLinkPrimary]}
-                  textStyle={homeStyles.ctaLinkTextPrimary}
-                >
-                  Open camera
-                </ScaleButton>
-                <ScaleButton
-                  onPress={() => router.push("../camera/uploads" as Href)}
-                  style={homeStyles.ctaLink}
-                  textStyle={homeStyles.ctaLinkText}
-                >
-                  Test - fetching image
-                </ScaleButton>
               </View>
             </View>
           </View>

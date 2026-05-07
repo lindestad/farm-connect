@@ -33,7 +33,11 @@ export default function FarmListScreen() {
   if (loading) {
     return (
       <SafeAreaView style={produceStyles.container}>
-        <ActivityIndicator color="#2F6A3E" />
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator color="#2F6A3E" />
+        </View>
       </SafeAreaView>
     );
   }
@@ -42,7 +46,7 @@ export default function FarmListScreen() {
     <SafeAreaView style={produceStyles.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ gap: 16, paddingBottom: 32 }}
+        contentContainerStyle={{ gap: 16, paddingBottom: 100 }}
       >
         {/* Header */}
         <View style={{ gap: 4 }}>
@@ -84,6 +88,7 @@ export default function FarmListScreen() {
         ) : (
           filtered.map((farm) => (
             <Pressable
+              accessibilityRole="button"
               key={farm.id}
               onPress={() => router.push(`/farm/${farm.id}`)}
               style={{

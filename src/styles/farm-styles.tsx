@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 
-// AI Generated Code - Whole File
 const shadow = {
   boxShadow: "0px 18px 40px rgba(26, 41, 30, 0.08)",
 } as const;

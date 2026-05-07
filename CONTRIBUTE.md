@@ -94,6 +94,15 @@ npx supabase migration repair <timestamp> --status applied --linked
 
 See `supabase/migrations/migrations.md` for the full workflow.
 
+## Experimental features
+
+`app.json` sets `experiments.reactCompiler: true`, which enables the React
+Compiler (also called React Forget) during the Expo 55 build. The React
+Compiler is still experimental in Expo 55 — it rewrites component code to
+insert memoisation automatically. If you see unexpected render behaviour or
+build failures related to the compiler, try disabling it locally by setting
+`reactCompiler: false` in `app.json` and opening a tracking issue.
+
 ## How to Contribute
 
 ### Reporting Bugs

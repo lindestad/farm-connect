@@ -1,6 +1,13 @@
 import type { PropsWithChildren, ReactNode } from "react";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type AuthScreenShellProps = PropsWithChildren<{
@@ -18,18 +25,26 @@ export function AuthScreenShell({
   footer,
 }: AuthScreenShellProps) {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.heroCard}>
-          <Text style={styles.eyebrow}>{eyebrow}</Text>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{subtitle}</Text>
-          <View style={styles.body}>{children}</View>
-          {footer ? <View style={styles.footer}>{footer}</View> : null}
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.safeArea}>
+        <StatusBar style="dark" />
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          keyboardDismissMode="on-drag"
+        >
+          <View style={styles.heroCard}>
+            <Text style={styles.eyebrow}>{eyebrow}</Text>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.subtitle}>{subtitle}</Text>
+            <View style={styles.body}>{children}</View>
+            {footer ? <View style={styles.footer}>{footer}</View> : null}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 

@@ -20,7 +20,7 @@ export type UserProfile = {
   updatedAt: string;
 };
 
-type ProfileRow = {
+export type ProfileRow = {
   id: string;
   email: string | null;
   display_name: string | null;
@@ -50,8 +50,10 @@ const profileSelect = `
   updated_at
 `;
 
-export function normalizeProfileRole(value: unknown): ProfileRole {
-  return value === "farmer" ? "farmer" : "customer";
+export function normalizeProfileRole(value: unknown): ProfileRole | null {
+  if (value === "farmer") return "farmer";
+  if (value === "customer") return "customer";
+  return null;
 }
 
 export function normalizeFullName(value: unknown) {
@@ -90,13 +92,13 @@ type UpdateProfileInput = {
   defaultPickupNotes: string;
 };
 
-function mapProfile(row: ProfileRow): UserProfile {
+export function mapProfile(row: ProfileRow): UserProfile {
   return {
     id: row.id,
     email: row.email,
     displayName: row.display_name,
     fullName: row.full_name,
-    role: normalizeProfileRole(row.role),
+    role: normalizeProfileRole(row.role) ?? "customer",
     phoneNumber: row.phone_number,
     bio: row.bio,
     locationLabel: row.location_label,
@@ -142,7 +144,11 @@ export async function upsertProfileFromUser(user: User) {
           normalizeOptionalText(user.user_metadata?.display_name) ??
           normalizeFullName(user.user_metadata?.full_name),
         full_name: normalizeFullName(user.user_metadata?.full_name),
-        role: normalizeProfileRole(user.user_metadata?.role),
+        // Only write role when it's a recognised value; unknown/missing values
+        // must not silently demote an existing farmer to customer.
+        ...(normalizeProfileRole(user.user_metadata?.role) !== null
+          ? { role: normalizeProfileRole(user.user_metadata?.role) }
+          : {}),
         phone_number: normalizeOptionalText(user.user_metadata?.phone_number),
         bio: normalizeOptionalText(user.user_metadata?.bio),
         location_label: normalizeOptionalText(

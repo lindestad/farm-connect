@@ -1,7 +1,9 @@
-import { Link, type Href } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -382,7 +384,7 @@ function FarmerProfileView() {
         fields are designed. This customer profile form is intentionally not
         shown here.
       </Text>
-      <Link href={"/farmer_dashboard" as Href} asChild>
+      <Link href={"/farmer_dashboard"} asChild>
         <Pressable accessibilityRole="button" style={styles.primaryButton}>
           <Text style={styles.primaryButtonText}>Open dashboard</Text>
         </Pressable>
@@ -470,92 +472,100 @@ export default function AccountScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.page}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <ProfileHeader profile={profile} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={styles.page}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardDismissMode="on-drag"
+        >
+          <ProfileHeader profile={profile} />
 
-        <AccountMetaCard
-          createdAt={profile?.createdAt}
-          email={user?.email}
-          role={profile?.role}
-          updatedAt={profile?.updatedAt}
-        />
-
-        {profileLoading ? (
-          <View style={styles.loadingPanel}>
-            <ActivityIndicator color="#2F6A3E" />
-            <Text style={styles.panelBody}>Loading profile...</Text>
-          </View>
-        ) : profile?.role === "farmer" ? (
-          <FarmerProfileView />
-        ) : (
-          <CustomerProfileView
-            draft={customerDraft}
-            isEditing={isEditing}
-            loading={saving}
-            onCancel={handleCancel}
-            onChange={handleCustomerFieldChange}
-            onEdit={handleEdit}
-            onSave={handleSave}
+          <AccountMetaCard
+            createdAt={profile?.createdAt}
+            email={user?.email}
+            role={profile?.role}
+            updatedAt={profile?.updatedAt}
           />
-        )}
 
-        {profileError ? (
-          <Text style={styles.errorText}>{profileError}</Text>
-        ) : null}
-        {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        ) : null}
-        {successMessage ? (
-          <Text style={styles.successText}>{successMessage}</Text>
-        ) : null}
+          {profileLoading ? (
+            <View style={styles.loadingPanel}>
+              <ActivityIndicator color="#2F6A3E" />
+              <Text style={styles.panelBody}>Loading profile...</Text>
+            </View>
+          ) : profile?.role === "farmer" ? (
+            <FarmerProfileView />
+          ) : (
+            <CustomerProfileView
+              draft={customerDraft}
+              isEditing={isEditing}
+              loading={saving}
+              onCancel={handleCancel}
+              onChange={handleCustomerFieldChange}
+              onEdit={handleEdit}
+              onSave={handleSave}
+            />
+          )}
 
-        {profile?.role === "customer" ? (
-          <View style={styles.panel}>
-            <Text style={styles.panelTitle}>Order history</Text>
-            <Text style={styles.panelBody}>
-              View your past purchases and pickup reservations.
+          {profileError ? (
+            <Text style={styles.errorText}>{profileError}</Text>
+          ) : null}
+          {errorMessage ? (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          ) : null}
+          {successMessage ? (
+            <Text style={styles.successText}>{successMessage}</Text>
+          ) : null}
+
+          {profile?.role === "customer" ? (
+            <View style={styles.panel}>
+              <Text style={styles.panelTitle}>Order history</Text>
+              <Text style={styles.panelBody}>
+                View your past purchases and pickup reservations.
+              </Text>
+              <Link href={"/order-history"} asChild>
+                <Pressable
+                  accessibilityRole="button"
+                  style={styles.primaryButton}
+                >
+                  <Text style={styles.primaryButtonText}>
+                    View order history
+                  </Text>
+                </Pressable>
+              </Link>
+            </View>
+          ) : null}
+
+          <View style={styles.bottomRow}>
+            <Pressable
+              accessibilityRole="button"
+              disabled={signingOut}
+              onPress={handleSignOut}
+              style={[
+                styles.primaryButton,
+                styles.signOutButton,
+                signingOut && styles.buttonDisabled,
+              ]}
+              testID="sign-out-button"
+            >
+              {signingOut ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.primaryButtonText}>Sign out</Text>
+              )}
+            </Pressable>
+            <Text style={styles.footerText}>
+              <Link href={"/"} style={styles.footerLink}>
+                Back to landing page
+              </Link>
             </Text>
-            <Link href={"/order-history" as Href} asChild>
-              <Pressable
-                accessibilityRole="button"
-                style={styles.primaryButton}
-              >
-                <Text style={styles.primaryButtonText}>View order history</Text>
-              </Pressable>
-            </Link>
           </View>
-        ) : null}
-
-        <View style={styles.bottomRow}>
-          <Pressable
-            accessibilityRole="button"
-            disabled={signingOut}
-            onPress={handleSignOut}
-            style={[
-              styles.primaryButton,
-              styles.signOutButton,
-              signingOut && styles.buttonDisabled,
-            ]}
-            testID="sign-out-button"
-          >
-            {signingOut ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.primaryButtonText}>Sign out</Text>
-            )}
-          </Pressable>
-          <Text style={styles.footerText}>
-            <Link href={"/" as Href} style={styles.footerLink}>
-              Back to landing page
-            </Link>
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -571,7 +581,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     gap: 16,
     paddingHorizontal: 18,
-    paddingVertical: 24,
+    paddingTop: 24,
+    paddingBottom: 100,
   },
   heroCard: {
     backgroundColor: "#21432D",
@@ -643,22 +654,6 @@ const styles = StyleSheet.create({
     color: "#5D6A60",
     fontSize: 14,
     lineHeight: 21,
-  },
-  dashboardButtonRow: {
-    marginTop: 15,
-  },
-  dashboardButton: {
-    alignItems: "center",
-    backgroundColor: "#2F6A3E",
-    borderRadius: 18,
-    justifyContent: "center",
-    minHeight: 48,
-    paddingHorizontal: 18,
-  },
-  dashboardButtonText: {
-    color: "#FFFFFF",
-    fontSize: 15,
-    fontWeight: "700",
   },
   sectionHeader: {
     gap: 12,

@@ -10,6 +10,7 @@ import {
   Alert,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -19,30 +20,11 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import {
+  type FarmPickupInventoryItem as InventoryItem,
+  type FarmPickupSlot as PickupSlot,
+} from "../../lib/farmProfiles";
 import { useAuth } from "../../providers/auth-provider";
-
-type InventoryItem = {
-  id: string;
-  farmer_id: string;
-  produce_id: string | null;
-  produce_name: string;
-  available_quantity: number;
-  unit: string;
-  price_text: string | null;
-  notes: string | null;
-  is_available: boolean;
-};
-
-type PickupSlot = {
-  id: string;
-  farmer_id: string;
-  slot_date: string;
-  start_time: string;
-  end_time: string;
-  capacity: number;
-  location: string;
-  notes: string | null;
-};
 
 type Tab = "inventory" | "slots";
 type PickerField = "slot_date" | "start_time" | "end_time" | null;
@@ -180,6 +162,7 @@ function InventoryModal({
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.formGrid}
+            keyboardDismissMode="on-drag"
           >
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>Produce</Text>
@@ -408,6 +391,7 @@ function SlotModal({
           <ScrollView
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.formGrid}
+            keyboardDismissMode="on-drag"
           >
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>Date</Text>
@@ -435,7 +419,7 @@ function SlotModal({
                 <DateTimePicker
                   value={pickerValue()}
                   mode="date"
-                  display="spinner"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
                   minimumDate={new Date()}
                   onChange={handlePickerChange}
                   style={modalStyles.iosPicker}
@@ -463,7 +447,7 @@ function SlotModal({
                   <DateTimePicker
                     value={pickerValue()}
                     mode="time"
-                    display="spinner"
+                    display={Platform.OS === "ios" ? "spinner" : "default"}
                     is24Hour
                     onChange={handlePickerChange}
                     style={modalStyles.iosPicker}
@@ -490,7 +474,7 @@ function SlotModal({
                   <DateTimePicker
                     value={pickerValue()}
                     mode="time"
-                    display="spinner"
+                    display={Platform.OS === "ios" ? "spinner" : "default"}
                     is24Hour
                     onChange={handlePickerChange}
                     style={modalStyles.iosPicker}
@@ -797,6 +781,13 @@ export default function PickupInventoryScreen() {
 
   return (
     <SafeAreaView style={styles.page}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -837,16 +828,6 @@ export default function PickupInventoryScreen() {
               <Text style={styles.dashboardButtonText}>
                 {activeTab === "inventory" ? "+ Add Inventory" : "+ Add Slot"}
               </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.dashboardButtonRow}>
-            <TouchableOpacity
-              style={styles.dashboardButton}
-              onPress={() => router.back()}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.dashboardButtonText}>Back to Dashboard</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -1324,3 +1305,23 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
 });
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

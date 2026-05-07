@@ -35,23 +35,24 @@ export type CreateOrderInput = {
   delivery_method: DeliveryMethod;
   pickup_notes?: string;
   items: (Omit<OrderItem, "id" | "order_id"> & { produce_id?: string })[];
+  accessToken?: string;
 };
 
-export async function createOrder(input: CreateOrderInput): Promise<Order> {
+async function insertOrderAndItems(
+  input: CreateOrderInput,
+  status: OrderStatus,
+  expires_at: string | null,
+): Promise<Order> {
   if (!supabase) throw new Error("Supabase is not configured.");
 
   const total_price = input.items.reduce((sum, item) => sum + item.price, 0);
-  const expires_at =
-    input.delivery_method === "reservation"
-      ? new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
-      : null;
 
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert({
       customer_id: input.customer_id,
       farm_id: input.farm_id,
-      status: "pending",
+      status,
       delivery_method: input.delivery_method,
       pickup_notes: input.pickup_notes?.trim() || null,
       total_price,
@@ -74,19 +75,74 @@ export async function createOrder(input: CreateOrderInput): Promise<Order> {
 
   if (itemsError) throw itemsError;
 
-  const itemsWithProduce = input.items.filter((i) => i.produce_id);
-  if (itemsWithProduce.length > 0) {
-    await supabase.functions.invoke("decrement-stock", {
-      body: {
-        farm_user_id: input.farm_id,
-        items: itemsWithProduce.map((i) => ({
-          produce_id: i.produce_id,
-          qty: i.qty,
-        })),
-      },
-    });
-  }
+  return order;
+}
 
+async function invokeDecrementStock(
+  farmId: string,
+  items: { produce_id?: string; qty: number }[],
+  accessToken?: string,
+): Promise<void> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+
+  const itemsWithProduce = items.filter((i) => i.produce_id);
+  if (itemsWithProduce.length === 0) return;
+
+  const headers: Record<string, string> = {};
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+  const { error } = await supabase.functions.invoke("decrement-stock", {
+    body: {
+      farm_user_id: farmId,
+      items: itemsWithProduce.map((i) => ({
+        produce_id: i.produce_id,
+        qty: i.qty,
+      })),
+    },
+    headers,
+  });
+  if (error) throw error;
+}
+
+// Creates a pending order row + items without decrementing stock.
+// Use this in the payment flow: call confirmOrder after Stripe succeeds.
+export async function createPendingOrder(
+  input: CreateOrderInput,
+): Promise<Order> {
+  return insertOrderAndItems(input, "pending", null);
+}
+
+// Confirms a pending order and decrements stock. Call after payment succeeds.
+// Decrement runs first so a failure leaves the order in pending (retryable),
+// not in confirmed-but-wrong-stock.
+export async function confirmOrder(
+  orderId: string,
+  farmId: string,
+  items: { produce_id?: string; qty: number }[],
+  accessToken?: string,
+): Promise<void> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+
+  await invokeDecrementStock(farmId, items, accessToken);
+
+  const { error } = await supabase
+    .from("orders")
+    .update({ status: "confirmed", updated_at: new Date().toISOString() })
+    .eq("id", orderId);
+
+  if (error) throw error;
+}
+
+// Creates a confirmed order in one step. Used by the reservation flow (no payment).
+export async function createOrder(input: CreateOrderInput): Promise<Order> {
+  const expires_at =
+    input.delivery_method === "reservation"
+      ? new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString()
+      : null;
+
+  const order = await insertOrderAndItems(input, "pending", expires_at);
+  await invokeDecrementStock(input.farm_id, input.items, input.accessToken);
   return order;
 }
 
@@ -134,29 +190,14 @@ export async function fetchOrdersWithItems(
   customerId: string,
 ): Promise<OrderWithItems[]> {
   if (!supabase) throw new Error("Supabase is not configured.");
-  const { data: orders, error: ordersError } = await supabase
+  const { data, error } = await supabase
     .from("orders")
-    .select("*")
+    .select("*, items:order_items(*)")
     .eq("customer_id", customerId)
     .order("created_at", { ascending: false });
 
-  if (ordersError) throw ordersError;
-  if (!orders || orders.length === 0) return [];
-
-  const { data: items, error: itemsError } = await supabase
-    .from("order_items")
-    .select("*")
-    .in(
-      "order_id",
-      orders.map((o) => o.id),
-    );
-
-  if (itemsError) throw itemsError;
-
-  return orders.map((order) => ({
-    ...order,
-    items: (items ?? []).filter((item) => item.order_id === order.id),
-  }));
+  if (error) throw error;
+  return (data ?? []) as OrderWithItems[];
 }
 
 export async function updateOrderStatus(

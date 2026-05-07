@@ -44,11 +44,27 @@ function OrderCard({ order }: { order: OrderWithItems }) {
       <View style={styles.metaGrid}>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Status</Text>
-          <Text style={styles.metaValue}>{order.status}</Text>
+          <Text
+            style={[
+              styles.metaValue,
+              order.status === "confirmed" && {
+                color: "#2F6A3E",
+                fontWeight: "700",
+              },
+              order.status === "cancelled" && {
+                color: "#9C5B4D",
+                fontWeight: "700",
+              },
+            ]}
+          >
+            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+          </Text>
         </View>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Delivery</Text>
-          <Text style={styles.metaValue}>{order.delivery_method}</Text>
+          <Text style={styles.metaValue}>
+            {order.delivery_method === "pickup" ? "Pickup" : "Reservation"}
+          </Text>
         </View>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Placed</Text>
@@ -172,7 +188,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     gap: 16,
     paddingHorizontal: 18,
-    paddingVertical: 24,
+    paddingTop: 24,
+    paddingBottom: 100,
   },
   header: {
     gap: 6,
