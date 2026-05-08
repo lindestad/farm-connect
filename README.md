@@ -1,6 +1,6 @@
 # `FarmConnect`
 
-FarmConnect is a mobile-first marketplace that connects customers with local farms. Users can browse, reserve, and schedule pickups for fresh produce, while farmers manage inventory, pickup windows, and recurring market events—all in one streamlined platform.
+FarmConnect is a mobile-first marketplace that connects customers with local farms. Users can browse, reserve, and schedule pickups for fresh produce, while farmers manage inventory, pickup windows, and recurring market events-all in one streamlined platform.
 
 ---
 
@@ -8,14 +8,19 @@ FarmConnect is a mobile-first marketplace that connects customers with local far
 <summary><strong>View Progress (Features Implemented)</strong></summary>
 
 - **Demo Landing Page** (feature showcase, customer/farmer flow overview, mock phone preview UI)
-- **Authentication System** (email/password login and registration, role selection, email confirmation redirect)
+- **Authentication System** (email/password login and registration, role selection, email confirmation redirect, forgot password / in-app reset flow)
 - **Account System** (customer profile: display name, phone, location, bio, contact preference, pickup notes; farmer account access control)
 - **Farm Profile** (create, view, edit, and delete farm profiles; owner-only controls)
-- **Farmer Dashboard** (role-gated dashboard with navigation to market management)
+- **Farmer Dashboard** (role-gated dashboard with navigation to market and inventory management)
 - **Market Day Management** (full CRUD: create, edit, and delete market days with date/time pickers, location, notes, status filtering)
+- **Pickup Inventory & Time Slots** (farmer-managed per-pickup produce inventory with quantities, pricing, and available time slot windows)
+- **Farm Stock Management** (per-farm produce catalog with stock quantities and pricing; server-side stock decrement on order)
 - **Produce Browser** (browse produce list with Norwegian/English names; detail view with full nutritional info sourced from Matvaretabellen)
-- **Map** (Google Maps integration displaying farm locations with markers, centered on Norway)
+- **Map** (Google Maps integration with searchable farm list sidebar; tap a result to pan the map to that farm)
+- **Camera** (in-app camera capture, image preview, retake, confirm, and upload to Supabase Storage)
 - **Payment System** (Stripe test mode via Supabase Edge Function; order screen with payment sheet, Google Pay support)
+- **Customer Order History** (view past pickup and reservation orders with order items and timestamps)
+- **Push Notifications** (Expo Push API via FCM; notifies customer on payment confirmation and reservation placement)
 
 </details>
 
@@ -24,10 +29,11 @@ FarmConnect is a mobile-first marketplace that connects customers with local far
 <details>
 <summary><strong>Supabase Instructions</strong></summary>
 
-For email confirmation links to return to the app, add this redirect URL in the Supabase dashboard:
+For email confirmation and password reset links to return to the app, add these redirect URLs in the Supabase dashboard:
 
 ```
 farmconnect://auth/confirm
+farmconnect://auth/reset-password
 ```
 
 The current auth flow includes:
@@ -37,21 +43,9 @@ The current auth flow includes:
 - Login with email/password
 - Persisted mobile sessions
 - Email confirmation redirect back into the app
+- Forgot password email with in-app reset flow
 
-To create the profiles table and policies, run the SQL migration in the Supabase SQL editor:
-
-```
-supabase/migrations/202603241945_create_profiles.sql
-```
-
-That migration creates:
-
-- `public.profiles`
-
-- Row-level policies so users can read and update only their own profile
-- # A trigger that creates the profile row automatically from signup metadata
-- row-level policies so users can read and update only their own profile
-- a trigger that creates the profile row automatically from signup metadata
+Migrations are in `supabase/migrations/` and applied in timestamp order. See [`supabase/migrations/migrations.md`](supabase/migrations/migrations.md) for the full workflow (applying, dry-run, repair).
 
 </details>
 
@@ -60,7 +54,7 @@ That migration creates:
 <details>
 <summary><strong>Stripe Instructions</strong></summary>
 
-The app uses Stripe for payment processing via the `@stripe/stripe-react-native` SDK. Payments are handled through a Supabase Edge Function (`create-payment-intent`) which creates a Stripe PaymentIntent server-side, keeping the secret key off the client. Edge function is deployed to Supabase. To test a payment, use the following Stripe test card:
+The app uses Stripe for payment processing via the `@stripe/stripe-react-native` SDK. Payments are handled through a Supabase Edge Function (`create-payment-intent`) which creates a Stripe PaymentIntent server-side, keeping the secret key off the client. A second edge function (`decrement-stock`) handles server-side stock decrement on order completion. Both edge functions are deployed to Supabase. To test a payment, use the following Stripe test card:
 
 | Field  | Value                 |
 | ------ | --------------------- |
@@ -154,10 +148,10 @@ On login, the app registers an Expo push token stored in `push_tokens`. After ch
 
 `google-services.json` is required in the project root for native builds and is tracked in this repo. It contains public Firebase client identifiers; service account credentials are managed separately through EAS credentials.
 
-| Event               | Recipient | Message               |
-| ------------------- | --------- | --------------------- |
-| Pickup order placed | Customer  | Payment confirmed     |
-| Reservation placed  | Customer  | Reservation confirmed |
+| Event               | Recipient | Title                 | Body                                                          |
+| ------------------- | --------- | --------------------- | ------------------------------------------------------------- |
+| Pickup order placed | Customer  | Payment confirmed     | Your payment of `{amount}` NOK was successful.                |
+| Reservation placed  | Customer  | Reservation confirmed | Your items are reserved and held for 48 hours. Pay at pickup. |
 
 </details>
 
@@ -165,7 +159,7 @@ On login, the app registers an Expo push token stored in `push_tokens`. After ch
 
 ### `Getting Started`
 
-See [CONTRIBUTE](CONTRIBUTE.md) for setup instructions and how to contribute.
+See [CONTRIBUTING](CONTRIBUTING.md) for setup instructions and how to contribute.
 
 ---
 
@@ -190,5 +184,14 @@ CI runs on every pull request and push to `main`. Recommended to install `Pretti
 npm run lint          # ESLint
 npm run typecheck     # TypeScript
 npm run format:check  # Prettier
-npm test              # Jest
+npm test              # Jest (with coverage)
+npm audit             # Dependency security audit
 ```
+
+Or run all checks at once:
+
+```bash
+./quality-check.sh
+```
+
+CI also enforces a `console.log`-free codebase, remove any `console.log` calls before merging.
