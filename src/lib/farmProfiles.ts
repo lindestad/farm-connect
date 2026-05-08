@@ -1,4 +1,4 @@
-import { AddressInput } from "@/lib/location/types"; // Shared address object type
+import { AddressInput } from "@/lib/location/types";
 import { supabase } from "./supabase";
 
 export type FarmProfile = {
@@ -110,9 +110,9 @@ export async function upsertFarmProfile(
         farm_name: farmName.trim(),
         farm_bio: farmBio.trim() || null,
         farm_location: farmLocation?.trim() || null,
-        farm_profile_picture_url: null, // Image uploads handled separately, not yet implemented
-        country: address.country?.trim() || null, // Save country from the shared address object
-        region: address.region?.trim() || null, // Save region from the shared address object
+        farm_profile_picture_url: null,
+        country: address.country?.trim() || null,
+        region: address.region?.trim() || null,
         city: address.city?.trim() || null, // Save city from the shared address object
         postal_code: address.postalCode?.trim() || null, // Save postal-code from the shared address object
         street: address.street?.trim() || null, // Save street from the shared address object

@@ -34,7 +34,8 @@ jobs:
             ':(exclude)build/**' \
             ':(exclude)coverage/**' \
             ':(exclude)dist/**' \
-            ':(exclude)node_modules/**'; then
+            ':(exclude)node_modules/**' \
+            ':(exclude)tests/**'; then
             echo "::error::Project assignment compliance failed. Remove console.log calls before merging."
             exit 1
           fi

@@ -1,11 +1,12 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   Pressable,
   ScrollView,
   Text,
+  TextInput,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,12 +14,12 @@ import { FarmHeroCard } from "../../components/FarmHeroCard";
 import { fetchProduceByFarm, type FarmProduce } from "../../lib/farmProduce";
 import {
   deleteFarmProfile,
-  type FarmPickupDetails,
-  type FarmMarketDay,
-  type FarmProfile,
   fetchFarmPickupDetailsByFarmerId,
   fetchFarmProfileById,
   fetchUpcomingMarketDaysByFarmerId,
+  type FarmMarketDay,
+  type FarmPickupDetails,
+  type FarmProfile,
 } from "../../lib/farmProfiles";
 import { useAuth } from "../../providers/auth-provider";
 import { farmStyles } from "../../styles/farm-styles";
@@ -287,6 +288,7 @@ export default function FarmProfileScreen() {
   const [deleting, setDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [farmProduce, setFarmProduce] = useState<FarmProduce[]>([]);
+  const [productSearchQuery, setProductSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -348,8 +350,23 @@ export default function FarmProfileScreen() {
 
   useEffect(() => {
     if (!farmId) return;
-    fetchProduceByFarm(farmId).then(setFarmProduce);
+    let cancelled = false;
+    fetchProduceByFarm(farmId).then((rows) => {
+      if (!cancelled) setFarmProduce(rows);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [farmId]);
+
+  const filteredProduce = useMemo(() => {
+    const normalizedQuery = productSearchQuery.trim().toLowerCase();
+    if (!normalizedQuery) return farmProduce;
+
+    return farmProduce.filter((item) =>
+      (item.name_nb ?? "").toLowerCase().includes(normalizedQuery),
+    );
+  }, [farmProduce, productSearchQuery]);
 
   const handleDelete = () => {
     Alert.alert(
@@ -383,7 +400,11 @@ export default function FarmProfileScreen() {
   if (loading) {
     return (
       <SafeAreaView style={farmStyles.page}>
-        <ActivityIndicator color="#2F6A3E" />
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator color="#2F6A3E" />
+        </View>
       </SafeAreaView>
     );
   }
@@ -402,6 +423,13 @@ export default function FarmProfileScreen() {
 
   return (
     <SafeAreaView style={farmStyles.page}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => router.back()}
+        style={backButtonStyle.button}
+      >
+        <Text style={backButtonStyle.text}>← Back</Text>
+      </Pressable>
       <ScrollView
         contentContainerStyle={farmStyles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -417,6 +445,83 @@ export default function FarmProfileScreen() {
           loading={marketDaysLoading}
           marketDays={marketDays}
         />
+        <View style={farmStyles.panel}>
+          <View style={farmStyles.panelHeaderRow}>
+            <Text style={farmStyles.panelTitle}>Products</Text>
+            {isOwner && farmProduce.length > 0 ? (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push("/farm/stock")}
+                style={farmStyles.inlineButton}
+              >
+                <Text style={farmStyles.inlineButtonText}>Manage Stock</Text>
+              </Pressable>
+            ) : null}
+          </View>
+          {farmProduce.length > 0 ? (
+            <TextInput
+              autoCapitalize="none"
+              autoCorrect={false}
+              onChangeText={setProductSearchQuery}
+              placeholder="Search products"
+              placeholderTextColor="#5D6A60"
+              style={farmStyles.searchInput}
+              value={productSearchQuery}
+            />
+          ) : null}
+          {farmProduce.length === 0 ? (
+            isOwner ? (
+              <View
+                style={{ alignItems: "center", gap: 10, paddingVertical: 8 }}
+              >
+                <Text style={farmStyles.emptyText}>
+                  No products in stock yet.
+                </Text>
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={() => router.push("/farm/stock")}
+                  style={farmStyles.inlineButton}
+                >
+                  <Text style={farmStyles.inlineButtonText}>Manage Stock</Text>
+                </Pressable>
+              </View>
+            ) : (
+              <Text style={farmStyles.emptyText}>
+                This farm has no products listed.
+              </Text>
+            )
+          ) : filteredProduce.length === 0 ? (
+            <Text style={farmStyles.emptyText}>
+              No products match your search.
+            </Text>
+          ) : (
+            <View style={farmStyles.productsGrid}>
+              {filteredProduce.map((item) => (
+                <Pressable
+                  key={item.id}
+                  accessibilityRole="button"
+                  style={[farmStyles.inlineButton, farmStyles.productTile]}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/produce/[produce]",
+                      params: {
+                        produce: item.produce_id,
+                        farmId: farmProfile.user_id,
+                        price: item.price,
+                        unit: item.unit,
+                        stock: item.stock,
+                      },
+                    })
+                  }
+                >
+                  <Text style={farmStyles.inlineButtonText}>
+                    {item.name_nb} — {item.price} kr / {item.unit}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          )}
+        </View>
         <FarmDetailsPanel
           deleting={deleting}
           farmProfile={farmProfile}
@@ -424,42 +529,27 @@ export default function FarmProfileScreen() {
           onEdit={() => router.replace("/farm/edit")}
           onDelete={handleDelete}
         />
-        {isOwner ? (
-          <Pressable
-            onPress={() => router.push("/farm/stock")}
-            style={farmStyles.inlineButton}
-          >
-            <Text style={farmStyles.inlineButtonText}>Manage Stock</Text>
-          </Pressable>
-        ) : null}
-        {farmProduce.length > 0 ? (
-          <View style={farmStyles.panel}>
-            <Text style={farmStyles.panelTitle}>Products</Text>
-            {farmProduce.map((item) => (
-              <Pressable
-                key={item.id}
-                style={farmStyles.inlineButton}
-                onPress={() =>
-                  router.push({
-                    pathname: "/produce/[produce]",
-                    params: {
-                      produce: item.produce_id,
-                      farmId: farmProfile.user_id,
-                      price: item.price,
-                      unit: item.unit,
-                      stock: item.stock,
-                    },
-                  })
-                }
-              >
-                <Text style={farmStyles.inlineButtonText}>
-                  {item.name_nb} — {item.price} kr / {item.unit}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

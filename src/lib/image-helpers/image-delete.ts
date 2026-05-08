@@ -11,7 +11,9 @@ export default async function deleteImage(id: string, imagePath: string) {
     .remove([imagePath]);
 
   if (storageError) {
-    throw new Error("Error delting image from storage:" + storageError.message);
+    throw new Error(
+      "Error deleting image from storage: " + storageError.message,
+    );
   }
 
   // Delete the matching database row after Storage deletion succeeds.
@@ -22,7 +24,7 @@ export default async function deleteImage(id: string, imagePath: string) {
 
   if (rowError) {
     throw new Error(
-      "Error deleting image row from database" + rowError.message,
+      "Error deleting image row from database: " + rowError.message,
     );
   }
 }

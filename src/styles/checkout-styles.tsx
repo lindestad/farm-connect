@@ -9,7 +9,8 @@ export const checkoutStyles = StyleSheet.create({
     gap: 16,
     paddingHorizontal: 18,
     paddingTop: 24,
-    paddingBottom: 100,
+    // Clears the absolute footer (bottom: 84 + ~88px footer height).
+    paddingBottom: 180,
   },
   pageTitle: {
     color: "#182019",
@@ -140,7 +141,8 @@ export const checkoutStyles = StyleSheet.create({
     backgroundColor: "#F4F5EF",
     borderTopColor: "#DDE4D9",
     borderTopWidth: 1,
-    bottom: 0,
+    // Sits above the floating tab bar (height 64 + marginBottom 20).
+    bottom: 84,
     left: 0,
     padding: 18,
     position: "absolute",

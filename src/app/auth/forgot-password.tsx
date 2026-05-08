@@ -1,4 +1,4 @@
-import { Link, type Href } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -50,7 +50,7 @@ export default function ForgotPasswordScreen() {
       footer={
         <Text style={styles.footerText}>
           Remembered it?{" "}
-          <Link href={"/auth/login" as Href} style={styles.footerLink}>
+          <Link href={"/auth/login"} style={styles.footerLink}>
             Back to login
           </Link>
         </Text>
@@ -82,6 +82,7 @@ export default function ForgotPasswordScreen() {
         </View>
       ) : null}
       <Pressable
+        accessibilityRole="button"
         disabled={loading}
         onPress={handleRequestReset}
         style={[styles.primaryButton, loading && styles.buttonDisabled]}

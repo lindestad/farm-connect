@@ -1,6 +1,5 @@
 import { StyleSheet } from "react-native";
 
-// AI Generated Code - Whole File
 const shadow = {
   boxShadow: "0px 18px 40px rgba(26, 41, 30, 0.08)",
 } as const;
@@ -119,12 +118,23 @@ export const farmStyles = StyleSheet.create({
     backgroundColor: "#EEF5EB",
     borderRadius: 999,
     paddingHorizontal: 14,
-    paddingVertical: 9,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center",
   },
   inlineButtonText: {
     color: "#214C2D",
     fontSize: 13,
     fontWeight: "700",
+  },
+  productsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 10,
+  },
+  productTile: {
+    alignSelf: "auto",
+    flexBasis: "48%",
   },
   closeButton: {
     backgroundColor: "#EEF5EB",

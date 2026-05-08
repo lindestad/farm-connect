@@ -1,10 +1,12 @@
 import { geocodeAddress } from "@/lib/location/locationService";
 import { AddressInput } from "@/lib/location/types";
 import * as Location from "expo-location";
-import { useRouter, type Href } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   Text,
@@ -37,13 +39,11 @@ export default function FarmEditScreen() {
     postalCode: "",
     street: "",
   });
-  const [, setLatitude] = useState<number | null>(null); // Set state for latitude
-  const [, setLongitude] = useState<number | null>(null); // Set state for longitude
 
   useEffect(() => {
     if (profileLoading) return;
     if (profile?.role !== "farmer") {
-      router.replace("/(tabs)" as Href);
+      router.replace("/(tabs)");
     }
   }, [profile, profileLoading, router]);
 
@@ -64,8 +64,6 @@ export default function FarmEditScreen() {
             postalCode: existing.postal_code ?? "",
             street: existing.street ?? "",
           });
-          setLatitude(existing.latitude ?? null);
-          setLongitude(existing.longitude ?? null);
           setIsExisting(true);
         }
       })
@@ -127,7 +125,11 @@ export default function FarmEditScreen() {
   if (profileLoading || loading) {
     return (
       <SafeAreaView style={farmStyles.page}>
-        <ActivityIndicator color="#2F6A3E" />
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator color="#2F6A3E" />
+        </View>
       </SafeAreaView>
     );
   }
@@ -137,150 +139,186 @@ export default function FarmEditScreen() {
   }
 
   return (
-    <SafeAreaView style={farmStyles.page}>
-      <ScrollView contentContainerStyle={farmStyles.scrollContent}>
-        <View style={farmStyles.card}>
-          <Text style={farmStyles.title}>
-            {isExisting ? "Edit farm profile" : "Create farm profile"}
-          </Text>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView style={farmStyles.page}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          style={backButtonStyle.button}
+        >
+          <Text style={backButtonStyle.text}>← Back</Text>
+        </Pressable>
+        <ScrollView
+          contentContainerStyle={farmStyles.scrollContent}
+          keyboardDismissMode="on-drag"
+        >
+          <View style={farmStyles.card}>
+            <Text style={farmStyles.title}>
+              {isExisting ? "Edit farm profile" : "Create farm profile"}
+            </Text>
 
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Farm name</Text>
-            <TextInput
-              onChangeText={setFarmName}
-              placeholder="Your farm's name"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={farmName}
-            />
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Farm name</Text>
+              <TextInput
+                onChangeText={setFarmName}
+                placeholder="Your farm's name"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={farmName}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Location</Text>
+              <TextInput
+                onChangeText={setFarmLocation}
+                placeholder="Town or area"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={farmLocation}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Country*</Text>
+              <TextInput
+                onChangeText={(text) =>
+                  setAddress((prev) => ({
+                    ...prev,
+                    country: text,
+                  }))
+                }
+                placeholder="Country"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={address.country ?? ""}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Region</Text>
+              <TextInput
+                onChangeText={(text) =>
+                  setAddress((prev) => ({
+                    ...prev,
+                    region: text,
+                  }))
+                }
+                placeholder="Region"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={address.region ?? ""}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>City*</Text>
+              <TextInput
+                onChangeText={(text) =>
+                  setAddress((prev) => ({
+                    ...prev,
+                    city: text,
+                  }))
+                }
+                placeholder="City"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={address.city ?? ""}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Postal code*</Text>
+              <TextInput
+                onChangeText={(text) =>
+                  setAddress((prev) => ({
+                    ...prev,
+                    postalCode: text,
+                  }))
+                }
+                placeholder="Postal code"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={address.postalCode ?? ""}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Street*</Text>
+              <TextInput
+                onChangeText={(text) =>
+                  setAddress((prev) => ({
+                    ...prev,
+                    street: text,
+                  }))
+                }
+                placeholder="Street"
+                placeholderTextColor="#7A867D"
+                style={farmStyles.input}
+                value={address.street ?? ""}
+              />
+            </View>
+
+            <View style={farmStyles.fieldGroup}>
+              <Text style={farmStyles.label}>Bio</Text>
+              <TextInput
+                multiline
+                onChangeText={setFarmBio}
+                placeholder="Tell customers about your farm"
+                placeholderTextColor="#7A867D"
+                style={[farmStyles.input, farmStyles.textArea]}
+                textAlignVertical="top"
+                value={farmBio}
+              />
+            </View>
+
+            {errorMessage ? (
+              <Text style={farmStyles.errorText}>{errorMessage}</Text>
+            ) : null}
+
+            <Pressable
+              accessibilityRole="button"
+              disabled={saving}
+              onPress={handleSave}
+              style={[
+                farmStyles.primaryButton,
+                saving && farmStyles.buttonDisabled,
+              ]}
+            >
+              {saving ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={farmStyles.primaryButtonText}>
+                  {isExisting ? "Save changes" : "Create farm profile"}
+                </Text>
+              )}
+            </Pressable>
           </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Location</Text>
-            <TextInput
-              onChangeText={setFarmLocation}
-              placeholder="Town or area"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={farmLocation}
-            />
-          </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Country*</Text>
-            <TextInput
-              onChangeText={(text) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  country: text,
-                }))
-              }
-              placeholder="Country"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={address.country ?? ""}
-            />
-          </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Region</Text>
-            <TextInput
-              onChangeText={(text) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  region: text,
-                }))
-              }
-              placeholder="Region"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={address.region ?? ""}
-            />
-          </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>City*</Text>
-            <TextInput
-              onChangeText={(text) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  city: text,
-                }))
-              }
-              placeholder="City"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={address.city ?? ""}
-            />
-          </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Postal code*</Text>
-            <TextInput
-              onChangeText={(text) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  postalCode: text,
-                }))
-              }
-              placeholder="Postal code"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={address.postalCode ?? ""}
-            />
-          </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Street*</Text>
-            <TextInput
-              onChangeText={(text) =>
-                setAddress((prev) => ({
-                  ...prev,
-                  street: text,
-                }))
-              }
-              placeholder="Street"
-              placeholderTextColor="#7A867D"
-              style={farmStyles.input}
-              value={address.street ?? ""}
-            />
-          </View>
-
-          <View style={farmStyles.fieldGroup}>
-            <Text style={farmStyles.label}>Bio</Text>
-            <TextInput
-              multiline
-              onChangeText={setFarmBio}
-              placeholder="Tell customers about your farm"
-              placeholderTextColor="#7A867D"
-              style={[farmStyles.input, farmStyles.textArea]}
-              textAlignVertical="top"
-              value={farmBio}
-            />
-          </View>
-
-          {errorMessage ? (
-            <Text style={farmStyles.errorText}>{errorMessage}</Text>
-          ) : null}
-
-          <Pressable
-            disabled={saving}
-            onPress={handleSave}
-            style={[
-              farmStyles.primaryButton,
-              saving && farmStyles.buttonDisabled,
-            ]}
-          >
-            {saving ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={farmStyles.primaryButtonText}>
-                {isExisting ? "Save changes" : "Create farm profile"}
-              </Text>
-            )}
-          </Pressable>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+        </ScrollView>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
+
+const backButtonStyle = {
+  button: {
+    alignSelf: "flex-start" as const,
+    backgroundColor: "#EEF5EB",
+    borderRadius: 999,
+    marginHorizontal: 18,
+    marginTop: 12,
+    marginBottom: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    minHeight: 44,
+    justifyContent: "center" as const,
+  },
+  text: {
+    color: "#214C2D",
+    fontSize: 14,
+    fontWeight: "700" as const,
+  },
+};

@@ -1,4 +1,4 @@
-import { Link, type Href } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -103,7 +103,7 @@ export default function RegisterScreen() {
       footer={
         <Text style={styles.footerText}>
           Already registered?{" "}
-          <Link href={"/auth/login" as Href} style={styles.footerLink}>
+          <Link href={"/auth/login"} style={styles.footerLink}>
             Sign in
           </Link>
         </Text>
@@ -164,6 +164,7 @@ export default function RegisterScreen() {
 
             return (
               <Pressable
+                accessibilityRole="button"
                 key={option.value}
                 onPress={() => setRole(option.value)}
                 style={[styles.roleCard, active && styles.roleCardActive]}
@@ -200,6 +201,7 @@ export default function RegisterScreen() {
         </View>
       ) : null}
       <Pressable
+        accessibilityRole="button"
         disabled={loading}
         onPress={handleRegister}
         style={[styles.primaryButton, loading && styles.buttonDisabled]}
@@ -212,6 +214,7 @@ export default function RegisterScreen() {
       </Pressable>
       {needsConfirmation ? (
         <Pressable
+          accessibilityRole="button"
           disabled={loading}
           onPress={handleResend}
           style={styles.secondaryButton}

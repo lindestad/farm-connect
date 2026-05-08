@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { Slot, useRouter, type Href } from "expo-router";
+import { Slot, useRouter } from "expo-router";
 
 import { useAuth } from "../../providers/auth-provider";
 
@@ -11,7 +11,7 @@ export default function FarmerDashboardLayout() {
   useEffect(() => {
     if (profileLoading) return;
     if (profile?.role !== "farmer") {
-      router.replace("/(tabs)" as Href);
+      router.replace("/(tabs)");
     }
   }, [profile, profileLoading, router]);
 

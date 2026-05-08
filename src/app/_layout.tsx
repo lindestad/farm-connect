@@ -1,8 +1,8 @@
 import { StripeProvider } from "@stripe/stripe-react-native";
 import * as Notifications from "expo-notifications";
-import { Stack, usePathname, useRouter, type Href } from "expo-router";
-import { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { Stack, usePathname, useRouter } from "expo-router";
+import { Component, type ReactNode, useEffect } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { usePushNotifications } from "../hooks/usePushNotifications";
 import { AuthProvider, useAuth } from "../providers/auth-provider";
 import { CartProvider, useCart } from "../providers/cart-provider";
@@ -20,6 +20,31 @@ const SESSION_REDIRECT_AUTH_ROUTES = [
   "/auth/confirm",
   "/auth/forgot-password",
 ];
+
+class AppErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <View style={styles.errorScreen}>
+          <Text style={styles.errorTitle}>Something went wrong</Text>
+          <Text style={styles.errorText}>
+            Please restart the app. If the problem persists, contact support.
+          </Text>
+        </View>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // Configure how notifications are displayed when the app is in the foreground
 Notifications.setNotificationHandler({
@@ -46,17 +71,17 @@ function RootNavigator() {
     if (isLoading) return;
 
     if (!session && !AUTH_ROUTES.includes(pathname)) {
-      router.replace("/auth/login" as Href);
+      router.replace("/auth/login");
       return;
     }
 
     if (session && SESSION_REDIRECT_AUTH_ROUTES.includes(pathname)) {
-      router.replace("/account" as Href);
+      router.replace("/(tabs)");
       return;
     }
 
     if (session && pathname === "/") {
-      router.replace("/(tabs)" as Href);
+      router.replace("/(tabs)");
     }
   }, [isLoading, pathname, router, session]);
 
@@ -82,15 +107,17 @@ function RootNavigator() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <StripeProvider
-          publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
-        >
-          <RootNavigator />
-        </StripeProvider>
-      </CartProvider>
-    </AuthProvider>
+    <AppErrorBoundary>
+      <AuthProvider>
+        <CartProvider>
+          <StripeProvider
+            publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+          >
+            <RootNavigator />
+          </StripeProvider>
+        </CartProvider>
+      </AuthProvider>
+    </AppErrorBoundary>
   );
 }
 
@@ -100,5 +127,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#F6F7F3",
+  },
+  errorScreen: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#F6F7F3",
+    padding: 32,
+  },
+  errorTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#1A2E1F",
+    marginBottom: 8,
+  },
+  errorText: {
+    fontSize: 14,
+    color: "#5A7A63",
+    textAlign: "center",
   },
 });

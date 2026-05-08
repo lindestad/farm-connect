@@ -20,13 +20,15 @@ function formatTimestamp(value: string | null | undefined) {
   if (!value) return "Unavailable";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return "Unavailable";
-  return parsed.toLocaleString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return (
+    parsed.toLocaleString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }) + " "
+  );
 }
 
 function OrderCard({ order }: { order: OrderWithItems }) {
@@ -44,11 +46,27 @@ function OrderCard({ order }: { order: OrderWithItems }) {
       <View style={styles.metaGrid}>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Status</Text>
-          <Text style={styles.metaValue}>{order.status}</Text>
+          <Text
+            style={[
+              styles.metaValue,
+              order.status === "confirmed" && {
+                color: "#2F6A3E",
+                fontWeight: "700",
+              },
+              order.status === "cancelled" && {
+                color: "#9C5B4D",
+                fontWeight: "700",
+              },
+            ]}
+          >
+            {order.status.charAt(0).toUpperCase() + order.status.slice(1) + " "}
+          </Text>
         </View>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Delivery</Text>
-          <Text style={styles.metaValue}>{order.delivery_method}</Text>
+          <Text style={styles.metaValue}>
+            {order.delivery_method === "pickup" ? "Pickup " : "Reservation "}
+          </Text>
         </View>
         <View style={styles.metaItem}>
           <Text style={styles.metaLabel}>Placed</Text>
@@ -130,7 +148,7 @@ export default function OrderHistoryScreen() {
           >
             <Text style={styles.backButtonText}>← Back</Text>
           </Pressable>
-          <Text style={styles.screenTitle}>Order history</Text>
+          <Text style={styles.screenTitle}>Order History</Text>
           <Text style={styles.screenBody}>
             Your past purchases and pickup reservations from FarmConnect.
           </Text>
@@ -147,7 +165,7 @@ export default function OrderHistoryScreen() {
           </View>
         ) : orders.length === 0 ? (
           <View style={styles.statePanel}>
-            <Text style={styles.stateText}>No orders yet.</Text>
+            <Text style={styles.stateText}>No orders yet. </Text>
             <Text style={styles.stateBody}>
               Place an order from the checkout screen to see it here.
             </Text>
@@ -172,7 +190,8 @@ const styles = StyleSheet.create({
   scrollContent: {
     gap: 16,
     paddingHorizontal: 18,
-    paddingVertical: 24,
+    paddingTop: 24,
+    paddingBottom: 100,
   },
   header: {
     gap: 6,

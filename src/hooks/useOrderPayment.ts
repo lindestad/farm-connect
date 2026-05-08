@@ -9,17 +9,27 @@ export function useOrderPayment(amountInNOK: number) {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
 
-  const handlePayment = async () => {
+  // orderId is forwarded to create-payment-intent so the server can validate the amount.
+  // DEPENDENCY: edge-function fix #2 must verify the JWT and look up orders.total_price
+  // using this order_id instead of trusting the client-supplied amount.
+  const handlePayment = async (
+    orderId?: string,
+  ): Promise<"success" | "cancelled" | "failed"> => {
+    if (processing) return "failed";
+    setProcessing(true);
     setPaymentError(null);
 
     if (!supabase) {
       setPaymentError("Supabase is not configured");
-      return;
+      setProcessing(false);
+      return "failed";
     }
     if (!session?.access_token) {
       Alert.alert("Not authenticated", "Please log in to continue.");
-      return;
+      setProcessing(false);
+      return "failed";
     }
 
     const { error: initError } = await initPaymentSheet({
@@ -43,14 +53,21 @@ export function useOrderPayment(amountInNOK: number) {
           const { data, error } = await supabase!.functions.invoke(
             "create-payment-intent",
             {
-              body: { amount: Math.round(amountInNOK * 100), currency: "nok" },
+              body: {
+                amount: Math.round(amountInNOK * 100),
+                currency: "nok",
+                ...(orderId ? { order_id: orderId } : {}),
+              },
               headers: { Authorization: `Bearer ${session?.access_token}` },
             },
           );
 
           if (error || !data?.clientSecret) {
             onPaymentResult({
-              error: { code: "Failed", message: "Payment failed" },
+              error: {
+                code: "Failed",
+                message: error?.message ?? "Payment failed",
+              },
             });
             return;
           }
@@ -62,17 +79,31 @@ export function useOrderPayment(amountInNOK: number) {
 
     if (initError) {
       setPaymentError(initError.message);
-      return;
+      setProcessing(false);
+      return "failed";
     }
 
     const { error: payError } = await presentPaymentSheet();
-    if (payError?.code === "Canceled") return;
+    setProcessing(false);
+    if (payError?.code === "Canceled") return "cancelled";
     if (payError) {
       setPaymentError(payError.message);
-      return;
+      return "failed";
     }
     setPaymentSuccess(true);
+    return "success";
   };
 
-  return { handlePayment, paymentSuccess, paymentError };
+  const resetPayment = () => {
+    setPaymentSuccess(false);
+    setPaymentError(null);
+  };
+
+  return {
+    handlePayment,
+    paymentSuccess,
+    paymentError,
+    processing,
+    resetPayment,
+  };
 }

@@ -23,6 +23,7 @@ import {
   upsertProfileFromUser,
 } from "../lib/profiles";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { parseUrlParams, normalizeEmailLinkType } from "../lib/auth-helpers";
 
 type AuthLinkStatus = "idle" | "processing" | "success" | "error";
 
@@ -76,42 +77,6 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 const createRedirectUrl = () => Linking.createURL("/auth/confirm");
 const createPasswordResetRedirectUrl = () =>
   Linking.createURL("/auth/reset-password");
-
-const parseUrlParams = (url: string) => {
-  const parsedUrl = new URL(url);
-  const params = new URLSearchParams(parsedUrl.search);
-  const hash = parsedUrl.hash.startsWith("#")
-    ? parsedUrl.hash.slice(1)
-    : parsedUrl.hash;
-
-  if (hash) {
-    const hashParams = new URLSearchParams(hash);
-    hashParams.forEach((value, key) => {
-      if (!params.has(key)) {
-        params.set(key, value);
-      }
-    });
-  }
-
-  return Object.fromEntries(params.entries());
-};
-
-const normalizeEmailLinkType = (value?: string) => {
-  if (!value || value === "signup" || value === "magiclink") {
-    return "email";
-  }
-
-  if (
-    value === "email" ||
-    value === "recovery" ||
-    value === "invite" ||
-    value === "email_change"
-  ) {
-    return value;
-  }
-
-  return "email";
-};
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null);
@@ -251,28 +216,30 @@ export function AuthProvider({ children }: PropsWithChildren) {
     };
 
     const bootstrapSession = async () => {
-      const { data, error } = await supabaseClient.auth.getSession();
+      try {
+        const { data, error } = await supabaseClient.auth.getSession();
 
-      if (error) {
-        if (isMounted) {
-          setAuthLinkStatus("error");
-          setAuthLinkMessage(error.message);
+        if (error) {
+          if (isMounted) {
+            setAuthLinkStatus("error");
+            setAuthLinkMessage(error.message);
+          }
+        } else {
+          if (isMounted) {
+            setSession(data.session ?? null);
+          }
+
+          await syncProfile(data.session?.user ?? null);
         }
-      } else {
-        if (isMounted) {
-          setSession(data.session ?? null);
+
+        const initialUrl = await Linking.getInitialURL();
+        if (initialUrl) {
+          await handleAuthUrl(initialUrl);
         }
-
-        await syncProfile(data.session?.user ?? null);
-      }
-
-      const initialUrl = await Linking.getInitialURL();
-      if (initialUrl) {
-        await handleAuthUrl(initialUrl);
-      }
-
-      if (isMounted) {
-        setIsLoading(false);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -439,6 +406,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
         const defaultPickupNotes = normalizeOptionalText(
           details.defaultPickupNotes,
         );
+        // Write only to public.profiles. auth.users.user_metadata is not
+        // the source of truth for the app after sign-up; mirroring it here
+        // without compensation on failure creates a two-phase-commit problem.
         const nextProfile = await updateProfile(session.user.id, {
           displayName,
           fullName,
@@ -448,21 +418,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
           preferredContactMethod,
           defaultPickupNotes: defaultPickupNotes ?? "",
         });
-        const { error } = await supabase.auth.updateUser({
-          data: {
-            display_name: displayName,
-            full_name: fullName,
-            phone_number: phoneNumber,
-            bio,
-            location_label: locationLabel,
-            preferred_contact_method: preferredContactMethod,
-            default_pickup_notes: defaultPickupNotes,
-          },
-        });
-
-        if (error) {
-          throw error;
-        }
 
         setProfile(nextProfile);
         setProfileError(null);
