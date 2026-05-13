@@ -207,7 +207,7 @@ select
   'authenticated',
   'authenticated',
   email,
-  crypt(password, gen_salt('bf')),
+  extensions.crypt(password, extensions.gen_salt('bf')),
   now(),
   '{"provider": "email", "providers": ["email"]}'::jsonb,
   jsonb_build_object('full_name', full_name, 'role', role),
