@@ -4,6 +4,15 @@ FarmConnect is a mobile-first marketplace that connects customers with local far
 
 ---
 
+> **Demo data note:** The Supabase migrations include seeded demo farms in [`202605050010_seed_demo_farms.sql`](supabase/migrations/202605050010_seed_demo_farms.sql) and login-ready demo accounts in [`202605111200_seed_full_demo_data.sql`](supabase/migrations/202605111200_seed_full_demo_data.sql). Use these accounts to explore the customer and farmer flows:
+>
+> | Role     | Email                    | Password       |
+> | -------- | ------------------------ | -------------- |
+> | Customer | `customer-demo@demo.com` | `DemoPass123!` |
+> | Farmer   | `farmer-demo@demo.com`   | `DemoPass123!` |
+
+---
+
 <details>
 <summary><strong>View Progress (Features Implemented)</strong></summary>
 
